@@ -1,8 +1,10 @@
+using App_projekt_IT.Data;
+using App_projekt_IT.Models;
+using App_projekt_IT.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using App_projekt_IT.Models;
-using App_projekt_IT.Data;
 
 namespace App_projekt_IT.Controllers
 {
@@ -149,6 +151,70 @@ namespace App_projekt_IT.Controllers
         private bool DoctorExists(int? id)
         {
             return _context.Doctors.Any(e => e.Id == id);
+        }
+
+        // GET: Wyœwietla formularz generatora
+        [HttpGet]
+        public IActionResult GenerateSchedule()
+        {
+            
+            ViewBag.Doctors = new SelectList(_context.Doctors, "Id", "LastName");
+            ViewBag.Services = new SelectList(_context.Services, "Id", "Name");
+
+            return View();
+        }
+
+        // POST: Przetwarza dane i generuje wizyty
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GenerateSchedule(ScheduleGeneratorViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                
+                if (model.EndTime <= model.StartTime)
+                {
+                    ModelState.AddModelError("", "Godzina zakoñczenia musi byæ póŸniejsza ni¿ godzina rozpoczêcia.");
+                    ViewBag.Doctors = new SelectList(_context.Doctors, "Id", "LastName");
+                    ViewBag.Services = new SelectList(_context.Services, "Id", "Name");
+                    return View(model);
+                }
+
+                
+                DateTime currentSlotTime = model.Date.Date + model.StartTime;
+                DateTime endSlotTime = model.Date.Date + model.EndTime;
+
+                var slotsToAdd = new List<AppointmentSlot>();
+
+                
+                while (currentSlotTime.AddMinutes(model.IntervalMinutes) <= endSlotTime)
+                {
+                    var slot = new AppointmentSlot
+                    {
+                        DoctorId = model.DoctorId,
+                        ServiceId = model.ServiceId,
+                        StartTime = currentSlotTime,
+                        IsBooked = false
+                    };
+
+                    slotsToAdd.Add(slot);
+
+                    
+                    currentSlotTime = currentSlotTime.AddMinutes(model.IntervalMinutes);
+                }
+
+                
+                _context.AppointmentSlots.AddRange(slotsToAdd);
+                await _context.SaveChangesAsync();
+
+                
+                return RedirectToAction(nameof(Index));
+            }
+
+            
+            ViewBag.Doctors = new SelectList(_context.Doctors, "Id", "LastName");
+            ViewBag.Services = new SelectList(_context.Services, "Id", "Name");
+            return View(model);
         }
     }
 }
