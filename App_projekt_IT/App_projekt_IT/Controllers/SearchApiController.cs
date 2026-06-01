@@ -17,7 +17,7 @@ namespace App_projekt_IT.Controllers
         }
 
         // Metody
-        // GET: api/SearchApi/cities
+        // GET: 
         [HttpGet("cities")]
         public async Task<IActionResult> GetCities()
         {
@@ -33,7 +33,7 @@ namespace App_projekt_IT.Controllers
             return Ok(cities); 
         }
 
-        // GET: api/SearchApi/services
+        // GET: 
         [HttpGet("services")]
         public async Task<IActionResult> GetServices()
         {
@@ -49,13 +49,13 @@ namespace App_projekt_IT.Controllers
             return Ok(services);
         }
 
-        // GET: api/SearchApi/slots?clinicId=1&serviceId=2&date=2026-06-15
+        // GET: 
         [HttpGet("slots")]
         public async Task<IActionResult> GetAvailableSlots(int clinicId, int serviceId, DateTime date)
         {
             // Filtrowanie na poziomie bazy danych 
             var availableSlots = await _context.AppointmentSlots
-                .Include(a => a.Doctor) // Dołączamy tabelę Lekarza 
+                .Include(a => a.Doctor) 
                 .Where(a =>
                     a.ServiceId == serviceId &&
                     a.Doctor.ClinicId == clinicId && 
