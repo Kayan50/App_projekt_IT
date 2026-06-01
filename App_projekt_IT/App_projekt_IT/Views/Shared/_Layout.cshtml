@@ -6,49 +6,24 @@
     <title>@ViewData["Title"] - Klinika-Med</title>
 
     <link rel="stylesheet" href="~/css/styles.css">
-
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">App_projekt_IT</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-danger fw-bold" asp-area="" asp-controller="Clinics" asp-action="Index">Zarządzaj Klinikami</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-danger fw-bold" asp-area="" asp-controller="Doctors" asp-action="Index">Zarządzaj Lekarzami</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-danger fw-bold" asp-area="" asp-controller="Services" asp-action="Index">Zarządzaj Usługami</a>
-                            </li>
-                        }
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
     <header class="main-header">
-        <a href="/" class="logo">Klinika-Med</a>
-        <nav>
-             <a href="#login" class="nav-login">
-                Zaloguj / Rejestracja <i class="fa-regular fa-circle-user"></i>
-             </a>
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="logo">Klinika-Med</a>
+        
+        <nav class="custom-nav-container">
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="admin-links">
+                    <a asp-area="" asp-controller="Clinics" asp-action="Index">Zarządzaj Klinikami</a>
+                    <a asp-area="" asp-controller="Doctors" asp-action="Index">Zarządzaj Lekarzami</a>
+                    <a asp-area="" asp-controller="Services" asp-action="Index">Zarządzaj Usługami</a>
+                </div>
+            }
+
+            <partial name="_LoginPartial" />
         </nav>
     </header>
 
@@ -56,7 +31,7 @@
         @RenderBody()
     </main>
 
-    <script src="~/js/app.js"></script>
+    <script src="~/js/app.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

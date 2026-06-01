@@ -1,0 +1,43 @@
+@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Logowanie";
+}
+
+<section class="auth-section">
+    <div class="auth-card">
+        <h2>Zaloguj się</h2>
+
+        <form id="account" class="auth-form" method="post">
+            <div asp-validation-summary="ModelOnly" style="color: #e11d48; font-size: 0.9rem; font-weight: bold; text-align: center;"></div>
+
+            <div class="form-group">
+                <label asp-for="Input.Email">Adres Email</label>
+                <input asp-for="Input.Email" autocomplete="username" aria-required="true" placeholder="np. jan.kowalski@mail.com" />
+                <span asp-validation-for="Input.Email" style="color: #e11d48; font-size: 0.8rem;"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Password">Hasło</label>
+                <input asp-for="Input.Password" autocomplete="current-password" aria-required="true" placeholder="••••••••" />
+                <span asp-validation-for="Input.Password" style="color: #e11d48; font-size: 0.8rem;"></span>
+            </div>
+
+            <div class="form-group" style="flex-direction: row; align-items: center; gap: 0.5rem;">
+                <input asp-for="Input.RememberMe" style="width: auto;" />
+                <label asp-for="Input.RememberMe" style="font-weight: normal; margin: 0;">Zapamiętaj mnie</label>
+            </div>
+
+            <button type="submit" class="btn-primary btn-block">Zaloguj się</button>
+        </form>
+
+        <div class="auth-links-bottom">
+            <a id="forgot-password" asp-page="./ForgotPassword">Zapomniałeś hasła?</a>
+            <p>Nie masz jeszcze konta? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Zarejestruj się</a></p>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

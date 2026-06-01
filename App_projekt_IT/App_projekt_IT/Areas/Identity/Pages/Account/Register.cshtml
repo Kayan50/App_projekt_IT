@@ -1,0 +1,58 @@
+@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Rejestracja";
+}
+
+<section class="auth-section">
+    <div class="auth-card register-card">
+        <h2>Załóż konto pacjenta</h2>
+
+        <form class="auth-form" method="post">
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Imię</label>
+                    <input type="text" name="Input.FirstName" required />
+                </div>
+                <div class="form-group">
+                    <label>Nazwisko</label>
+                    <input type="text" name="Input.LastName" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>PESEL</label>
+                    <input type="text" name="Input.Pesel" required pattern="\d{11}" title="PESEL musi mieć 11 cyfr" />
+                </div>
+                <div class="form-group">
+                    <label>Data urodzenia</label>
+                    <input type="date" name="Input.DateOfBirth" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Adres Email</label>
+                <input type="email" name="Input.Email" required />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Hasło</label>
+                    <input type="password" name="Input.Password" required />
+                </div>
+                <div class="form-group">
+                    <label>Potwierdź hasło</label>
+                    <input type="password" name="Input.ConfirmPassword" required />
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary btn-block">Zarejestruj się</button>
+        </form>
+
+        <div class="auth-links-bottom">
+            <p>Masz już konto? <a href="/Identity/Account/Login">Zaloguj się</a></p>
+        </div>
+    </div>
+</section>
