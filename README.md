@@ -1,1 +1,1 @@
-# Projekt ASP.NET
+# Aplikacja do rezerwacji wizyt lub usług w szpitalach
