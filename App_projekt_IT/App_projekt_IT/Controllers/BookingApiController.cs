@@ -35,7 +35,7 @@ namespace App_projekt_IT.Controllers
                 $"UPDATE AppointmentSlots SET IsBooked = 1, UserId = {userId} WHERE Id = {slotId} AND IsBooked = 0"
             );
 
-            // 3. Weryfikacja sukcesu
+            
             if (rowsAffected == 0)
             {
                
