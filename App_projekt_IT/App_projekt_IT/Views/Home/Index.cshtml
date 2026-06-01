@@ -2,7 +2,40 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section id="search" class="search-section">
+    <h1>Znajdź lekarza i umów wizytę</h1>
+    <form id="search-form" class="search-form">
+
+        <select id="service-type" required>
+            <option value="" disabled selected>Wybierz usługę</option>
+            <option value="Rezonans magnetyczny">Rezonans magnetyczny</option>
+            <option value="Tomografia komputerowa">Tomografia komputerowa</option>
+            <option value="RTG">RTG (Prześwietlenie)</option>
+            <option value="USG">USG</option>
+            <option value="Konsultacja kardiologiczna">Konsultacja kardiologiczna</option>
+        </select>
+
+        <select id="city" required>
+            <option value="" disabled selected>Miasto</option>
+            <option value="Kraków">Kraków</option>
+            <option value="Warszawa">Warszawa</option>
+            <option value="Wrocław">Wrocław</option>
+            <option value="Poznań">Poznań</option>
+            <option value="Gdańsk">Gdańsk</option>
+        </select>
+
+        <input type="date" id="appointment-date" required>
+
+        <div class="radio-group">
+            <label><input type="radio" name="payment" value="NFZ" checked> NFZ</label>
+            <label><input type="radio" name="payment" value="Prywatnie"> Prywatnie</label>
+        </div>
+
+        <button type="submit" class="btn-primary">Szukaj</button>
+    </form>
+</section>
+
+<section id="results" class="results-section">
+    <div id="results-container" class="grid-container">
+    </div>
+</section>

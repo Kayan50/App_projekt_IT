@@ -1,12 +1,13 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - App_projekt_IT</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/App_projekt_IT.styles.css" asp-append-version="true" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Klinika-Med</title>
+
+    <link rel="stylesheet" href="~/css/styles.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <header>
@@ -42,22 +43,20 @@
                     <partial name="_LoginPartial" />
                 </div>
             </div>
+    <header class="main-header">
+        <a href="/" class="logo">Klinika-Med</a>
+        <nav>
+             <a href="#login" class="nav-login">
+                Zaloguj / Rejestracja <i class="fa-regular fa-circle-user"></i>
+             </a>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - App_projekt_IT - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <main>
+        @RenderBody()
+    </main>
+
+    <script src="~/js/app.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
