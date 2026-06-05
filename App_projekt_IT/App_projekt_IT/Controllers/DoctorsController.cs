@@ -21,23 +21,21 @@ namespace App_projekt_IT.Controllers
         // GET: DOCTORS
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Doctors.ToListAsync());
+            
+            var doctors = _context.Doctors.Include(d => d.Clinic);
+            return View(await doctors.ToListAsync());
         }
 
-        // GET: DOCTORS/Details/5
+        // GET: DOCTORS/Details/
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var doctor = await _context.Doctors
+                .Include(d => d.Clinic) 
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (doctor == null)
-            {
-                return NotFound();
-            }
+
+            if (doctor == null) return NotFound();
 
             return View(doctor);
         }
@@ -45,15 +43,16 @@ namespace App_projekt_IT.Controllers
         // GET: DOCTORS/Create
         public IActionResult Create()
         {
+            
+            ViewData["ClinicId"] = new SelectList(_context.Clinics, "Id", "Name");
             return View();
         }
 
         // POST: DOCTORS/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Title,ClinicId,Clinic,Services,AppointmentSlots")] Doctor doctor)
+       
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Title,ClinicId")] Doctor doctor)
         {
             if (ModelState.IsValid)
             {
@@ -61,36 +60,30 @@ namespace App_projekt_IT.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ClinicId"] = new SelectList(_context.Clinics, "Id", "Name", doctor.ClinicId);
             return View(doctor);
         }
 
-        // GET: DOCTORS/Edit/5
+        // GET: DOCTORS/Edit
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var doctor = await _context.Doctors.FindAsync(id);
-            if (doctor == null)
-            {
-                return NotFound();
-            }
+            if (doctor == null) return NotFound();
+
+            
+            ViewData["ClinicId"] = new SelectList(_context.Clinics, "Id", "Name", doctor.ClinicId);
             return View(doctor);
         }
 
-        // POST: DOCTORS/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: DOCTORS/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,FirstName,LastName,Title,ClinicId,Clinic,Services,AppointmentSlots")] Doctor doctor)
+        
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,FirstName,LastName,Title,ClinicId")] Doctor doctor)
         {
-            if (id != doctor.Id)
-            {
-                return NotFound();
-            }
+            if (id != doctor.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -101,39 +94,31 @@ namespace App_projekt_IT.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DoctorExists(doctor.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!DoctorExists(doctor.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
+            
+            ViewData["ClinicId"] = new SelectList(_context.Clinics, "Id", "Name", doctor.ClinicId);
             return View(doctor);
         }
 
-        // GET: DOCTORS/Delete/5
+        // GET: DOCTORS/Delete
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var doctor = await _context.Doctors
+                .Include(d => d.Clinic) 
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (doctor == null)
-            {
-                return NotFound();
-            }
+
+            if (doctor == null) return NotFound();
 
             return View(doctor);
         }
 
-        // POST: DOCTORS/Delete/5
+        // POST: DOCTORS/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
@@ -143,7 +128,6 @@ namespace App_projekt_IT.Controllers
             {
                 _context.Doctors.Remove(doctor);
             }
-
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -153,18 +137,23 @@ namespace App_projekt_IT.Controllers
             return _context.Doctors.Any(e => e.Id == id);
         }
 
-        // GET: Wyœwietla formularz generatora
+        // GET
         [HttpGet]
         public IActionResult GenerateSchedule()
         {
             
-            ViewBag.Doctors = new SelectList(_context.Doctors, "Id", "LastName");
+            var doctorsList = _context.Doctors.Select(d => new {
+                Id = d.Id,
+                FullName = d.FirstName + " " + d.LastName
+            }).ToList();
+
+            ViewBag.Doctors = new SelectList(doctorsList, "Id", "FullName");
             ViewBag.Services = new SelectList(_context.Services, "Id", "Name");
 
             return View();
         }
 
-        // POST: Przetwarza dane i generuje wizyty
+        // POST: 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GenerateSchedule(ScheduleGeneratorViewModel model)
@@ -175,18 +164,28 @@ namespace App_projekt_IT.Controllers
                 if (model.EndTime <= model.StartTime)
                 {
                     ModelState.AddModelError("", "Godzina zakoñczenia musi byæ póŸniejsza ni¿ godzina rozpoczêcia.");
-                    ViewBag.Doctors = new SelectList(_context.Doctors, "Id", "LastName");
-                    ViewBag.Services = new SelectList(_context.Services, "Id", "Name");
+                    RepopulateGeneratorViewBags();
                     return View(model);
                 }
 
-                
                 DateTime currentSlotTime = model.Date.Date + model.StartTime;
                 DateTime endSlotTime = model.Date.Date + model.EndTime;
 
+                
+                bool slotsExist = await _context.AppointmentSlots
+                    .AnyAsync(a => a.DoctorId == model.DoctorId &&
+                                   a.StartTime >= currentSlotTime &&
+                                   a.StartTime <= endSlotTime);
+
+                if (slotsExist)
+                {
+                    ModelState.AddModelError("", "W wybranym przedziale czasowym istniej¹ ju¿ wygenerowane terminy dla tego lekarza. Zmieñ datê lub godziny.");
+                    RepopulateGeneratorViewBags();
+                    return View(model);
+                }
+
                 var slotsToAdd = new List<AppointmentSlot>();
 
-                
                 while (currentSlotTime.AddMinutes(model.IntervalMinutes) <= endSlotTime)
                 {
                     var slot = new AppointmentSlot
@@ -198,23 +197,28 @@ namespace App_projekt_IT.Controllers
                     };
 
                     slotsToAdd.Add(slot);
-
-                    
                     currentSlotTime = currentSlotTime.AddMinutes(model.IntervalMinutes);
                 }
 
-                
                 _context.AppointmentSlots.AddRange(slotsToAdd);
                 await _context.SaveChangesAsync();
 
-                
                 return RedirectToAction(nameof(Index));
             }
 
-            
-            ViewBag.Doctors = new SelectList(_context.Doctors, "Id", "LastName");
-            ViewBag.Services = new SelectList(_context.Services, "Id", "Name");
+            RepopulateGeneratorViewBags();
             return View(model);
+        }
+
+        
+        private void RepopulateGeneratorViewBags()
+        {
+            var doctorsList = _context.Doctors.Select(d => new {
+                Id = d.Id,
+                FullName = d.FirstName + " " + d.LastName
+            }).ToList();
+            ViewBag.Doctors = new SelectList(doctorsList, "Id", "FullName");
+            ViewBag.Services = new SelectList(_context.Services, "Id", "Name");
         }
     }
 }

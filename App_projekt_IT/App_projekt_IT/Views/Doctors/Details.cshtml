@@ -1,66 +1,28 @@
 @model App_projekt_IT.Models.Doctor
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Szczegó³y Lekarza";
 }
 
-<h1>Details</h1>
+<h2>Szczegó³y Lekarza</h2>
 
-<div>
-    <h4>Doctor</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ClinicId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ClinicId)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Clinic)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Clinic)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Services)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Services)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AppointmentSlots)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AppointmentSlots)
-        </dd>
+<div class="clinic-card">
+    <dl>
+        <dt>@Html.DisplayNameFor(model => model.FirstName)</dt>
+        <dd>@Html.DisplayFor(model => model.FirstName)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.LastName)</dt>
+        <dd>@Html.DisplayFor(model => model.LastName)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Title)</dt>
+        <dd>@Html.DisplayFor(model => model.Title)</dd>
+
+        <dt>Klinika</dt>
+        <dd>@Html.DisplayFor(model => model.Clinic.Name)</dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="action-links">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn-primary" style="display: inline-block; text-decoration: none; padding: 8px 12px;">Edytuj</a>
+    <a asp-action="Index">Powrót do listy</a>
 </div>

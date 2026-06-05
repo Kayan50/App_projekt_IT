@@ -1,34 +1,53 @@
 ﻿@model App_projekt_IT.Models.ViewModels.ScheduleGeneratorViewModel
 
+@{
+    ViewData["Title"] = "Generator Harmonogramu";
+}
+
 <h2>Generuj Harmonogram Pracy</h2>
 
-<form asp-action="GenerateSchedule" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="clinic-card">
+    <form asp-action="GenerateSchedule" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger" style="margin-bottom: 15px;"></div>
 
-    <div>
-        <label asp-for="DoctorId"></label>
-        <select asp-for="DoctorId" asp-items="ViewBag.Doctors" class="form-control"></select>
-    </div>
-    <div>
-        <label asp-for="ServiceId"></label>
-        <select asp-for="ServiceId" asp-items="ViewBag.Services" class="form-control"></select>
-    </div>
-    <div>
-        <label asp-for="Date"></label>
-        <input asp-for="Date" type="date" class="form-control" />
-    </div>
-    <div>
-        <label asp-for="StartTime"></label>
-        <input asp-for="StartTime" type="time" class="form-control" />
-    </div>
-    <div>
-        <label asp-for="EndTime"></label>
-        <input asp-for="EndTime" type="time" class="form-control" />
-    </div>
-    <div>
-        <label asp-for="IntervalMinutes"></label>
-        <input asp-for="IntervalMinutes" type="number" class="form-control" value="30" />
-    </div>
+        <div class="form-group">
+            <label asp-for="DoctorId"></label>
+            <select asp-for="DoctorId" asp-items="ViewBag.Doctors" class="form-control"></select>
+            <span asp-validation-for="DoctorId" class="text-danger"></span>
+        </div>
 
-    <button type="submit" class="btn btn-primary mt-3">Generuj</button>
-</form>
+        <div class="form-group">
+            <label asp-for="ServiceId"></label>
+            <select asp-for="ServiceId" asp-items="ViewBag.Services" class="form-control"></select>
+            <span asp-validation-for="ServiceId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Date"></label>
+            <input asp-for="Date" type="date" class="form-control" />
+            <span asp-validation-for="Date" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="StartTime"></label>
+            <input asp-for="StartTime" type="time" class="form-control" />
+            <span asp-validation-for="StartTime" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="EndTime"></label>
+            <input asp-for="EndTime" type="time" class="form-control" />
+            <span asp-validation-for="EndTime" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="IntervalMinutes"></label>
+            <input asp-for="IntervalMinutes" type="number" class="form-control" value="30" />
+            <span asp-validation-for="IntervalMinutes" class="text-danger"></span>
+        </div>
+
+        <div class="action-links">
+            <button type="submit" class="btn-primary">Generuj wizyty</button>
+        </div>
+    </form>
+</div>
