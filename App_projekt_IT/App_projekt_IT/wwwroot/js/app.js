@@ -1,85 +1,163 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
-    const dateInput = document.getElementById('appointment-date');
+﻿document.addEventListener("DOMContentLoaded", () => {
+  const dateInput = document.getElementById("appointment-date");
 
-    if (dateInput) {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
+  if (dateInput) {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    const formattedDate = `${year}-${month}-${day}`;
 
-        const formattedDate = `${year}-${month}-${day}`;
+    dateInput.value = formattedDate;
+    dateInput.min = formattedDate;
+  }
 
-        dateInput.value = formattedDate;
+  const citySelect = document.getElementById("city-select");
+  const serviceSelect = document.getElementById("service-select");
 
-        dateInput.min = formattedDate;
+  async function loadCities() {
+    if (!citySelect) return;
+    try {
+      const response = await fetch("/api/SearchApi/cities");
+      if (!response.ok) throw new Error();
+      const cities = await response.json();
+      citySelect.innerHTML = '<option value="">Wybierz miasto</option>';
+      cities.forEach((city) => {
+        const option = document.createElement("option");
+        option.value = city.id;
+        option.textContent = city.name;
+        citySelect.appendChild(option);
+      });
+    } catch (error) {
+      citySelect.innerHTML = '<option value="">Błąd serwera</option>';
     }
-    const searchForm = document.getElementById('search-form');
-    const resultsContainer = document.getElementById('results-container');
+  }
 
-    searchForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const service = document.getElementById('service-type').value;
-        const city = document.getElementById('city').value;
-        const date = document.getElementById('appointment-date').value;
-
-        resultsContainer.innerHTML = '<p>Szukam wolnych terminów...</p>';
-
-        try {
-
-            const data = [
-                { clinicName: "Centrum Medyczne Kraków", doctor: "Dr. Jan Kowalski", slots: ["14:30", "15:00", "16:15"] },
-                { clinicName: "Klinika Nowa", doctor: "Dr. Anna Nowak", slots: ["09:00", "11:30"] }
-            ];
-
-            renderResults(data);
-
-        } catch (error) {
-            console.error("Błąd pobierania danych:", error);
-            resultsContainer.innerHTML = '<p>Wystąpił błąd podczas wyszukiwania.</p>';
+  async function loadServices() {
+    if (!serviceSelect) return;
+    try {
+      const response = await fetch("/api/SearchApi/services");
+      if (!response.ok) throw new Error();
+      const services = await response.json();
+      serviceSelect.innerHTML = '<option value="">Wybierz usługę</option>';
+      services.forEach((service) => {
+        const option = document.createElement("option");
+        option.value = service.id;
+        option.textContent = service.name;
+        if (service.isNFZ) {
+          option.dataset.nfz = true;
         }
-    });
+        serviceSelect.appendChild(option);
+      });
+    } catch (error) {
+      serviceSelect.innerHTML = '<option value="">Błąd serwera</option>';
+    }
+  }
 
-    function renderResults(clinics) {
-        resultsContainer.innerHTML = '';
+  loadCities();
+  loadServices();
+
+  const searchForm = document.getElementById("search-form");
+  const resultsContainer = document.getElementById("results-container");
+
+  if (searchForm) {
+    searchForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const cityId = document.getElementById("city-select").value;
+      const serviceId = document.getElementById("service-select").value;
+      const date = dateInput.value;
+
+      const visitTypeRadio = document.querySelector(
+        'input[name="visitType"]:checked',
+      );
+      const isNfz =
+        visitTypeRadio && visitTypeRadio.value === "NFZ" ? "true" : "false";
+
+      resultsContainer.innerHTML =
+        '<div style="grid-column: 1 / -1; text-align: center;"><h3>Szukam wolnych terminów...</h3></div>';
+
+      try {
+        const url = `/api/SearchApi/slots?cityId=${cityId}&serviceId=${serviceId}&date=${date}&isNfz=${isNfz}`;
+        const response = await fetch(url);
+
+        if (!response.ok) throw new Error("Błąd serwera podczas wyszukiwania");
+
+        const clinics = await response.json();
+        resultsContainer.innerHTML = "";
 
         if (clinics.length === 0) {
-            resultsContainer.innerHTML = '<p>Brak wolnych terminów w wybranym dniu.</p>';
-            return;
+          resultsContainer.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; background: white; padding: 2rem; border-radius: 12px; box-shadow: var(--card-shadow);">
+              <h3 style="color: var(--brand-bg); margin-bottom: 1rem;">Brak wolnych terminów na ten dzień 😔</h3>
+              <p>Spróbuj zmienić datę lub kryteria wyszukiwania.</p>
+              <div style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 1rem;">
+                <button type="button" id="prev-day-btn" class="btn-primary" style="background-color: #64748b;">&larr; Wczoraj</button>
+                <button type="button" id="next-day-btn" class="btn-primary">Jutro &rarr;</button>
+              </div>
+            </div>
+          `;
+          setupDateButtons(dateInput);
+          return;
         }
 
-        clinics.forEach(clinic => {
-            const card = document.createElement('div');
-            card.classList.add('clinic-card');
+        clinics.forEach((clinic) => {
+          const card = document.createElement("div");
+          card.className = "clinic-card";
+          const slotsHtml = clinic.availableSlots
+            .map(
+              (slot) =>
+                `<button class="slot-btn" data-slot-id="${slot.slotId}">${slot.time}</button>`,
+            )
+            .join("");
 
-            let htmlContent = `
-                <h3>${clinic.clinicName}</h3>
-                <p><strong>Lekarz:</strong> ${clinic.doctor}</p>
-                <div class="slots-container" style="margin-top: 1rem;">
-                    <h4>Dostępne godziny:</h4>
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
-            `;
-
-            clinic.slots.forEach(slot => {
-                htmlContent += `<button class="slot-btn" data-time="${slot}">${slot}</button>`;
-            });
-
-            htmlContent += `</div></div>`;
-            card.innerHTML = htmlContent;
-
-            resultsContainer.appendChild(card);
+          card.innerHTML = `
+            <h3 style="color: var(--brand-bg); margin-bottom: 0.5rem;">${clinic.clinicName}</h3>
+            <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 1.5rem;">
+              <strong>Lekarz:</strong> ${clinic.doctorName}
+            </p>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              ${slotsHtml}
+            </div>
+          `;
+          resultsContainer.appendChild(card);
         });
+      } catch (error) {
+        console.error("Błąd wyszukiwania:", error);
+        resultsContainer.innerHTML =
+          '<div style="grid-column: 1 / -1; text-align: center; color: #e11d48;"><h3>Wystąpił błąd komunikacji z serwerem.</h3></div>';
+      }
+    });
+  }
 
-        attachSlotListeners();
-    }
+  function setupDateButtons(dateInput) {
+    const prevBtn = document.getElementById("prev-day-btn");
+    const nextBtn = document.getElementById("next-day-btn");
 
-    function attachSlotListeners() {
-        const slotButtons = document.querySelectorAll('.slot-btn');
-        slotButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const time = e.target.getAttribute('data-time');
-                alert(`Wybrano godzinę: ${time}. Nastąpi przekierowanie do logowania/potwierdzenia.`);
-            });
-        });
+    if (prevBtn) {
+      prevBtn.addEventListener("click", () =>
+        changeDateAndSubmit(-1, dateInput),
+      );
     }
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () =>
+        changeDateAndSubmit(1, dateInput),
+      );
+    }
+  }
+
+  function changeDateAndSubmit(daysToAdd, dateInput) {
+    const currentDate = new Date(dateInput.value);
+    currentDate.setDate(currentDate.getDate() + daysToAdd);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (currentDate < today) return;
+
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+
+    dateInput.value = `${year}-${month}-${day}`;
+    searchForm.dispatchEvent(new Event("submit"));
+  }
 });

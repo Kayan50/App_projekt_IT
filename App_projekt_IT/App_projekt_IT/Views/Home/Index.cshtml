@@ -6,7 +6,7 @@
     <h1>Znajdź lekarza i umów wizytę</h1>
     <form id="search-form" class="search-form">
 
-        <select id="service-type" required>
+        <select id="service-select" required>
             <option value="" disabled selected>Wybierz usługę</option>
             <option value="Rezonans magnetyczny">Rezonans magnetyczny</option>
             <option value="Tomografia komputerowa">Tomografia komputerowa</option>
@@ -15,7 +15,7 @@
             <option value="Konsultacja kardiologiczna">Konsultacja kardiologiczna</option>
         </select>
 
-        <select id="city" required>
+        <select id="city_select" required>
             <option value="" disabled selected>Miasto</option>
             <option value="Kraków">Kraków</option>
             <option value="Warszawa">Warszawa</option>
@@ -36,6 +36,7 @@
 </section>
 
 <section id="results" class="results-section">
-    <div id="results-container" class="grid-container">
+    <div id="results-container" class="grid-container" style="margin-top: 3rem;">
+        <!-- Wyniki wyszukiwania będą tutaj dodawane dynamicznie -->
     </div>
 </section>
