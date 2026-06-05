@@ -46,60 +46,51 @@ public class RegisterModel : PageModel
         _emailSender = emailSender;
     }
 
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     [BindProperty]
     public InputModel Input { get; set; } = default!;
 
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     public string? ReturnUrl { get; set; }
 
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     public IList<AuthenticationScheme>? ExternalLogins { get; set; }
 
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     public class InputModel
     {
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Imiê jest wymagane.")]
+        [Display(Name = "Imiê")]
+        public string FirstName { get; set; } = default!;
+
+        [Required(ErrorMessage = "Nazwisko jest wymagane.")]
+        [Display(Name = "Nazwisko")]
+        public string LastName { get; set; } = default!;
+
+        // DODANE: PESEL z tward¹ walidacj¹ 11 znaków
+        [Required(ErrorMessage = "PESEL jest wymagany.")]
+        [StringLength(11, MinimumLength = 11, ErrorMessage = "PESEL musi sk³adaæ siê z dok³adnie 11 cyfr.")]
+        [Display(Name = "PESEL")]
+        public string Pesel { get; set; } = default!;
+
+        // DODANE: Data urodzenia
+        [Required(ErrorMessage = "Data urodzenia jest wymagana.")]
+        [DataType(DataType.Date, ErrorMessage = "WprowadŸ prawid³ow¹ datê.")]
+        [Display(Name = "Data urodzenia")]
+        public DateTime DateOfBirth { get; set; }
+
+        [Required(ErrorMessage = "Email jest wymagany.")]
+        [EmailAddress(ErrorMessage = "Nieprawid³owy format adresu email.")]
         [Display(Name = "Email")]
         public string Email { get; set; } = default!;
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessage = "Has³o jest wymagane.")]
+        [StringLength(100, ErrorMessage = "{0} musi mieæ przynajmniej {2} i maksymalnie {1} znaków d³ugoœci.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Has³o")]
         public string Password { get; set; } = default!;
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "PotwierdŸ has³o")]
+        [Compare("Password", ErrorMessage = "Has³a nie s¹ identyczne.")]
         public string? ConfirmPassword { get; set; }
     }
-
 
     public async Task OnGetAsync(string? returnUrl = null)
     {
@@ -111,12 +102,20 @@ public class RegisterModel : PageModel
     {
         returnUrl ??= Url.Content("~/");
         ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
         if (ModelState.IsValid)
         {
             var user = CreateUser();
 
             await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
             await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
+            
+            user.FirstName = Input.FirstName;
+            user.LastName = Input.LastName;
+            user.PESEL = Input.Pesel;
+            user.DateOfBirth = Input.DateOfBirth;
+
             var result = await _userManager.CreateAsync(user, Input.Password);
 
             if (result.Succeeded)

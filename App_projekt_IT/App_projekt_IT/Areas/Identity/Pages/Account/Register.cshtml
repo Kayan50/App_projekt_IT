@@ -10,49 +10,62 @@
 
         <form class="auth-form" method="post">
 
+            <div asp-validation-summary="ModelOnly" class="text-danger" style="margin-bottom: 15px; color: #d9534f; font-weight: bold;"></div>
+
             <div class="form-row">
                 <div class="form-group">
-                    <label>Imię</label>
-                    <input type="text" name="Input.FirstName" required />
+                    <label asp-for="Input.FirstName">Imię</label>
+                    <input asp-for="Input.FirstName" required />
+                    <span asp-validation-for="Input.FirstName" style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
                 </div>
                 <div class="form-group">
-                    <label>Nazwisko</label>
-                    <input type="text" name="Input.LastName" required />
+                    <label asp-for="Input.LastName">Nazwisko</label>
+                    <input asp-for="Input.LastName" required />
+                    <span asp-validation-for="Input.LastName" style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>PESEL</label>
-                    <input type="text" name="Input.Pesel" required pattern="\d{11}" title="PESEL musi mieć 11 cyfr" />
+                    <label asp-for="Input.Pesel">PESEL</label>
+                    <input asp-for="Input.Pesel" required pattern="\d{11}" title="PESEL musi mieć 11 cyfr" />
+                    <span asp-validation-for="Input.Pesel" style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
                 </div>
                 <div class="form-group">
-                    <label>Data urodzenia</label>
-                    <input type="date" name="Input.DateOfBirth" required />
+                    <label asp-for="Input.DateOfBirth">Data urodzenia</label>
+                    <input asp-for="Input.DateOfBirth" type="date" required />
+                    <span asp-validation-for="Input.DateOfBirth" style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Adres Email</label>
-                <input type="email" name="Input.Email" required />
+                <label asp-for="Input.Email">Adres Email</label>
+                <input asp-for="Input.Email" type="email" required />
+                <span asp-validation-for="Input.Email" style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Hasło</label>
-                    <input type="password" name="Input.Password" required />
+                    <label asp-for="Input.Password">Hasło</label>
+                    <input asp-for="Input.Password" type="password" required />
+                    <span asp-validation-for="Input.Password" style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
                 </div>
                 <div class="form-group">
-                    <label>Potwierdź hasło</label>
-                    <input type="password" name="Input.ConfirmPassword" required />
+                    <label asp-for="Input.ConfirmPassword">Potwierdź hasło</label>
+                    <input asp-for="Input.ConfirmPassword" type="password" required />
+                    <span asp-validation-for="Input.ConfirmPassword" style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
                 </div>
             </div>
 
-            <button type="submit" class="btn-primary btn-block">Zarejestruj się</button>
+            <button type="submit" class="btn-primary btn-block" style="margin-top: 20px;">Zarejestruj się</button>
         </form>
 
-        <div class="auth-links-bottom">
+        <div class="auth-links-bottom" style="margin-top: 15px; text-align: center;">
             <p>Masz już konto? <a href="/Identity/Account/Login">Zaloguj się</a></p>
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
