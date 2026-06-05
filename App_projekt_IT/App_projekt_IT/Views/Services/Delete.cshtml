@@ -1,14 +1,14 @@
 @model App_projekt_IT.Models.Service
 
 @{
-    ViewData["Title"] = "Usu� Us�ug�";
+    ViewData["Title"] = "Usuń Usługę";
 }
 
-<h2>Usu� Us�ug�</h2>
-<h4 class="warning-text">Czy na pewno chcesz usun�� t� us�ug�? Operacja jest nieodwracalna.</h4>
+<h2>Usuń Usługę</h2>
+<h4 class="warning-text">Czy na pewno chcesz usunąć tę usługę? Operacja jest nieodwracalna.</h4>
 
 <div class="clinic-card">
-    <dl >
+    <dl>
         <dt>@Html.DisplayNameFor(model => model.Name)</dt>
         <dd>@Html.DisplayFor(model => model.Name)</dd>
 
@@ -20,7 +20,7 @@
 <div class="action-links">
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <button type="submit" class="btn-primary">Usu� bezpowrotnie</button>
-        <a asp-action="Index">Powr�t do listy</a>
+        <button type="submit" class="btn-primary">Usuń bezpowrotnie</button>
+        <a asp-action="Index">Powrót do listy</a>
     </form>
 </div>

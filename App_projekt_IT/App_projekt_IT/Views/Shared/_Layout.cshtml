@@ -1,18 +1,20 @@
 ﻿<!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"] - Klinika-Med</title>
+    <title>@ViewData["Title"] - Kliniki-Med</title>
 
     <link rel="stylesheet" href="~/css/styles.css">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <header class="main-header">
-        <a asp-area="" asp-controller="Home" asp-action="Index" class="logo">Klinika-Med</a>
-        
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="logo">Kliniki-Med</a>
+
         <nav class="custom-nav-container">
             @if (User.IsInRole("Admin"))
             {
@@ -34,4 +36,5 @@
     <script src="~/js/app.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>

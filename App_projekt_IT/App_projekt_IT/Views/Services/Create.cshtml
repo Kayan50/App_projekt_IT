@@ -1,35 +1,35 @@
 @model App_projekt_IT.Models.Service
 
 @{
-    ViewData["Title"] = "Dodaj Us�ug�";
+    ViewData["Title"] = "Dodaj Usługę";
 }
 
-<h2>Dodaj now� us�ug�</h2>
+<h2>Dodaj nową usługę</h2>
 
 <div class="clinic-card">
     <form asp-action="Create" method="post">
         <div asp-validation-summary="All" class="text-danger"></div>
 
         <div class="form-group">
-            <label asp-for="Name"></label>
+            <label asp-for="Name">Nazwa</label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
-        <div class="form-group">
-            <label asp-for="IsNFZ"></label>
+        <div class="checkbox-group">
+            <label asp-for="IsNFZ">Dostępna przez NFZ</label>
             <input asp-for="IsNFZ" type="checkbox" />
             <span asp-validation-for="IsNFZ" class="text-danger"></span>
         </div>
 
         <div class="action-links">
-            <button type="submit" class="btn-primary">Utw�rz us�ug�</button>
+            <button type="submit" class="btn-primary">Utwórz usługę</button>
         </div>
     </form>
 </div>
 
 <div class="action-links">
-    <a asp-action="Index">Powr�t do listy</a>
+    <a asp-action="Index">Powrót do listy</a>
 </div>
 
 @section Scripts {
