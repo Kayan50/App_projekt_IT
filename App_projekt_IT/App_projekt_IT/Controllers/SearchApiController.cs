@@ -49,33 +49,50 @@ namespace App_projekt_IT.Controllers
             return Ok(services);
         }
 
-        // GET: api/SearchApi/slots?clinicId=1&serviceId=2&date=2026-06-15
+        // GET: 
         [HttpGet("slots")]
-        public async Task<IActionResult> GetAvailableSlots(int clinicId, int serviceId, DateTime date)
+        public async Task<IActionResult> GetAvailableSlots(int cityId, int serviceId, DateTime date, bool isNfz)
         {
-            // Filtrowanie na poziomie bazy danych 
+            
             var availableSlots = await _context.AppointmentSlots
-                .Include(a => a.Doctor) // Dołączamy tabelę Lekarza 
+                .Include(a => a.Doctor)
+                    .ThenInclude(d => d.Clinic)
+                .Include(a => a.Service) 
                 .Where(a =>
+                    a.Doctor.Clinic.CityId == cityId && 
                     a.ServiceId == serviceId &&
-                    a.Doctor.ClinicId == clinicId && 
-                    a.StartTime.Date == date.Date && 
-                    a.IsBooked == false) 
-                .OrderBy(a => a.StartTime) 
-                .Select(a => new
-                {
-                    SlotId = a.Id,
-                    Time = a.StartTime.ToString("HH:mm"), 
-                    DoctorName = $"{a.Doctor.FirstName} {a.Doctor.LastName}"
-                })
+                    a.Service.IsNFZ == isNfz && 
+                    a.StartTime.Date == date.Date &&
+                    a.IsBooked == false)
+                .OrderBy(a => a.StartTime)
                 .ToListAsync();
 
             if (!availableSlots.Any())
             {
-                return NotFound(new { message = "Brak wolnych terminów na wybrany dzień." }); 
+                
+                return Ok(new List<object>());
             }
 
-            return Ok(availableSlots); 
+            var groupedResults = availableSlots
+                .GroupBy(a => new
+                {
+                    ClinicName = a.Doctor.Clinic.Name, 
+                    DoctorFirstName = a.Doctor.FirstName,
+                    DoctorLastName = a.Doctor.LastName
+                })
+                .Select(g => new
+                {
+                    clinicName = g.Key.ClinicName,
+                    doctorName = $"Dr {g.Key.DoctorFirstName} {g.Key.DoctorLastName}",
+                    availableSlots = g.Select(s => new
+                    {
+                        slotId = s.Id,
+                        time = s.StartTime.ToString("HH:mm")
+                    }).ToList()
+                })
+                .ToList();
+
+            return Ok(groupedResults); 
         }
     }
 }

@@ -22,20 +22,15 @@ namespace App_projekt_IT.Controllers
             return View(await _context.Services.ToListAsync());
         }
 
-        // GET: SERVICES/Details/5
+        // GET: SERVICES/Details
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var service = await _context.Services
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (service == null)
-            {
-                return NotFound();
-            }
+
+            if (service == null) return NotFound();
 
             return View(service);
         }
@@ -47,11 +42,10 @@ namespace App_projekt_IT.Controllers
         }
 
         // POST: SERVICES/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,IsNFZ,Doctors")] Service service)
+        
+        public async Task<IActionResult> Create([Bind("Id,Name,IsNFZ")] Service service)
         {
             if (ModelState.IsValid)
             {
@@ -62,33 +56,24 @@ namespace App_projekt_IT.Controllers
             return View(service);
         }
 
-        // GET: SERVICES/Edit/5
+        // GET: SERVICES/Edit
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var service = await _context.Services.FindAsync(id);
-            if (service == null)
-            {
-                return NotFound();
-            }
+            if (service == null) return NotFound();
+
             return View(service);
         }
 
-        // POST: SERVICES/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: SERVICES/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,IsNFZ,Doctors")] Service service)
+        
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,IsNFZ")] Service service)
         {
-            if (id != service.Id)
-            {
-                return NotFound();
-            }
+            if (id != service.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -99,39 +84,28 @@ namespace App_projekt_IT.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ServiceExists(service.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!ServiceExists(service.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(service);
         }
 
-        // GET: SERVICES/Delete/5
+        // GET: SERVICES/Delete
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var service = await _context.Services
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (service == null)
-            {
-                return NotFound();
-            }
+
+            if (service == null) return NotFound();
 
             return View(service);
         }
 
-        // POST: SERVICES/Delete/5
+        // POST: SERVICES/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
@@ -152,4 +126,3 @@ namespace App_projekt_IT.Controllers
         }
     }
 }
-

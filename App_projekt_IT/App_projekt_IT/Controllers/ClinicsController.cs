@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering; 
 using Microsoft.EntityFrameworkCore;
 using App_projekt_IT.Models;
 using App_projekt_IT.Data;
@@ -19,10 +20,11 @@ namespace App_projekt_IT.Controllers
         // GET: CLINICS
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Clinics.ToListAsync());
+            var applicationDbContext = _context.Clinics.Include(c => c.City);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: CLINICS/Details/5
+        // GET: CLINICS
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -31,7 +33,9 @@ namespace App_projekt_IT.Controllers
             }
 
             var clinic = await _context.Clinics
+                .Include(c => c.City) 
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (clinic == null)
             {
                 return NotFound();
@@ -43,15 +47,16 @@ namespace App_projekt_IT.Controllers
         // GET: CLINICS/Create
         public IActionResult Create()
         {
+            
+            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
             return View();
         }
 
         // POST: CLINICS/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Phone,Email,Address,PostalCode,CityId,City,Doctors")] Clinic clinic)
+        
+        public async Task<IActionResult> Create([Bind("Id,Name,Phone,Email,Address,PostalCode,CityId")] Clinic clinic)
         {
             if (ModelState.IsValid)
             {
@@ -59,10 +64,13 @@ namespace App_projekt_IT.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            
+            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", clinic.CityId);
             return View(clinic);
         }
 
-        // GET: CLINICS/Edit/5
+        // GET: CLINICS/Edit
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -75,15 +83,17 @@ namespace App_projekt_IT.Controllers
             {
                 return NotFound();
             }
+
+            
+            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", clinic.CityId);
             return View(clinic);
         }
 
-        // POST: CLINICS/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: CLINICS/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,Phone,Email,Address,PostalCode,CityId,City,Doctors")] Clinic clinic)
+     
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,Phone,Email,Address,PostalCode,CityId")] Clinic clinic)
         {
             if (id != clinic.Id)
             {
@@ -110,10 +120,12 @@ namespace App_projekt_IT.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", clinic.CityId);
             return View(clinic);
         }
 
-        // GET: CLINICS/Delete/5
+        // GET: CLINICS/Delete
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -122,7 +134,9 @@ namespace App_projekt_IT.Controllers
             }
 
             var clinic = await _context.Clinics
+                .Include(c => c.City) 
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (clinic == null)
             {
                 return NotFound();
@@ -131,7 +145,7 @@ namespace App_projekt_IT.Controllers
             return View(clinic);
         }
 
-        // POST: CLINICS/Delete/5
+        // POST: CLINICS/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
