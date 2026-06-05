@@ -4,44 +4,42 @@
     ViewData["Title"] = "Lekarze";
 }
 
-<h2>Zarz�dzaj Lekarzami</h2>
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>Zarządzaj Lekarzami</h1>
+        <div style="display: flex; gap: 1rem;">
+            <a asp-action="Create" class="btn-create-new">Dodaj nowego lekarza</a>
+            <a asp-action="GenerateSchedule" class="btn-create-new"
+               style="background-color: #64748b; box-shadow: 0 4px 6px -1px rgba(100, 116, 139, 0.3);">Generuj
+                Harmonogram</a>
+            </div>
+        </div>
 
-<div class="action-links">
-    <a asp-action="Create" class="btn-primary">Dodaj nowego lekarza</a>
-    <a asp-action="GenerateSchedule" class="btn-primary">Generuj Harmonogram</a>
-</div>
-
-<div class="clinic-card">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.FirstName)</th>
-                <th>@Html.DisplayNameFor(model => model.LastName)</th>
-                <th>@Html.DisplayNameFor(model => model.Title)</th>
-
-                <th>Klinika</th>
-
-                <th>Akcje</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+        <table class="custom-table">
+            <thead>
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.LastName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Title)</td>
-
-                    <td>@Html.DisplayFor(modelItem => item.Clinic.Name)</td>
-
-                    <td class="action-links">
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edytuj</a>
-                        <a asp-action="Details" asp-route-id="@item.Id">Szczeg�y</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="warning-text">Usu�</a>
-                        
-                    </td>
+                    <th>Imię</th>
+                    <th>Nazwisko</th>
+                    <th>Tytuł</th>
+                    <th>Klinika</th>
+                    <th>Akcje</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.LastName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Clinic.Name)</td>
+                        <td class="action-links">
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edytuj</a>
+                            <a asp-action="Details" asp-route-id="@item.Id">Szczegóły</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id">Usuń</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>

@@ -1,27 +1,35 @@
 @page
 @model PersonalDataModel
 @{
-    ViewData["Title"] = "Personal Data";
+    ViewData["Title"] = "Dane osobowe";
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
-<h3>@ViewData["Title"]</h3>
+<h2>@ViewData["Title"]</h2>
 
-<div class="row">
-    <div class="col-md-6">
-        <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
-        <p>
-            <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-        </p>
+<div style="margin-top: 1.5rem;">
+    <p style="color: #475569; margin-bottom: 1rem; line-height: 1.6;">
+        Twoje konto zawiera dane osobowe, które nam przekazałeś. Ta strona pozwala na pobranie kopii tych danych w
+        formacie JSON lub ich całkowite usunięcie z naszego systemu.
+    </p>
+    <p style="color: #e11d48; font-weight: 600; margin-bottom: 2rem;">
+        Uwaga: Usunięcie tych danych trwale usunie Twoje konto i zablokuje możliwość logowania. Tej operacji nie można
+        cofnąć.
+    </p>
+
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
         <form id="download-data" asp-page="DownloadPersonalData" method="post">
-            <button class="btn btn-primary" type="submit">Download</button>
-        </form>
-        <p>
-            <a id="delete" asp-page="DeletePersonalData" class="btn btn-danger">Delete</a>
-        </p>
-    </div>
-</div>
+            <button class="btn-primary" type="submit"
+                    style="background-color: #64748b; box-shadow: 0 4px 6px -1px rgba(100, 116, 139, 0.3);">Pobierz moje
+                dane</button>
+            </form>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+            <a id="delete" asp-page="DeletePersonalData" class="btn-primary"
+               style="background-color: #e11d48; box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.3); text-decoration: none; display: inline-flex; align-items: center;">Usuń
+                konto</a>
+            </div>
+        </div>
+
+        @section Scripts {
+            <partial name="_ValidationScriptsPartial" />
+        }

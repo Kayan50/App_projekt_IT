@@ -1,10 +1,10 @@
 ﻿:root {
-  --brand-bg: #0f172a; /* Bardzo głęboki, nowoczesny granat (Slate) */
+  --brand-bg: #0f172a;
   --brand-bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-  --brand-btn: #f43f5e; /* Świeży, żywy róż (Rose) */
-  --brand-hover: #be123c; /* Ciemniejszy róż po najechaniu */
-  --bg-light: #f8fafc; /* Bardzo czysty, chłodny odcień bieli na tło strony */
-  --text-dark: #1e293b; /* Złamana czerń - dużo przyjemniejsza dla oczu do czytania */
+  --brand-btn: #f43f5e;
+  --brand-hover: #be123c;
+  --bg-light: #f8fafc;
+  --text-dark: #1e293b;
   --card-shadow:
     0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
 }
@@ -16,11 +16,10 @@
 }
 
 body {
-  font-family:
-    "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Dodany Inter dla nowoczesności */
+  font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--bg-light);
   color: var(--text-dark);
-  -webkit-font-smoothing: antialiased; /* Wygładzanie czcionek */
+  -webkit-font-smoothing: antialiased;
 }
 
 /* --------------------------------------
@@ -33,7 +32,7 @@ body {
   gap: 3rem;
   padding: 1rem 2rem;
   background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px); /* Efekt rozmytego szkła pod menu */
+  backdrop-filter: blur(10px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
@@ -42,7 +41,7 @@ body {
 
 .logo {
   font-size: 1.5rem;
-  font-weight: 800; /* Grubsze logo */
+  font-weight: 800;
   color: var(--brand-bg);
   text-decoration: none;
   letter-spacing: -0.5px;
@@ -105,14 +104,14 @@ body {
   background-color: var(--brand-bg);
   color: white !important;
   padding: 0.6rem 1.4rem;
-  border-radius: 8px; /* Bardziej zaokrąglone przyciski */
+  border-radius: 8px;
   font-weight: 600;
   transition: all 0.2s ease;
 }
 
 .nav-register:hover {
   background-color: var(--brand-btn);
-  transform: translateY(-1px); /* Delikatne uniesienie */
+  transform: translateY(-1px);
 }
 
 .nav-register i {
@@ -245,8 +244,8 @@ body {
 .clinic-card {
   background: white;
   padding: 2rem;
-  border-radius: 12px; /* Większe zaokrąglenie dla kart */
-  border: 1px solid #e2e8f0; /* Bardzo subtelna ramka */
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
   box-shadow: var(--card-shadow);
   transition:
     transform 0.3s ease,
@@ -254,7 +253,6 @@ body {
 }
 
 .clinic-card:hover {
-  transform: translateY(-5px); /* Karta "unosi się" po najechaniu */
   box-shadow:
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -291,7 +289,7 @@ body {
 .auth-card {
   background-color: white;
   padding: 3rem;
-  border-radius: 16px; /* Nowoczesne, duże zaokrąglenie */
+  border-radius: 16px;
   box-shadow: var(--card-shadow);
   border: 1px solid #e2e8f0;
   width: 100%;
@@ -373,6 +371,190 @@ body {
   width: 100%;
   margin-top: 1rem;
   padding: 1.1rem;
+}
+
+/* --------------------------------------
+   TABELE (Dla Panelu Administratora)
+--------------------------------------- */
+.admin-container {
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.admin-header h1 {
+  color: var(--brand-bg);
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: -0.5px;
+}
+
+.btn-create-new {
+  background-color: var(--brand-btn);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(244, 63, 94, 0.3);
+  display: inline-block;
+}
+
+.btn-create-new:hover {
+  background-color: var(--brand-hover);
+  transform: translateY(-2px);
+  color: white;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  border: 1px solid #e2e8f0;
+}
+
+.custom-table thead th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  text-align: left;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.custom-table tbody td {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: var(--text-dark);
+  vertical-align: middle;
+}
+
+.custom-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f1f5f9;
+}
+
+.action-links a {
+  color: var(--brand-btn);
+  font-weight: 500;
+  text-decoration: none;
+  margin-right: 0.8rem;
+  transition: color 0.2s;
+  font-size: 0.95rem;
+}
+
+.action-links a:hover {
+  color: var(--brand-hover);
+  text-decoration: underline;
+}
+
+/* --------------------------------------
+   PROFILE PAGE (Zarządzanie kontem)
+--------------------------------------- */
+.profile-container {
+  display: flex;
+  gap: 3rem;
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.profile-sidebar {
+  width: 250px;
+  flex-shrink: 0;
+}
+
+.profile-sidebar h3 {
+  color: var(--brand-bg);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.profile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.profile-nav a {
+  text-decoration: none;
+  color: #475569;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.profile-nav a:hover {
+  background-color: #f1f5f9;
+  color: var(--brand-bg);
+}
+
+.profile-nav a.active {
+  background-color: #fef1f2;
+  color: var(--brand-btn);
+  font-weight: 600;
+}
+
+.profile-content {
+  flex-grow: 1;
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid #e2e8f0;
+}
+
+.profile-content h2 {
+  color: var(--brand-bg);
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* --------------------------------------
+   WYMUSZENIE WIDOCZNOŚCI KURSORA
+--------------------------------------- */
+.form-group input,
+.auth-form input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="date"] {
+  cursor: text !important;
+  caret-color: var(--brand-bg, #0f172a) !important;
+}
+
+.form-group input:disabled,
+.auth-form input:disabled {
+  cursor: not-allowed !important;
+  caret-color: transparent !important;
 }
 
 /* --------------------------------------

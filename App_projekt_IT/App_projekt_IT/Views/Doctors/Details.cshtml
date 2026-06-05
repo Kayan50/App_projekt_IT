@@ -1,10 +1,10 @@
 @model App_projekt_IT.Models.Doctor
 
 @{
-    ViewData["Title"] = "Szczegó³y Lekarza";
+    ViewData["Title"] = "SzczegÃ³Å‚y Lekarza";
 }
 
-<h2>Szczegó³y Lekarza</h2>
+<h2>SzczegÃ³Å‚y Lekarza</h2>
 
 <div class="clinic-card">
     <dl>
@@ -23,6 +23,7 @@
 </div>
 
 <div class="action-links">
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn-primary" style="display: inline-block; text-decoration: none; padding: 8px 12px;">Edytuj</a>
-    <a asp-action="Index">Powrót do listy</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn-primary"
+       style="display: inline-block; text-decoration: none; padding: 8px 12px;">Edytuj</a>
+    <a asp-action="Index">PowrÃ³t do listy</a>
 </div>

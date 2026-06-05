@@ -1,11 +1,11 @@
 @model App_projekt_IT.Models.Doctor
 
 @{
-    ViewData["Title"] = "Usuñ Lekarza";
+    ViewData["Title"] = "UsuÅ„ Lekarza";
 }
 
-<h2>Usuñ Lekarza</h2>
-<h4 class="warning-text">Czy na pewno chcesz usun¹æ tego lekarza? Operacja jest nieodwracalna.</h4>
+<h2>UsuÅ„ Lekarza</h2>
+<h4 class="warning-text">Czy na pewno chcesz usunÄ…Ä‡ tego lekarza? Operacja jest nieodwracalna.</h4>
 
 <div class="clinic-card">
     <dl>
@@ -26,7 +26,7 @@
 <div class="action-links">
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <button type="submit" class="btn-danger-custom">Usuñ bezpowrotnie</button>
-        <a asp-action="Index">Powrót do listy</a>
+        <button type="submit" class="btn-danger-custom">UsuÅ„ bezpowrotnie</button>
+        <a asp-action="Index">PowrÃ³t do listy</a>
     </form>
 </div>

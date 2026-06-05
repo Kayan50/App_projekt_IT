@@ -1,39 +1,40 @@
 @model IEnumerable<App_projekt_IT.Models.Service>
 
-@{
-    ViewData["Title"] = "Us³ugi";
-}
-
-<div>
-    <h2>Zarz¹dzaj Us³ugami</h2>
-    <div class="action-links">
-        <a asp-action="Create" class="btn-primary" >Dodaj now¹ us³ugê</a>
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>ZarzÄ…dzaj UsÅ‚ugami</h1>
+        <div style="display: flex; gap: 1rem;">
+            <a asp-action="Create" class="btn-create-new">Dodaj nowÄ… usÅ‚ugÄ™</a>
+        </div>
     </div>
-</div>
 
-<div class="clinic-card" >
-    <table class="table" >
+    <table class="custom-table">
         <thead>
             <tr>
-                <th>@Html.DisplayNameFor(model => model.Name)</th>
+                <th>Nazwa UsÅ‚ugi</th>
                 <th>Refundacja NFZ</th>
-                <th >Akcje</th>
+                <th>Akcje</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
                 <tr>
-                    <td >@Html.DisplayFor(modelItem => item.Name)</td>
-
-                    <td >
-                        @(item.IsNFZ ? "Tak" : "Nie")
+                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>
+                        @if (item.IsNFZ)
+                        {
+                            <span style="color: #10b981; font-weight: 500;">Tak</span>
+                        }
+                        else
+                        {
+                            <span style="color: #ef4444; font-weight: 500;">Nie</span>
+                        }
                     </td>
-
-                    <td class="action-links" >
-                        <a asp-action="Edit" asp-route-id="@item.Id" >Edytuj</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id" >Szczegó³y</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="warning-text">Usuñ</a>
+                    <td class="action-links">
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edytuj</a>
+                        <a asp-action="Details" asp-route-id="@item.Id">SzczegÃ³Å‚y</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">UsuÅ„</a>
                     </td>
                 </tr>
             }
