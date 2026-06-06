@@ -1,0 +1,30 @@
+﻿@model IEnumerable<App_projekt_IT.Models.Notification>
+
+<div class="page-header">
+    <h2>Twoje powiadomienia</h2>
+</div>
+
+<div class="notifications-container">
+    @if (!Model.Any())
+    {
+        <p class="text-muted">Nie masz jeszcze żadnych powiadomień.</p>
+    }
+    else
+    {
+        foreach (var notif in Model)
+        {
+            <div class="notification-card @(notif.IsRead ? "read" : "unread")">
+                <p>@notif.Message</p>
+                <small class="text-muted">@notif.CreatedAt.ToString("dd.MM.yyyy HH:mm")</small>
+
+                @if (notif.Type == "WymagaPotwierdzenia" && !notif.AppointmentSlot.IsConfirmed)
+                {
+                    <form asp-action="ConfirmAppointment" method="post" class="action-links">
+                        <input type="hidden" name="notificationId" value="@notif.Id" />
+                        <button type="submit" class="btn-primary btn-success">Potwierdź obecność</button>
+                    </form>
+                }
+            </div>
+        }
+    }
+</div>
