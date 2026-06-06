@@ -9,7 +9,10 @@
 }
 
 <section id="search" class="search-section">
-    <h1>Znajdź lekarza i umów wizytę</h1>
+    <h1>Znajdź terminy i umów wizytę!</h1>
+    <p>
+        Szybka rezerwacja do najlepszych specjalistów.
+    </p>
 
     <form id="search-form" class="search-form" asp-controller="Home" asp-action="Index" method="get">
 
@@ -29,7 +32,7 @@
             <label><input type="radio" name="payment" value="Prywatnie" checked="@isPrywatnie"> Prywatnie</label>
         </div>
 
-        <button type="submit" class="btn-primary">Szukaj</button>
+        <button type="submit" class="btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Szukaj</button>
     </form>
 </section>
 
@@ -88,68 +91,70 @@
         </div>
 
         <div class="action-buttons" style="margin-top: 0;">
-            <button type="button" onclick="confirmBooking()" class="btn-primary btn-success">Umów</button>
-            <button type="button" onclick="closeBookingModal()" class="btn-secondary">Anuluj</button>
+            <button type="button" onclick="confirmBooking()" class="btn-primary btn-success"><i
+                class="fa-solid fa-check"></i> Umów</button>
+                <button type="button" onclick="closeBookingModal()" class="btn-secondary"><i class="fa-solid fa-times"></i>
+                    Anuluj</button>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
-@section Scripts {
-    <script>
-        let currentSlotId = null;
+        @section Scripts {
+            <script>
+                let currentSlotId = null;
 
-        function openBookingModal(slotId, clinicName, date, time, serviceName) {
+                function openBookingModal(slotId, clinicName, date, time, serviceName) {
 
-            @if (!User.Identity.IsAuthenticated)
-                {
-                    <text>
-                            alert("Musisz być zalogowany, aby umówić wizytę.");
-                            window.location.href = '/Identity/Account/Login';
-                            return;
-                    </text>
-            }
+                    @if (!User?.Identity?.IsAuthenticated ?? false)
+                        {
+                            <text>
+                                    alert("Musisz być zalogowany, aby umówić wizytę.");
+                                    window.location.href = '/Identity/Account/Login';
+                                    return;
+                            </text>
+                    }
 
-                currentSlotId = slotId;
-            document.getElementById('modalClinicName').innerText = clinicName;
-            document.getElementById('modalServiceName').innerText = serviceName;
-            document.getElementById('modalDate').innerText = date;
-            document.getElementById('modalTime').innerText = time;
-            document.getElementById('bookingModal').classList.remove('hidden');
-        }
+                        currentSlotId = slotId;
+                    document.getElementById('modalClinicName').innerText = clinicName;
+                    document.getElementById('modalServiceName').innerText = serviceName;
+                    document.getElementById('modalDate').innerText = date;
+                    document.getElementById('modalTime').innerText = time;
+                    document.getElementById('bookingModal').classList.remove('hidden');
+                }
 
-        function closeBookingModal() {
-            document.getElementById('bookingModal').classList.add('hidden');
-            currentSlotId = null;
-        }
+                function closeBookingModal() {
+                    document.getElementById('bookingModal').classList.add('hidden');
+                    currentSlotId = null;
+                }
 
-        function confirmBooking() {
-            if (!currentSlotId) return;
+                function confirmBooking() {
+                    if (!currentSlotId) return;
 
             
-            fetch(`/api/BookingApi/${currentSlotId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
+                    fetch(`/api/BookingApi/${currentSlotId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => {
+                            return response.json().then(data => ({ status: response.status, body: data }));
+                        })
+                        .then(result => {
+                            closeBookingModal();
+                            if (result.status === 200) {
+                                alert(result.body.message);
+                                window.location.href = '/PatientPanel';
+                            } else {
+                                alert(result.body.message);
+                                window.location.reload();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Błąd:', error);
+                            alert('Wystąpił problem techniczny.');
+                            closeBookingModal();
+                        });
                 }
-            })
-                .then(response => {
-                    return response.json().then(data => ({ status: response.status, body: data }));
-                })
-                .then(result => {
-                    closeBookingModal();
-                    if (result.status === 200) {
-                        alert(result.body.message);
-                        window.location.href = '/PatientPanel';
-                    } else {
-                        alert(result.body.message);
-                        window.location.reload();
-                    }
-                })
-                .catch(error => {
-                    console.error('Błąd:', error);
-                    alert('Wystąpił problem techniczny.');
-                    closeBookingModal();
-                });
+            </script>
         }
-    </script>
-}
