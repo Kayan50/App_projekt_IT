@@ -25,7 +25,17 @@ namespace App_projekt_IT.Controllers
                 .Where(n => n.UserId == userId)
                 .OrderByDescending(n => n.CreatedAt)
                 .ToListAsync();
-
+            var unreadNotifications = notifications.Where(n => !n.IsRead).ToList();
+            ViewBag.JustReadIds = unreadNotifications.Select(n => n.Id).ToList();
+            if (unreadNotifications.Any())
+            {
+                foreach (var notif in unreadNotifications)
+                {
+                    notif.IsRead = true;
+                }
+                
+                await _context.SaveChangesAsync();
+            }
             return View(notifications);
         }
 

@@ -1,25 +1,45 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using System.Security.Claims
 @using App_projekt_IT.Models
+@using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject App_projekt_IT.Data.ApplicationDbContext _context
+@{
+    int unreadCount = 0;
+    if (User?.Identity?.IsAuthenticated == true)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        unreadCount = _context.Notifications.Count(n => n.UserId == userId && !n.IsRead);
+    }
+}
 
 <div class="auth-links">
-    @if (SignInManager.IsSignedIn(User))
+    @if (User != null && SignInManager.IsSignedIn(User))
     {
+        @if (!User.IsInRole("Admin"))
+        {
+            <a asp-controller="PatientPanel" asp-action="Index" class="nav-panel" title="Moje Wizyty"><i
+                class="fa-regular fa-calendar"></i> Panel</a>
 
-        <a asp-controller="PatientPanel" asp-action="Index" class="nav-panel" title="Moje Wizyty"><i
-            class="fa-regular fa-calendar"></i> Panel</a>
-  
-        <a class="nav-link" asp-controller="Notification" asp-action="Index">Powiadomienia</a>
-  
-        <a asp-area="Identity" asp-page="/Account/Manage/Index" class="nav-item-text" title="Ustawienia profilu"><i
+                <a class="nav-link" style="" asp-controller="Notification" asp-action="Index" title="Powiadomienia">
+                    <span class="icon-wrapper" style="position: relative; display: inline-flex; align-items: center;">
+                        <i class="fa-solid fa-bell"></i>
+                        @if (unreadCount > 0)
+                        {
+                            <span class="notification-badge">@unreadCount</span>
+                        }
+                    </span>
+                </a>
+            }
+            <a asp-area="Identity" asp-page="/Account/Manage/Index" class="nav-link" title="Ustawienia profilu"><i
                 class="fa-solid fa-gear"></i></a>
-  
-        <form asp-area="Identity" asp-page="/Account/Logout"
-              asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" style="display:inline;">
-            <button type="submit" class="nav-item-text">Wyloguj<i class="fa-solid fa-arrow-right-from-bracket"></i></button>
-        </form>
-    }
+
+                <form asp-area="Identity" asp-page="/Account/Logout"
+                      asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" style="display:inline;">
+                    <button type="submit" class="nav-item-text">Wyloguj<i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+                </form>
+            }
     else
             {
                 <a asp-area="Identity" asp-page="/Account/Login" class="nav-login">

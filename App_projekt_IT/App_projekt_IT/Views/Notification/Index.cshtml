@@ -7,17 +7,25 @@
 <div class="notifications-container">
     @if (!Model.Any())
     {
-        <p class="text-muted">Nie masz jeszcze żadnych powiadomień.</p>
+        <div class="empty-results-text"
+             style="text-align: center; padding: 4rem 2rem; background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: var(--card-shadow);">
+            Nie masz jeszcze żadnych powiadomień.
+        </div>
     }
     else
     {
         foreach (var notif in Model)
         {
-            <div class="notification-card @(notif.IsRead ? "read" : "unread")">
-                <p>@notif.Message</p>
+            var justReadIds = ViewBag.JustReadIds as List<int> ?? new List<int>();
+            bool isNew = !notif.IsRead || justReadIds.Contains(notif.Id);
+
+            <div class="notification-card @(isNew ? "unread" : "read")">
+                <p style="font-size: 1.05rem; font-weight: 500; color: var(--text-dark); margin-bottom: 0.5rem;">
+                    @notif.Message
+                </p>
                 <small class="text-muted">@notif.CreatedAt.ToString("dd.MM.yyyy HH:mm")</small>
 
-                @if (notif.Type == "WymagaPotwierdzenia" && !notif.AppointmentSlot.IsConfirmed)
+                @if (notif.Type == "WymagaPotwierdzenia" && notif.AppointmentSlot != null && !notif.AppointmentSlot.IsConfirmed)
                 {
                     <form asp-action="ConfirmAppointment" method="post" class="action-links">
                         <input type="hidden" name="notificationId" value="@notif.Id" />
