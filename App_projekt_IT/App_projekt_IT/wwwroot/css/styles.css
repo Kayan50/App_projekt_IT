@@ -52,6 +52,13 @@ body {
   margin-top: 4rem;
 }
 
+/* ---TYLKO NIE DLA STRONY GŁÓWNEJ--- */
+.page-spacing {
+  padding-top: 3.5rem;
+  padding-bottom: 4rem;
+}
+
+/* --- KONTEJNER STOPKI --- */
 .footer-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -383,6 +390,60 @@ body {
   background: var(--brand-bg);
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* --- OVERRIDE DLA SELECT2 (Dopasowanie do formularza) --- */
+.search-form .select2-container {
+  flex: 1;
+  min-width: 180px;
+}
+
+.select2-container--default .select2-selection--single {
+  height: auto !important;
+  padding: 1.2rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 1rem;
+  color: var(--text-dark);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+.select2-container--default
+  .select2-selection--single
+  .select2-selection__rendered {
+  line-height: normal;
+  padding-left: 0;
+  color: var(--text-dark);
+}
+
+.select2-container--default
+  .select2-selection--single
+  .select2-selection__arrow {
+  height: 100%;
+  right: 15px;
+}
+
+.select2-container--default.select2-container--open .select2-selection--single {
+  border-color: var(--brand-btn);
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.2);
+}
+
+/* --- OGRANICZENIE WYSOKOŚCI LISTY ROZWIJANEJ --- */
+.select2-results__options {
+  max-height: 250px !important;
+  overflow-y: auto;
+}
+
+.select2-results__option {
+  padding: 10px 15px;
+  font-size: 1rem;
+}
+
+.select2-container--default
+  .select2-results__option--highlighted.select2-results__option--selectable {
+  background-color: var(--brand-bg);
+  color: white;
 }
 
 /* --------------------------------------
@@ -838,10 +899,90 @@ dl.row:hover {
 
 .profile-content h2 {
   color: var(--brand-bg);
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   font-size: 1.8rem;
   font-weight: 700;
   letter-spacing: -0.5px;
+}
+
+.profile-content h4 {
+  color: var(--brand-bg);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* =========================================
+   POWIADOMIENIA (SKRZYNKA)
+========================================= */
+
+.notifi-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.notification-card {
+    background: white;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.notification-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+}
+
+.notification-card.unread {
+    background-color: #fef2f2;
+    border-left: 5px solid var(--brand-btn);
+}
+
+.notification-card.read {
+    opacity: 0.75;
+    border-left: 5px solid transparent;
+}
+
+.notification-card.read:hover {
+    opacity: 1;
+}
+
+/* --- CZERWONA KROPKA POWIADOMIEŃ --- */
+.nav-notification-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background-color: #ef4444;
+    color: white;
+    font-size: 0.70rem;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 50%;
+    border: 2px solid white;
+    line-height: 1;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+    
+    animation: badgePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes badgePop {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
 }
 
 /* --------------------------------------

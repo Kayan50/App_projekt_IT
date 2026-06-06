@@ -101,6 +101,12 @@
 
         @section Scripts {
             <script>
+                $(document).ready(function () {
+                    $('#city, #service-type').select2({
+                        width: '100%',
+                        placeholder: "Wybierz opcję"
+                    });
+                });
                 let currentSlotId = null;
 
                 function openBookingModal(slotId, clinicName, date, time, serviceName) {
