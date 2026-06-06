@@ -24,6 +24,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+
+builder.Services.AddHostedService<App_projekt_IT.Services.AppointmentReminderService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

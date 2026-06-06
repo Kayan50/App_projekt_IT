@@ -6,7 +6,9 @@
 <div class="auth-links">
     @if (SignInManager.IsSignedIn(User))
     {
+
         <a asp-controller="PatientPanel" asp-action="Index" class="nav-panel" title="Moje Wizyty">Panel</a>
+        <a class="nav-link" asp-controller="Notification" asp-action="Index">Powiadomienia</a>
         <a asp-area="Identity" asp-page="/Account/Manage/Index" class="nav-item-text" title="Ustawienia profilu">Ustawienia</a>
         <form asp-area="Identity" asp-page="/Account/Logout"
               asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" style="display:inline;">
