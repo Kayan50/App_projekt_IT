@@ -1,0 +1,20 @@
+﻿@model App_projekt_IT.Models.City
+
+@{
+    ViewData["Title"] = "Szczegóły Miasta";
+}
+
+<h2>Szczegóły Miasta</h2>
+
+<dl class="row">
+    <dt>Nazwa</dt>
+    <dd>@Html.DisplayFor(model => model.Name)</dd>
+
+    <dt>Województwo</dt>
+    <dd>@Html.DisplayFor(model => model.Voivodeship)</dd>
+</dl>
+
+<div class="action-buttons">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn-primary">Edytuj</a>
+    <a asp-action="Index" class="btn-secondary">Powrót do listy</a>
+</div>

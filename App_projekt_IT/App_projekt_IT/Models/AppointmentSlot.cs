@@ -5,6 +5,8 @@
         public int Id { get; set; }
         public DateTime StartTime { get; set; }
         public bool IsBooked { get; set; }
+        
+        public bool IsConfirmed { get; set; } = false;
 
         // Klucze obce
         public int DoctorId { get; set; }

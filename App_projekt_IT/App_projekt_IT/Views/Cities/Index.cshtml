@@ -1,0 +1,37 @@
+﻿@model IEnumerable<App_projekt_IT.Models.City>
+
+@{
+    ViewData["Title"] = "Miasta";
+}
+
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>Zarządzaj Miastami</h1>
+        <a asp-action="Create" class="btn-create-new">Dodaj nowe miasto</a>
+    </div>
+
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Województwo</th>
+                <th>Akcje</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Voivodeship)</td>
+                    <td class="action-links">
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edytuj</a>
+                        <a asp-action="Details" asp-route-id="@item.Id">Szczegóły</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Usuń</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,35 @@
+﻿@model App_projekt_IT.Models.City
+
+@{
+    ViewData["Title"] = "Dodaj Miasto";
+}
+
+<h2>Dodaj nowe miasto</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="clinic-card">
+
+        <div class="form-group">
+            <label asp-for="Name">Nazwa</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Voivodeship">Województwo</label>
+            <input asp-for="Voivodeship" class="form-control" />
+            <span asp-validation-for="Voivodeship" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit" class="btn-primary">Utwórz miasto</button>
+        <a asp-action="Index" class="btn-secondary">Powrót do listy</a>
+    </div>
+</form>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
