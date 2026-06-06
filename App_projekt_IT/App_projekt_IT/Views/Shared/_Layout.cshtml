@@ -16,15 +16,27 @@
         <a asp-area="" asp-controller="Home" asp-action="Index" class="logo">Kliniki-Med</a>
 
         <nav class="custom-nav-container">
-            @if (User.IsInRole("Admin"))
+            @{
+                // 1. Pobieramy nazwę aktualnego kontrolera (gdzie obecnie jesteśmy)
+                var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+
+                // 2. Lista kontrolerów, które uznajemy za "Panel Zarządzania"
+                string[] adminControllers = { "Clinics", "Doctors", "Services", "Cities" };
+                bool isManaging = adminControllers.Contains(currentController);
+            }
+
+            @if (User.IsInRole("Admin") && isManaging)
             {
                 <div class="admin-links">
-                    <a asp-area="" asp-controller="Clinics" asp-action="Index">Zarządzaj Klinikami</a>
-                    <a asp-area="" asp-controller="Doctors" asp-action="Index">Zarządzaj Lekarzami</a>
-                    <a asp-area="" asp-controller="Services" asp-action="Index">Zarządzaj Usługami</a>
-                    <a asp-area="" asp-controller="Cities" asp-action="Index">Zarządzaj Miastami</a>
+                    <a asp-area="" asp-controller="Clinics" asp-action="Index"
+                       class="@(currentController == "Clinics" ? "active" : "")">Zarządzaj Klinikami</a>
+                    <a asp-area="" asp-controller="Doctors" asp-action="Index"
+                       class="@(currentController == "Doctors" ? "active" : "")">Zarządzaj Lekarzami</a>
+                    <a asp-area="" asp-controller="Services" asp-action="Index"
+                       class="@(currentController == "Services" ? "active" : "")">Zarządzaj Usługami</a>
+                    <a asp-area="" asp-controller="Cities" asp-action="Index"
+                       class="@(currentController == "Cities" ? "active" : "")">Zarządzaj Miastami</a>
                 </div>
-
             }
 
             <partial name="_LoginPartial" />
@@ -32,7 +44,9 @@
     </header>
 
     @{
-        bool isHomePage = ViewData["Title"]?.ToString() == "Strona Główna";
+        // Pamiętaj, aby w pliku wyszukiwarki i nowej strony głównej ustawić odpowiedni Title!
+        bool isHomePage = ViewData["Title"]?.ToString() == "Strona Główna" || ViewData["Title"]?.ToString() ==
+   "Wyszukiwarka";
         string spacingClass = isHomePage ? "" : "page-spacing";
     }
 
@@ -40,7 +54,6 @@
         @RenderBody()
     </main>
 
-    
     <footer class="main-footer">
         <div class="footer-container">
             <div class="footer-links">

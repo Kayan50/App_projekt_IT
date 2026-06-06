@@ -1,166 +1,41 @@
-﻿@model IEnumerable<App_projekt_IT.Models.AppointmentSlot>
-
 @{
     ViewData["Title"] = "Strona Główna";
-
-    var paymentQuery = Context.Request.Query["payment"].ToString();
-    var isPrywatnie = paymentQuery == "Prywatnie";
-    var isNFZ = paymentQuery == "NFZ" || string.IsNullOrEmpty(paymentQuery);
+    // Zabezpieczenie na wypadek braku ról - rozpoznajemy admina po mailu lub roli
+    bool isAdmin = User.IsInRole("Admin") || User.Identity?.Name == "admin@kliniki.pl";
 }
 
-<section id="search" class="search-section">
-    <h1>Znajdź terminy i umów wizytę!</h1>
-    <p>
-        Szybka rezerwacja do najlepszych specjalistów.
+<div class="landing-page" style="text-align: center; padding: 6rem 2rem; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: 60vh;">
+    
+    <h1 style="color: var(--brand-bg); font-size: 3.5rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 1rem;">
+        Kliniki-Med
+    </h1>
+    <p style="font-size: 1.25rem; color: #475569; margin-bottom: 4rem;">
+        Twój nowoczesny system rezerwacji wizyt medycznych online.
     </p>
 
-    <form id="search-form" class="search-form" asp-controller="Home" asp-action="Index" method="get">
-
-        <select name="serviceId" id="service-type" asp-items="ViewBag.ServiceId" required>
-            <option value="">Wybierz usługę</option>
-        </select>
-
-        <select name="cityId" id="city" asp-items="ViewBag.CityId" required>
-            <option value="">Miasto</option>
-        </select>
-
-        <input type="date" name="appointmentDate" id="appointment-date"
-               value="@Context.Request.Query["appointmentDate"]" required>
-
-        <div class="radio-group">
-            <label><input type="radio" name="payment" value="NFZ" checked="@isNFZ"> NFZ</label>
-            <label><input type="radio" name="payment" value="Prywatnie" checked="@isPrywatnie"> Prywatnie</label>
-        </div>
-
-        <button type="submit" class="btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Szukaj</button>
-    </form>
-</section>
-
-<section id="results" class="results-section">
-    <div id="results-container" class="grid-container">
-
-        @if (!Model.Any() && Context.Request.Query.Count > 0)
-        {
-            <div class="empty-results">
-                Niestety, brak wolnych terminów dla wybranych kryteriów.
-            </div>
-        }
-        else if (Model.Any())
-        {
-            var groupedByClinic = Model.GroupBy(s => s.Doctor.Clinic);
-
-            foreach (var clinicGroup in groupedByClinic)
-            {
-                var clinic = clinicGroup.Key;
-                <div class="clinic-card">
-                    <h3 class="clinic-name">@clinic.Name</h3>
-                    <p class="text-muted">@clinic.Address, @clinic.City.Name</p>
-
-                    @foreach (var doctorGroup in clinicGroup.GroupBy(s => s.Doctor))
-                    {
-                        <div style="margin-bottom: 1.5rem;">
-                            <strong>@doctorGroup.Key.Title @doctorGroup.Key.FirstName @doctorGroup.Key.LastName</strong>
-                            <div class="time-slots">
-                                @foreach (var slot in doctorGroup)
-                                {
-                                    <button type="button" class="slot-btn"
-                                            onclick="openBookingModal(@slot.Id, '@clinic.Name', '@slot.StartTime.ToString("dd.MM.yyyy")', '@slot.StartTime.ToString("HH:mm")', '@slot.Service.Name')">
-                                        @slot.StartTime.ToString("HH:mm")
-                                    </button>
-                                }
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
-        }
-    </div>
-</section>
-
-<div id="bookingModal" class="modal-overlay hidden">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Podsumowanie rezerwacji</h3>
-        </div>
-
-        <div class="modal-body">
-            <p><strong class="modal-label">Klinika:</strong> <span id="modalClinicName"></span></p>
-            <p><strong class="modal-label">Usługa:</strong> <span id="modalServiceName"></span></p>
-            <p><strong class="modal-label">Data:</strong> <span id="modalDate"></span></p>
-            <p><strong class="modal-label">Godzina:</strong> <span id="modalTime"></span></p>
-        </div>
-
-        <div class="action-buttons" style="margin-top: 0;">
-            <button type="button" onclick="confirmBooking()" class="btn-primary btn-success"><i
-                class="fa-solid fa-check"></i> Umów</button>
-                <button type="button" onclick="closeBookingModal()" class="btn-secondary"><i class="fa-solid fa-times"></i>
-                    Anuluj</button>
-                </div>
-            </div>
-        </div>
-
-        @section Scripts {
-            <script>
-                $(document).ready(function () {
-                    $('#city, #service-type').select2({
-                        width: '100%',
-                        placeholder: "Wybierz opcję"
-                    });
-                });
-                let currentSlotId = null;
-
-                function openBookingModal(slotId, clinicName, date, time, serviceName) {
-
-                    @if (!User?.Identity?.IsAuthenticated ?? false)
-                        {
-                            <text>
-                                    alert("Musisz być zalogowany, aby umówić wizytę.");
-                                    window.location.href = '/Identity/Account/Login';
-                                    return;
-                            </text>
-                    }
-
-                        currentSlotId = slotId;
-                    document.getElementById('modalClinicName').innerText = clinicName;
-                    document.getElementById('modalServiceName').innerText = serviceName;
-                    document.getElementById('modalDate').innerText = date;
-                    document.getElementById('modalTime').innerText = time;
-                    document.getElementById('bookingModal').classList.remove('hidden');
-                }
-
-                function closeBookingModal() {
-                    document.getElementById('bookingModal').classList.add('hidden');
-                    currentSlotId = null;
-                }
-
-                function confirmBooking() {
-                    if (!currentSlotId) return;
-
+    @if (isAdmin)
+    {
+        <h3 style="color: var(--text-dark); margin-bottom: 1.5rem;">Panel Administratora</h3>
+        <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
             
-                    fetch(`/api/BookingApi/${currentSlotId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                        .then(response => {
-                            return response.json().then(data => ({ status: response.status, body: data }));
-                        })
-                        .then(result => {
-                            closeBookingModal();
-                            if (result.status === 200) {
-                                alert(result.body.message);
-                                window.location.href = '/PatientPanel';
-                            } else {
-                                alert(result.body.message);
-                                window.location.reload();
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Błąd:', error);
-                            alert('Wystąpił problem techniczny.');
-                            closeBookingModal();
-                        });
-                }
-            </script>
-        }
+            <a asp-controller="Home" asp-action="Search" class="btn-primary" style="padding: 1.5rem 3rem; font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; text-decoration: none; border-radius: 12px;">
+                <i class="fa-solid fa-magnifying-glass" style="font-size: 2.5rem;"></i>
+                Wyszukiwarka
+            </a>
+            
+            <a asp-controller="Clinics" asp-action="Index" class="btn-secondary" style="padding: 1.5rem 3rem; font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; text-decoration: none; border: 2px solid var(--brand-bg); color: var(--brand-bg); border-radius: 12px;">
+                <i class="fa-solid fa-gears" style="font-size: 2.5rem;"></i>
+                Zarządzaj systemem
+            </a>
+            
+        </div>
+    }
+    else
+    {
+        <div>
+            <a asp-controller="Home" asp-action="Search" class="btn-primary" style="padding: 1.2rem 3rem; font-size: 1.2rem; border-radius: 50px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.8rem; box-shadow: 0 10px 15px -3px rgba(244, 63, 94, 0.3);">
+                Znajdź wolny termin <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    }
+</div>
