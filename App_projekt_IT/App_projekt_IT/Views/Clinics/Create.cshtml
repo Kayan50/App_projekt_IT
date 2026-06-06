@@ -6,9 +6,9 @@
 
 <h2>Dodaj nową klinikę</h2>
 
-<div class="clinic-card">
-    <form asp-action="Create" method="post">
-        <div asp-validation-summary="All" class="text-danger"></div>
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="clinic-card">
 
         <div class="form-group">
             <label asp-for="Name">Nazwa</label>
@@ -45,14 +45,14 @@
             <select asp-for="City" class="form-control" asp-items="ViewBag.CityId"></select>
             <span asp-validation-for="CityId" class="text-danger"></span>
         </div>
+    </div>
 
-        <div class="action-links">
-            <button type="submit" class="btn-primary">Utwórz klinikę</button>
-            
-        </div>
-    </form>
-    <a asp-action="Index" class="btn-secondary">Powrót do listy</a>
-</div>
+    <div class="action-buttons">
+        <button type="submit" class="btn-primary">Utwórz klinikę</button>
+        <a asp-action="Index" class="btn-secondary">Powrót do listy</a>
+    </div>
+</form>
+
 
 
 

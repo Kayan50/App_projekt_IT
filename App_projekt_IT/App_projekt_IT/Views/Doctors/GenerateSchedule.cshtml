@@ -6,9 +6,9 @@
 
 <h2>Generuj Harmonogram Pracy</h2>
 
-<div class="clinic-card">
-    <form asp-action="GenerateSchedule" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger" style="margin-bottom: 15px;"></div>
+<form asp-action="GenerateSchedule" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger" style="margin-bottom: 15px;"></div>
+    <div class="clinic-card">
 
         <div class="form-group">
             <label asp-for="DoctorId"></label>
@@ -45,9 +45,11 @@
             <input asp-for="IntervalMinutes" type="number" class="form-control" value="30" />
             <span asp-validation-for="IntervalMinutes" class="text-danger"></span>
         </div>
+    </div>
 
-        <div class="action-links">
-            <button type="submit" class="btn-primary">Generuj wizyty</button>
-        </div>
-    </form>
-</div>
+    <div class="action-buttons">
+        <button type="submit" class="btn-primary">Generuj wizyty</button>
+        <a asp-action="Index" class="btn-secondary">Powrót do listy</a>
+    </div>
+</form>
+

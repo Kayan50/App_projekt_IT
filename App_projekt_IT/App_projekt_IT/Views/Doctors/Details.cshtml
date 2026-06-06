@@ -6,24 +6,21 @@
 
 <h2>Szczegóły Lekarza</h2>
 
-<div class="clinic-card">
-    <dl>
-        <dt>@Html.DisplayNameFor(model => model.FirstName)</dt>
-        <dd>@Html.DisplayFor(model => model.FirstName)</dd>
+<dl class="row">
+    <dt>Imie</dt>
+    <dd>@Html.DisplayFor(model => model.FirstName)</dd>
 
-        <dt>@Html.DisplayNameFor(model => model.LastName)</dt>
+        <dt>Nazwisko</dt>
         <dd>@Html.DisplayFor(model => model.LastName)</dd>
 
-        <dt>@Html.DisplayNameFor(model => model.Title)</dt>
+        <dt>Tytuł</dt>
         <dd>@Html.DisplayFor(model => model.Title)</dd>
 
         <dt>Klinika</dt>
         <dd>@Html.DisplayFor(model => model.Clinic.Name)</dd>
     </dl>
-</div>
 
-<div class="action-links">
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn-primary"
-       style="display: inline-block; text-decoration: none; padding: 8px 12px;">Edytuj</a>
+<div class="action-buttons">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn-primary">Edytuj</a>
     <a asp-action="Index" class="btn-secondary">Powrót do listy</a>
 </div>

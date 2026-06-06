@@ -6,29 +6,27 @@
 
 <h2>Szczegóły Kliniki</h2>
 
-<div class="clinic-card">
-    <dl>
-        <dt>@Html.DisplayNameFor(model => model.Name)</dt>
-        <dd>@Html.DisplayFor(model => model.Name)</dd>
+<dl class="row">
+    <dt>Nazwa</dt>
+    <dd>@Html.DisplayFor(model => model.Name)</dd>
 
-        <dt>@Html.DisplayNameFor(model => model.Phone)</dt>
-        <dd>@Html.DisplayFor(model => model.Phone)</dd>
+    <dt>Telefon</dt>
+    <dd>@Html.DisplayFor(model => model.Phone)</dd>
 
-        <dt>@Html.DisplayNameFor(model => model.Email)</dt>
-        <dd>@Html.DisplayFor(model => model.Email)</dd>
+    <dt>Email</dt>
+    <dd>@Html.DisplayFor(model => model.Email)</dd>
 
-        <dt>@Html.DisplayNameFor(model => model.Address)</dt>
-        <dd>@Html.DisplayFor(model => model.Address)</dd>
+    <dt>Adres</dt>
+    <dd>@Html.DisplayFor(model => model.Address)</dd>
 
-        <dt>@Html.DisplayNameFor(model => model.PostalCode)</dt>
-        <dd>@Html.DisplayFor(model => model.PostalCode)</dd>
+    <dt>Kod pocztowy</dt>
+    <dd>@Html.DisplayFor(model => model.PostalCode)</dd>
 
-        <dt>Miasto</dt>
-        <dd>@Html.DisplayFor(model => model.City.Name)</dd>
-    </dl>
-</div>
+    <dt>Miasto</dt>
+    <dd>@Html.DisplayFor(model => model.City.Name)</dd>
+</dl>
 
-<div class="action-links">
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn-primary" >Edytuj</a>
+<div class="action-buttons">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn-primary">Edytuj</a>
     <a asp-action="Index" class="btn-secondary">Powrót do listy</a>
 </div>

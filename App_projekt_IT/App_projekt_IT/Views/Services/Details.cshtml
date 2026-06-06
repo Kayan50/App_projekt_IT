@@ -6,17 +6,24 @@
 
 <h2>Szczegóły Usługi</h2>
 
-<div class="clinic-card">
-    <dl >
-        <dt>@Html.DisplayNameFor(model => model.Name)</dt>
-        <dd>@Html.DisplayFor(model => model.Name)</dd>
+<dl class="row">
+    <dt>Nazwa</dt>
+    <dd>@Html.DisplayFor(model => model.Name)</dd>
 
-        <dt>@Html.DisplayNameFor(model => model.IsNFZ)</dt>
-        <dd>@Html.DisplayFor(model => model.IsNFZ)</dd>
-    </dl>
-</div>
+    <dt>Czy usługa jest objęta przez NFZ</dt>
+    <dd>
+        @if (Model.IsNFZ)
+        {
+            <span style="color: #10b981; font-weight: 500;">Tak</span>
+        }
+        else
+        {
+            <span style="color: #ef4444; font-weight: 500;">Nie</span>
+        }
+    </dd>
+</dl>
 
-<div class="action-links">
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn-primary" >Edytuj</a>
+<div class="action-buttons">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn-primary">Edytuj</a>
     <a asp-action="Index" class="btn-secondary">Powrót do listy</a>
 </div>

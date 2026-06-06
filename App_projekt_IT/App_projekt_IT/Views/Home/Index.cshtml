@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Strona Główna";
-    
+
     var paymentQuery = Context.Request.Query["payment"].ToString();
     var isPrywatnie = paymentQuery == "Prywatnie";
     var isNFZ = paymentQuery == "NFZ" || string.IsNullOrEmpty(paymentQuery);
@@ -21,7 +21,8 @@
             <option value="">Miasto</option>
         </select>
 
-        <input type="date" name="appointmentDate" id="appointment-date" value="@Context.Request.Query["appointmentDate"]" required>
+        <input type="date" name="appointmentDate" id="appointment-date"
+               value="@Context.Request.Query["appointmentDate"]" required>
 
         <div class="radio-group">
             <label><input type="radio" name="payment" value="NFZ" checked="@isNFZ"> NFZ</label>
@@ -48,18 +49,18 @@
             foreach (var clinicGroup in groupedByClinic)
             {
                 var clinic = clinicGroup.Key;
-                <div class="clinic-card clinic-group">
-                    <h3>@clinic.Name</h3>
+                <div class="clinic-card">
+                    <h3 class="clinic-name">@clinic.Name</h3>
                     <p class="text-muted">@clinic.Address, @clinic.City.Name</p>
 
                     @foreach (var doctorGroup in clinicGroup.GroupBy(s => s.Doctor))
                     {
-                        <div class="doctor-group">
+                        <div style="margin-bottom: 1.5rem;">
                             <strong>@doctorGroup.Key.Title @doctorGroup.Key.FirstName @doctorGroup.Key.LastName</strong>
                             <div class="time-slots">
                                 @foreach (var slot in doctorGroup)
                                 {
-                                    <button type="button" class="btn-primary btn-sm time-slot-btn"
+                                    <button type="button" class="slot-btn"
                                             onclick="openBookingModal(@slot.Id, '@clinic.Name', '@slot.StartTime.ToString("dd.MM.yyyy")', '@slot.StartTime.ToString("HH:mm")', '@slot.Service.Name')">
                                         @slot.StartTime.ToString("HH:mm")
                                     </button>
@@ -80,15 +81,15 @@
         </div>
 
         <div class="modal-body">
-            <p><strong>Klinika:</strong> <span id="modalClinicName"></span></p>
-            <p><strong>Usługa:</strong> <span id="modalServiceName"></span></p>
-            <p><strong>Data:</strong> <span id="modalDate"></span></p>
-            <p><strong>Godzina:</strong> <span id="modalTime"></span></p>
+            <p><strong class="modal-label">Klinika:</strong> <span id="modalClinicName"></span></p>
+            <p><strong class="modal-label">Usługa:</strong> <span id="modalServiceName"></span></p>
+            <p><strong class="modal-label">Data:</strong> <span id="modalDate"></span></p>
+            <p><strong class="modal-label">Godzina:</strong> <span id="modalTime"></span></p>
         </div>
 
-        <div class="modal-actions action-links">
-            <button type="button" onclick="closeBookingModal()" class="btn-secondary">Anuluj</button>
+        <div class="action-buttons" style="margin-top: 0;">
             <button type="button" onclick="confirmBooking()" class="btn-primary btn-success">Umów</button>
+            <button type="button" onclick="closeBookingModal()" class="btn-secondary">Anuluj</button>
         </div>
     </div>
 </div>
@@ -98,17 +99,17 @@
         let currentSlotId = null;
 
         function openBookingModal(slotId, clinicName, date, time, serviceName) {
-            
+
             @if (!User.Identity.IsAuthenticated)
-            {
+                {
                     <text>
-                    alert("Musisz być zalogowany, aby umówić wizytę.");
-                    window.location.href = '/Identity/Account/Login';
-                    return;
+                            alert("Musisz być zalogowany, aby umówić wizytę.");
+                            window.location.href = '/Identity/Account/Login';
+                            return;
                     </text>
             }
 
-            currentSlotId = slotId;
+                currentSlotId = slotId;
             document.getElementById('modalClinicName').innerText = clinicName;
             document.getElementById('modalServiceName').innerText = serviceName;
             document.getElementById('modalDate').innerText = date;
@@ -131,24 +132,24 @@
                     'Content-Type': 'application/json'
                 }
             })
-            .then(response => {
-                return response.json().then(data => ({ status: response.status, body: data }));
-            })
-            .then(result => {
-                closeBookingModal();
-                if (result.status === 200) {
-                    alert(result.body.message);
-                    window.location.href = '/PatientPanel';
-                } else {
-                    alert(result.body.message);
-                    window.location.reload();
-                }
-            })
-            .catch(error => {
-                console.error('Błąd:', error);
-                alert('Wystąpił problem techniczny.');
-                closeBookingModal();
-            });
+                .then(response => {
+                    return response.json().then(data => ({ status: response.status, body: data }));
+                })
+                .then(result => {
+                    closeBookingModal();
+                    if (result.status === 200) {
+                        alert(result.body.message);
+                        window.location.href = '/PatientPanel';
+                    } else {
+                        alert(result.body.message);
+                        window.location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Błąd:', error);
+                    alert('Wystąpił problem techniczny.');
+                    closeBookingModal();
+                });
         }
     </script>
 }

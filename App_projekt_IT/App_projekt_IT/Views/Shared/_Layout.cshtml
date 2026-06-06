@@ -28,13 +28,14 @@
             <partial name="_LoginPartial" />
         </nav>
     </header>
+    <div class="container">
+        <main>
+            @RenderBody()
+        </main>
+    </div>
 
-    <main>
-        @RenderBody()
-    </main>
-
-    <script src="~/js/app.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
+        <script src="~/js/app.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
 
 </html>

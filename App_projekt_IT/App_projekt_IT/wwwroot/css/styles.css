@@ -23,6 +23,25 @@ body {
 }
 
 /* --------------------------------------
+   GŁÓWNY KONTENER STRONY (Marginesy bezpieczeństwa)
+--------------------------------------- */
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.crud-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  padding: 3rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: var(--card-shadow);
+}
+
+/* --------------------------------------
    NAWIGACJA
 --------------------------------------- */
 .main-header {
@@ -53,8 +72,10 @@ body {
   gap: 2.5rem;
 }
 
-.admin-links {
+.admin-links,
+.auth-links {
   display: flex;
+  align-items: center;
   gap: 1.5rem;
 }
 
@@ -68,12 +89,6 @@ body {
 
 .admin-links a:hover {
   opacity: 0.7;
-}
-
-.auth-links {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
 }
 
 .auth-links a {
@@ -91,34 +106,13 @@ body {
 }
 
 .nav-login {
-  color: var(--text-dark);
-  font-weight: 500;
   padding: 0.5rem 0;
 }
-
 .nav-login i {
   font-size: 1.3rem;
 }
 
-.nav-register {
-  background-color: var(--brand-bg);
-  color: white !important;
-  padding: 0.6rem 1.4rem;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.nav-register:hover {
-  background-color: var(--brand-btn);
-  transform: translateY(-1px);
-}
-
-.nav-register i {
-  font-size: 1.2rem;
-  margin-left: 0.3rem;
-}
-
+.nav-register,
 .nav-panel {
   background-color: var(--brand-bg);
   color: white !important;
@@ -128,6 +122,7 @@ body {
   transition: all 0.2s ease;
 }
 
+.nav-register:hover,
 .nav-panel:hover {
   background-color: var(--brand-btn);
   transform: translateY(-1px);
@@ -153,6 +148,69 @@ body {
   color: var(--brand-btn);
 }
 
+/* --------------------------------------
+   PRZYCISKI GLOBALNE I AKCJE
+--------------------------------------- */
+.btn-primary {
+  background-color: var(--brand-btn);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(244, 63, 94, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--brand-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px -2px rgba(244, 63, 94, 0.4);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: #64748b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.9rem 2.5rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #f1f5f9;
+  color: var(--brand-bg);
+  border-color: #94a3b8;
+}
+
+.btn-block {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 1.1rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.action-buttons .btn-primary,
+.action-buttons .btn-secondary {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 /* --------------------------------------
    SEKCJA WYSZUKIWARKI
@@ -225,48 +283,8 @@ body {
   font-weight: 500;
 }
 
-.btn-primary {
-  background-color: var(--brand-btn);
-  color: white;
-  font-size: 1.1rem;
-  font-weight: 600;
-  padding: 1rem 2.5rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 4px 6px -1px rgba(244, 63, 94, 0.3);
-  transition: all 0.2s ease;
-}
-
-.btn-primary:hover {
-  background-color: var(--brand-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px -2px rgba(244, 63, 94, 0.4);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  color: #64748b;
-  font-size: 1.1rem;
-  font-weight: 600;
-  padding: 0.9rem 2.5rem;
-  border: 2px solid #cbd5e1;
-  border-radius: 8px;
-  cursor: pointer;
-  text-decoration: none; 
-  display: inline-block;
-  text-align: center;
-  transition: all 0.2s ease;
-}
-
-.btn-secondary:hover {
-  background-color: #f1f5f9;
-  color: var(--brand-bg);
-  border-color: #94a3b8;
-}
-
 /* --------------------------------------
-   KAFELKI WYNIKÓW (Hover effects)
+   KAFELKI WYNIKÓW I MODAL (Strona główna)
 --------------------------------------- */
 .results-section {
   padding: 4rem 2rem;
@@ -289,6 +307,7 @@ body {
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
+  margin-top: 1.5rem;
 }
 
 .clinic-card:hover {
@@ -314,8 +333,39 @@ body {
   border-color: var(--brand-btn);
 }
 
+/* --- Style tekstów wewnątrz kafelków i modala --- */
+
+.empty-results-text {
+  color: #475569;
+  font-weight: 500;
+}
+
+.clinic-name {
+  color: var(--brand-bg);
+  margin-bottom: 0.3rem;
+}
+
+.doctor-name {
+  color: var(--text-dark);
+  display: block;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.modal-title {
+  color: var(--brand-bg);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 1rem;
+}
+
+.modal-label {
+  color: #475569;
+}
 /* --------------------------------------
-   STRONY LOGOWANIA / REJESTRACJI
+   FORMULARZE (Logowanie, Rejestracja, Zarządzanie kontem)
 --------------------------------------- */
 .auth-section {
   display: flex;
@@ -347,10 +397,10 @@ body {
   letter-spacing: -0.5px;
 }
 
-.auth-form {
+.auth-form,
+.form-row {
   display: flex;
   flex-direction: column;
-  gap: 1.4rem;
 }
 
 .form-row {
@@ -363,6 +413,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-group label {
@@ -371,20 +422,55 @@ body {
   color: #475569;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   padding: 0.9rem 1rem;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   font-size: 1rem;
   background-color: #f8fafc;
   transition: all 0.2s ease;
+  color: var(--text-dark);
+  font-family: inherit;
+  width: 100%;
 }
 
-.form-group input:focus {
+.form-group select {
+  cursor: pointer;
+  appearance: auto;
+}
+
+.form-group input:focus,
+.form-group select:focus {
   outline: none;
   background-color: white;
   border-color: var(--brand-btn);
   box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.15);
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.8rem;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 1.4rem;
+  height: 1.4rem;
+  cursor: pointer;
+  accent-color: var(--brand-btn);
+  border-radius: 4px;
+}
+
+.checkbox-group label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  cursor: pointer;
+  margin: 0;
 }
 
 .auth-links-bottom {
@@ -406,21 +492,9 @@ body {
   text-decoration: underline;
 }
 
-.btn-block {
-  width: 100%;
-  margin-top: 1rem;
-  padding: 1.1rem;
-}
-
 /* --------------------------------------
    TABELE (Dla Panelu Administratora)
 --------------------------------------- */
-.admin-container {
-  padding: 3rem 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
 .admin-header {
   display: flex;
   justify-content: space-between;
@@ -451,6 +525,23 @@ body {
 
 .btn-create-new:hover {
   background-color: var(--brand-hover);
+  transform: translateY(-2px);
+  color: white;
+}
+
+.btn-generate-schedule {
+  background-color: #64748b;
+  box-shadow: 0 4px 6px -1px rgba(100, 116, 139, 0.3);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-generate-schedule:hover {
+  background-color: #475569;
   transform: translateY(-2px);
   color: white;
 }
@@ -488,7 +579,6 @@ body {
 .custom-table tbody tr:last-child td {
   border-bottom: none;
 }
-
 .custom-table tbody tr:hover {
   background-color: #f1f5f9;
 }
@@ -505,6 +595,48 @@ body {
 .action-links a:hover {
   color: var(--brand-hover);
   text-decoration: underline;
+}
+
+/* --------------------------------------
+   WIDOKI SZCZEGÓŁÓW I USUWANIA
+--------------------------------------- */
+dl.row {
+  display: grid;
+  grid-template-columns: minmax(150px, max-content) 1fr;
+  gap: 1.2rem 2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+dl.row dt {
+  font-weight: 600;
+  color: #475569;
+  text-align: right;
+}
+
+dl.row dd {
+  color: var(--text-dark);
+  margin: 0;
+  font-weight: 500;
+}
+dl.row:hover {
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.warning-text {
+  color: #e11d48;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
 }
 
 /* --------------------------------------
@@ -576,79 +708,21 @@ body {
 }
 
 /* --------------------------------------
-   WYMUSZENIE WIDOCZNOŚCI KURSORA
---------------------------------------- */
-.form-group input,
-.auth-form input,
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="tel"],
-input[type="number"],
-input[type="date"] {
-  cursor: text !important;
-  caret-color: var(--brand-bg, #0f172a) !important;
-}
-
-.form-group input:disabled,
-.auth-form input:disabled {
-  cursor: not-allowed !important;
-  caret-color: transparent !important;
-}
-
-/* --------------------------------------
-   SELECT I CHECKBOX (Dla Panelu Zarządzania Kontem)
---------------------------------------- */
-.form-group select {
-  padding: 0.9rem 1rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 1rem;
-  background-color: #f8fafc;
-  transition: all 0.2s ease;
-  color: var(--text-dark);
-  font-family: inherit;
-  width: 100%;
-  cursor: pointer;
-  appearance: auto;
-}
-
-.form-group select:focus {
-  outline: none;
-  background-color: white;
-  border-color: var(--brand-btn);
-  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.15);
-}
-
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-top: 0.8rem;
-  margin-bottom: 0.5rem;
-  padding: 0.5rem 0;
-}
-
-.checkbox-group input[type="checkbox"] {
-  width: 1.4rem;
-  height: 1.4rem;
-  cursor: pointer;
-  accent-color: var(--brand-btn);
-  border-radius: 4px;
-}
-
-.checkbox-group label {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text-dark);
-  cursor: pointer;
-  margin: 0;
-}
-
-/* --------------------------------------
-   MOBILE
+   WIDOK NA EKRANY MOBILNE
 --------------------------------------- */
 @media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  .crud-form-container {
+    padding: 1.5rem;
+  }
+
+  .crud-form-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
   .main-header {
     flex-direction: column;
     align-items: flex-start;
@@ -658,7 +732,6 @@ input[type="date"] {
   .search-section {
     padding: 3rem 1rem;
   }
-
   .search-section h1 {
     font-size: 2rem;
   }
@@ -678,5 +751,20 @@ input[type="date"] {
 
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  dl.row {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+  }
+
+  dl.row dt {
+    text-align: left;
+    color: var(--brand-btn);
+    margin-bottom: -0.8rem;
   }
 }

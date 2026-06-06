@@ -4,25 +4,25 @@
     ViewData["Title"] = "Moje Wizyty";
 }
 
-<div >
-    <h2>Moje zarezerwowane wizyty</h2>
+<div class="admin-header">
+    <h1>Moje zarezerwowane wizyty</h1>
 </div>
 
-<div class="clinic-card" >
-    <table class="table" >
+<div>
+    <table class="custom-table">
         <thead>
             <tr>
                 <th>Data i godzina</th>
                 <th>Lekarz</th>
                 <th>Usługa</th>
-                <th >Akcje</th>
+                <th>Akcje</th>
             </tr>
         </thead>
         <tbody>
             @if (!Model.Any())
             {
                 <tr>
-                    <td colspan="4" >
+                    <td colspan="4">
                         Nie masz obecnie żadnych zaplanowanych wizyt.
                     </td>
                 </tr>
@@ -32,22 +32,23 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td >
+                        <td>
                             @item.StartTime.ToString("dd.MM.yyyy HH:mm")
                         </td>
 
-                        <td >
+                        <td>
                             @item.Doctor.Title @item.Doctor.FirstName @item.Doctor.LastName
                         </td>
 
-                        <td >
+                        <td>
                             @item.Service.Name
                         </td>
 
-                        <td class="action-links" >
-                            <form asp-action="CancelReservation" method="post" >
+                        <td class="action-links">
+                            <form asp-action="CancelReservation" method="post">
                                 <input type="hidden" name="id" value="@item.Id" />
-                                <button type="submit" class="btn-danger-custom" onclick="return confirm('Czy na pewno chcesz odwołać tę wizytę?');">Odwołaj wizytę</button>
+                                <button type="submit" class="btn-secondary"
+                                        onclick="return confirm('Czy na pewno chcesz odwołać tę wizytę?');">Odwołaj wizytę</button>
                             </form>
                         </td>
                     </tr>

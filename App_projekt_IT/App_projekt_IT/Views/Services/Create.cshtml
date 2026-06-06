@@ -6,9 +6,9 @@
 
 <h2>Dodaj nową usługę</h2>
 
-<div class="clinic-card">
-    <form asp-action="Create" method="post">
-        <div asp-validation-summary="All" class="text-danger"></div>
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="clinic-card">
 
         <div class="form-group">
             <label asp-for="Name">Nazwa</label>
@@ -21,16 +21,15 @@
             <input asp-for="IsNFZ" type="checkbox" />
             <span asp-validation-for="IsNFZ" class="text-danger"></span>
         </div>
+    </div>
+    
+    <div class="action-buttons">
+        <button type="submit" class="btn-primary">Utwórz usługę</button>
+        <a asp-action="Index" class="btn-secondary">Powrót do listy</a>
+    </div>
+</form>
 
-        <div class="action-links">
-            <button type="submit" class="btn-primary">Utwórz usługę</button>
-        </div>
-    </form>
-</div>
 
-<div>
-    <a asp-action="Index" class="btn-secondary">Powrót do listy</a>
-</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
