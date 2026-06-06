@@ -1,6 +1,6 @@
 ﻿:root {
   --brand-bg: #0f172a;
-  --brand-bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  --brand-bg-gradient: linear-gradient(135deg, #103783 0%, #121c31e3 100%);
   --brand-btn: #f43f5e;
   --brand-hover: #be123c;
   --bg-light: #f8fafc;
@@ -20,15 +20,20 @@ body {
   background-color: var(--bg-light);
   color: var(--text-dark);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 /* --------------------------------------
    GŁÓWNY KONTENER STRONY (Marginesy bezpieczeństwa)
 --------------------------------------- */
-.container {
+.main-content {
   width: 100%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0 2rem 3rem 2rem;
+  flex: 1;
 }
 
 .crud-form-container {
@@ -39,6 +44,53 @@ body {
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   box-shadow: var(--card-shadow);
+}
+
+.main-footer {
+  background-color: #0f172a;
+  color: #94a3b8;
+  margin-top: 4rem;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 2rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-brand h4 {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.footer-links a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: white;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.85rem;
+  color: #64748b;
 }
 
 /* --------------------------------------
@@ -162,6 +214,11 @@ body {
   cursor: pointer;
   box-shadow: 0 4px 6px -1px rgba(244, 63, 94, 0.3);
   transition: all 0.2s ease;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
 }
 
 .btn-primary:hover {
@@ -183,6 +240,11 @@ body {
   display: inline-block;
   text-align: center;
   transition: all 0.2s ease;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
 }
 
 .btn-secondary:hover {
@@ -217,21 +279,38 @@ body {
 --------------------------------------- */
 .search-section {
   background: var(--brand-bg-gradient);
-  padding: 5rem 2rem;
+  padding: 6rem 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  /* ROZCIĄGANIE NA 100% SZEROKOŚCI EKRANU */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 }
 
 .search-section h1 {
   color: white;
   font-weight: 600;
   font-size: 2.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1350px;
   text-align: left;
   letter-spacing: -0.5px;
+}
+
+.search-section p {
+  color: #e0e0e0;
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+  width: 100%;
+  max-width: 1350px;
+  text-align: left;
 }
 
 .search-form {
@@ -240,7 +319,15 @@ body {
   align-items: stretch;
   gap: 0.8rem;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1350px;
+
+  /* Szklany efekt */
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
 }
 
 .search-form select,
@@ -267,43 +354,65 @@ body {
 
 .radio-group {
   display: flex;
-  gap: 1.5rem;
-  background: white;
-  padding: 0 1.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.4rem;
   border-radius: 8px;
   align-items: center;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  gap: 0;
 }
 
 .radio-group label {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  justify-content: center;
+  padding: 0.6rem 1.2rem;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  color: #475569;
+  transition: all 0.2s ease;
+}
+
+.radio-group input[type="radio"] {
+  display: none;
+}
+
+.radio-group input[type="radio"]:checked + label,
+.radio-group label:has(input[type="radio"]:checked) {
+  background: var(--brand-bg);
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* --------------------------------------
    KAFELKI WYNIKÓW I MODAL (Strona główna)
 --------------------------------------- */
+
+/* --- TŁO SEKCJI --- */
 .results-section {
-  padding: 4rem 2rem;
+  background-color: #f8fafc;
+  padding: 5rem 2rem;
 }
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2.5rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+/* --- KARTA KLINIKI --- */
 .clinic-card {
   background: white;
   padding: 2rem;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
-  box-shadow: var(--card-shadow);
+
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.05),
+    0 4px 6px -2px rgba(0, 0, 0, 0.03);
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
@@ -311,59 +420,87 @@ body {
 }
 
 .clinic-card:hover {
+  transform: translateY(-5px);
   box-shadow:
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
+/* --- PRZYCISKI GODZIN (SLOTY) --- */
+.time-slots {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.8rem;
+}
+
 .slot-btn {
-  background: #f1f5f9;
+  background: #e2e8f0;
   color: var(--brand-bg);
   font-weight: 500;
-  border: 1px solid #cbd5e1;
+  border: 1px solid transparent;
   padding: 0.6rem 1.2rem;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
-.slot-btn:hover {
+.slot-btn:hover,
+.slot-btn.active {
   background: var(--brand-btn);
   color: white;
-  border-color: var(--brand-btn);
+  transform: scale(1.05);
 }
 
-/* --- Style tekstów wewnątrz kafelków i modala --- */
-
+/* --- STYLE TEKSTÓW WEWNĄTRZ KAFELKÓW --- */
 .empty-results-text {
   color: #475569;
   font-weight: 500;
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem;
 }
 
 .clinic-name {
   color: var(--brand-bg);
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+}
+
+.text-muted {
+  color: #64748b;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.8rem;
 }
 
 .doctor-name {
   color: var(--text-dark);
   display: block;
   margin-bottom: 0.8rem;
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 0.5rem;
+  font-weight: 600;
 }
 
+/* --- MODAL --- */
 .modal-title {
   color: var(--brand-bg);
   margin-bottom: 1.5rem;
   text-align: center;
   border-bottom: 2px solid #e2e8f0;
   padding-bottom: 1rem;
+  font-size: 1.5rem;
 }
 
 .modal-label {
-  color: #475569;
+  display: inline-block;
+  width: 80px;
+  color: #64748b;
+  font-weight: 600;
 }
+
 /* --------------------------------------
    FORMULARZE (Logowanie, Rejestracja, Zarządzanie kontem)
 --------------------------------------- */
@@ -708,6 +845,77 @@ dl.row:hover {
 }
 
 /* --------------------------------------
+STYLE DLA OKIENKA MODALNEGO (REZERWACJA) 
+---------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.hidden {
+  display: none;
+  opacity: 0;
+}
+
+.modal-content {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: modalPop 0.3s ease-out;
+}
+
+@keyframes modalPop {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-header h3 {
+  color: var(--brand-bg);
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.modal-body p {
+  margin-bottom: 0.8rem;
+  font-size: 1.05rem;
+  color: var(--text-dark);
+}
+
+.modal-body .modal-label {
+  display: inline-block;
+  width: 80px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.modal-content .action-buttons {
+  margin-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 1.5rem;
+}
+
+/* --------------------------------------
    WIDOK NA EKRANY MOBILNE
 --------------------------------------- */
 @media (max-width: 768px) {
@@ -727,6 +935,12 @@ dl.row:hover {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
   }
 
   .search-section {

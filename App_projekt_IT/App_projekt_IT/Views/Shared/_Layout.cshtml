@@ -6,9 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - Kliniki-Med</title>
 
-    <link rel="stylesheet" href="~/css/styles.css">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
 <body>
@@ -28,14 +27,26 @@
             <partial name="_LoginPartial" />
         </nav>
     </header>
-    <div class="container">
-        <main>
-            @RenderBody()
-        </main>
-    </div>
 
-        <script src="~/js/app.js" asp-append-version="true"></script>
-        @await RenderSectionAsync("Scripts", required: false)
-    </body>
+    <main class="main-content">
+        @RenderBody()
+    </main>
+
+    
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-links">
+                <a asp-area="" asp-controller="Home" asp-action="Index">Strona główna</a>
+                <a asp-area="" asp-controller="Home" asp-action="Privacy">Polityka Prywatności</a>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 Tomasz Król, Adam Łukasik. Wszelkie prawa zastrzeżone.</p>
+        </div>
+    </footer>
+    <script src="~/js/app.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
 
 </html>
