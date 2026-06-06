@@ -19,9 +19,12 @@ namespace App_projekt_IT.Controllers
             _logger = logger;
             _context = context;
         }
+        public IActionResult Index()
+        {
+        return View();
+        }
 
-
-        public async Task<IActionResult> Index(int? serviceId, int? cityId, DateTime? appointmentDate, string payment)
+        public async Task<IActionResult> Search(int? serviceId, int? cityId, DateTime? appointmentDate, string payment)
         {
             ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Name", serviceId);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", cityId);
