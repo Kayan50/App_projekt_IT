@@ -40,12 +40,15 @@ namespace App_projekt_IT.Controllers
             ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Name", serviceId);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", cityId);
 
+            TimeZoneInfo polishTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+            DateTime currentPolishTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, polishTimeZone);
+
             var query = _context.AppointmentSlots
                 .Include(a => a.Doctor)
                     .ThenInclude(d => d.Clinic)
                         .ThenInclude(c => c.City)
                 .Include(a => a.Service)
-                .Where(a => a.IsBooked == false && a.StartTime > DateTime.Now);
+                .Where(a => a.IsBooked == false && a.StartTime > currentPolishTime);
 
             bool hasSearched = serviceId.HasValue || cityId.HasValue || appointmentDate.HasValue || !string.IsNullOrEmpty(payment);
 
@@ -83,7 +86,7 @@ namespace App_projekt_IT.Controllers
                             .ThenInclude(d => d.Clinic)
                                 .ThenInclude(c => c.City)
                         .Include(a => a.Service)
-                        .Where(a => a.IsBooked == false && a.StartTime > DateTime.Now);
+                        .Where(a => a.IsBooked == false && a.StartTime > currentPolishTime);
 
                     if (serviceId.HasValue) altQuery = altQuery.Where(a => a.ServiceId == serviceId.Value);
                     if (cityId.HasValue) altQuery = altQuery.Where(a => a.Doctor.Clinic.CityId == cityId.Value);
