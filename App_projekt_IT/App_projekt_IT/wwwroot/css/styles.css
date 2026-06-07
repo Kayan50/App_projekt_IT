@@ -150,6 +150,79 @@ body {
   margin: 0 auto;
 }
 
+/* SEKCJA USŁUG (3 karty, zdjęcie na górze, opis pod spodem) */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Zachowałem Twoją starą nazwę klasy, żebyś nie musiał zmieniać HTML-a */
+.service-card-horizontal {
+  display: flex;
+  flex-direction: column; /* MAGIA: Zmiana z 'row' na 'column'. Układa elementy z góry na dół */
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  height: 100%; /* Wymusza równą wysokość wszystkich kart w danym rzędzie */
+}
+
+.service-card-horizontal:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--card-shadow);
+  border-color: #cbd5e1;
+}
+
+.service-image-container {
+  width: 100%; /* Zdjęcie zajmuje 100% szerokości karty */
+  height: 220px; /* Sztywna wysokość dla wszystkich zdjęć, żeby było równo */
+}
+
+.service-image-container.fallback-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  font-size: 3.5rem;
+  color: #cbd5e1;
+  border-bottom: 1px solid #e2e8f0; /* Zmieniono obramowanie z prawego na dolne */
+}
+
+.service-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.service-content {
+  flex: 1; /* Popycha zawartość tak, by przycisk wylądował równo na samym dole karty */
+  display: flex;
+  flex-direction: column;
+  padding: 1.8rem;
+}
+
+.service-title {
+  font-size: 1.25rem;
+  color: var(--brand-bg);
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+}
+
+.service-desc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
 /* SEKCJA OPINII (REVIEWS) NA STRONIE GŁÓWNEJ */
 .reviews-section {
   padding: 4rem 2rem 5rem 2rem;
@@ -170,13 +243,16 @@ body {
 
 .reviews-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 1rem;
 }
 
 .review-card {
+  display: flex;
+  flex-direction: column;
   background: #f8fafc;
   padding: 2rem;
   border-radius: 16px;
@@ -185,8 +261,7 @@ body {
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
+  height: 100%;
 }
 
 .review-card:hover {
@@ -669,7 +744,7 @@ body {
   grid-template-columns: 1fr;
   gap: 2.5rem;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 1.5rem auto;
 }
 
 .doctors-container {
@@ -1576,6 +1651,18 @@ dl.row dd {
     text-align: left;
     color: var(--brand-btn);
     margin-bottom: -0.5rem;
+  }
+
+  /* Usługi strona główna */
+  .service-card-horizontal {
+    flex-direction: column;
+  }
+
+  .service-image-container {
+    flex: none;
+    height: 200px;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
   }
 
   /* =========================================

@@ -29,36 +29,52 @@ else
     </div>
     @if (ViewBag.HighlightedServices != null)
     {
-        var services = (List<Service>)ViewBag.HighlightedServices;
+        // Bezpieczne rzutowanie zabezpieczające przed błędami krytycznymi
+        var services = ViewBag.HighlightedServices as IEnumerable<Service>;
 
-        if (services.Any())
+        if (services != null && services.Any())
         {
-            <section class="services-section">
-                <div class="admin-header">
-                    <h2>Poznaj nasze specjalizacje</h2>
+            <section class="services-section" style="margin-top: 4rem;">
+                <div class="reviews-header text-center" style="margin-bottom: 3rem; text-align: center;">
+                    <h2 style="color: var(--brand-bg); font-size: 2.2rem; font-weight: 700; letter-spacing: -0.5px;">
+                        Poznaj nasze specjalizacje
+                    </h2>
+                    <p class="text-muted">Kompleksowa opieka medyczna na najwyższym poziomie</p>
                 </div>
 
-                <div class="grid-container">
+                <div class="services-grid">
                     @foreach (var service in services)
                     {
-                        <div class="clinic-card">
+                        <div class="service-card-horizontal">
 
                             @if (!string.IsNullOrEmpty(service.ImagePath))
                             {
-                                <img src="@service.ImagePath" alt="@service.Name" class="service-image" />
+                                <div class="service-image-container">
+                                    <img src="@service.ImagePath" alt="@service.Name" class="service-image" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="service-image-container fallback-icon">
+                                    <i class="fa-solid fa-stethoscope"></i>
+                                </div>
                             }
 
-                            <h3 class="clinic-name">@service.Name</h3>
+                            <div class="service-content">
+                                <h3 class="service-title">@service.Name</h3>
 
-                            <p class="text-muted">
-                                @service.Description
-                            </p>
+                                <p class="service-desc text-muted">
+                                    @service.Description
+                                </p>
 
-                            <div class="action-buttons">
-                                <a asp-controller="Home" asp-action="Search" asp-route-serviceId="@service.Id" class="btn-secondary">
-                                    Sprawdź terminy
-                                </a>
+                                <div class="action-buttons" style="margin-top: auto; justify-content: flex-start;">
+                                    <a asp-controller="Home" asp-action="Search" asp-route-serviceId="@service.Id"
+                                       class="btn-secondary">
+                                        <i class="fa-regular fa-calendar-check" style="margin-right: 0.4rem;"></i> Sprawdź terminy
+                                    </a>
+                                </div>
                             </div>
+
                         </div>
                     }
                 </div>
@@ -72,18 +88,23 @@ else
         if (reviews.Any())
         {
             <section class="reviews-section">
-                <div>
+                <div class="reviews-header">
                     <h2>Co mówią o nas pacjenci?</h2>
+                    <p class="text-muted">Prawdziwe opinie z naszych klinik</p>
                 </div>
 
-                <div class="grid-container">
+                <div class="reviews-grid">
                     @foreach (var review in reviews)
                     {
-                        <div class="clinic-card">
+                        <div class="review-card">
                             <div class="rating-stars">
                                 @for (int i = 0; i < review.Rating; i++)
                                 {
-                                    <span>⭐</span>
+                                    <i class="fa-solid fa-star"></i>
+                                }
+                                @for (int i = review.Rating; i < 5; i++)
+                                {
+                                    <i class="fa-regular fa-star" style="color: #cbd5e1;"></i>
                                 }
                             </div>
 
@@ -91,12 +112,16 @@ else
                                 "@review.Comment"
                             </p>
 
-                            <p class="text-muted">
-                                <small>
-                                    Wizyta u: <strong>dr @review.AppointmentSlot.Doctor.LastName</strong><br />
-                                    Data: @review.CreatedAt.ToString("dd.MM.yyyy")
-                                </small>
-                            </p>
+                            <hr class="review-divider" />
+
+                            <div class="review-meta">
+                                <span class="review-doctor">
+                                    <i class="fa-solid fa-user-doctor"></i> dr @review.AppointmentSlot.Doctor.LastName
+                                </span>
+                                <span class="review-date">
+                                    <i class="fa-regular fa-calendar"></i> @review.CreatedAt.ToString("dd.MM.yyyy")
+                                </span>
+                            </div>
                         </div>
                     }
                 </div>
