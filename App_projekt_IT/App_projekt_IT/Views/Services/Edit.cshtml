@@ -1,17 +1,19 @@
 @model App_projekt_IT.Models.Service
 
 @{
-    ViewData["Title"] = "Edytuj Usługu";
+    ViewData["Title"] = "Edytuj Usługę";
 }
 
 <div class="admin-header">
     <h1>Edytuj dane usługi</h1>
 </div>
 
-<form asp-action="Edit">
+<form asp-action="Edit" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="ImagePath" />
+
     <div class="clinic-card">
 
         <div class="form-group">
@@ -25,6 +27,30 @@
             <input asp-for="IsNFZ" type="checkbox" />
             <span asp-validation-for="IsNFZ" class="text-danger"></span>
         </div>
+
+        <div class="form-group">
+            <label asp-for="Description">Opis usługi</label>
+            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Zmień zdjęcie (pozostaw puste, aby zachować obecne)</label>
+            <input type="file" name="imageFile" class="form-control" accept="image/*" />
+
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <p class="text-muted">
+                    <small>Obecnie wgrany plik: <strong>@Model.ImagePath</strong></small>
+                </p>
+            }
+        </div>
+
+        <div class="checkbox-group">
+            <label asp-for="IsHighlighted">Wyróżnij na stronie głównej</label>
+            <input asp-for="IsHighlighted" type="checkbox" />
+            <span asp-validation-for="IsHighlighted" class="text-danger"></span>
+        </div>
     </div>
 
     <div class="action-buttons">
@@ -32,9 +58,6 @@
         <a asp-action="Index" class="btn-secondary">Powrót do listy</a>
     </div>
 </form>
-
-
-
 
 @section Scripts {
     @{

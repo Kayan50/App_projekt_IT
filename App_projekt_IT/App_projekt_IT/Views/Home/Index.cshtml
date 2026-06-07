@@ -27,7 +27,44 @@ else
             </div>
         </div>
     </div>
+    @if (ViewBag.HighlightedServices != null)
+    {
+        var services = (List<Service>)ViewBag.HighlightedServices;
 
+        if (services.Any())
+        {
+            <section class="services-section">
+                <div class="admin-header">
+                    <h2>Poznaj nasze specjalizacje</h2>
+                </div>
+
+                <div class="grid-container">
+                    @foreach (var service in services)
+                    {
+                        <div class="clinic-card">
+
+                            @if (!string.IsNullOrEmpty(service.ImagePath))
+                            {
+                                <img src="@service.ImagePath" alt="@service.Name" class="service-image" />
+                            }
+
+                            <h3 class="clinic-name">@service.Name</h3>
+
+                            <p class="text-muted">
+                                @service.Description
+                            </p>
+
+                            <div class="action-buttons">
+                                <a asp-controller="Home" asp-action="Search" asp-route-serviceId="@service.Id" class="btn-secondary">
+                                    Sprawdź terminy
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+    }
     @if (ViewBag.TopReviews != null)
     {
         var reviews = (List<Review>)ViewBag.TopReviews;

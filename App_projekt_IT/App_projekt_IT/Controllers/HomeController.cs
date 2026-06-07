@@ -32,6 +32,13 @@ namespace App_projekt_IT.Controllers
 
             ViewBag.TopReviews = topReviews;
 
+            var highlightedServices = await _context.Services
+                .Where(s => s.IsHighlighted == true)
+                .Take(3) 
+                .ToListAsync();
+
+            ViewBag.HighlightedServices = highlightedServices;
+
             return View();
         }
 
