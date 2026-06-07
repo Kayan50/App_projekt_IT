@@ -35,7 +35,33 @@ namespace App_projekt_IT.Controllers
             return View(userAppointments);
         }
 
-        
+        // GET: Details
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            
+            var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+            var appointment = await _context.AppointmentSlots
+                .Include(a => a.Service)
+                .Include(a => a.Doctor)
+                    .ThenInclude(d => d.Clinic)
+                        .ThenInclude(c => c.City) 
+                .FirstOrDefaultAsync(a => a.Id == id && a.UserId == userId); 
+
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            return View(appointment);
+        }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CancelReservation(int id)
@@ -73,5 +99,7 @@ namespace App_projekt_IT.Controllers
             
             return RedirectToAction(nameof(Index));
         }
+
+
     }
 }

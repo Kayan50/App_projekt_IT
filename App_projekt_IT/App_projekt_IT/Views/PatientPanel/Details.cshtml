@@ -1,0 +1,42 @@
+﻿@model App_projekt_IT.Models.AppointmentSlot
+
+@{
+    ViewData["Title"] = "Szczegóły wizyty";
+}
+
+<div class="admin-header">
+    <h1>Szczegóły Twojej wizyty</h1>
+</div>
+
+<div class="clinic-card">
+    <div class="form-group">
+        <h3>Informacje o wizycie</h3>
+        <p><strong>Data:</strong> @Model.StartTime.ToString("dd.MM.yyyy")</p>
+        <p><strong>Godzina:</strong> @Model.StartTime.ToString("HH:mm")</p>
+        <p><strong>Zarezerwowana usługa:</strong> @Model.Service.Name</p>
+    </div>
+
+    <hr />
+
+    <div class="form-group">
+        <h3>Lekarz</h3>
+        <p><strong>Imię i nazwisko:</strong> @Model.Doctor.Title @Model.Doctor.FirstName @Model.Doctor.LastName</p>
+    </div>
+
+    <hr />
+
+    <div class="form-group">
+        <h3>Miejsce wizyty (Klinika)</h3>
+        <p><strong>Nazwa:</strong> @Model.Doctor.Clinic.Name</p>
+        <p><strong>Adres:</strong> @Model.Doctor.Clinic.Address</p>
+        <p><strong>Miasto:</strong> @Model.Doctor.Clinic.PostalCode @Model.Doctor.Clinic.City.Name</p>
+
+        <br />
+        <p><strong>Telefon kontaktowy:</strong> @Model.Doctor.Clinic.Phone</p>
+        <p><strong>Email kliniki:</strong> @Model.Doctor.Clinic.Email</p>
+    </div>
+
+    <div class="action-buttons">
+        <a asp-action="Index" class="btn-secondary">Powrót do listy wizyt</a>
+    </div>
+</div>
