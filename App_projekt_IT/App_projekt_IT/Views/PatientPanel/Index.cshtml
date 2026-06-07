@@ -45,11 +45,28 @@
                         </td>
 
                         <td class="action-links">
-                            <form asp-action="CancelReservation" method="post">
-                                <input type="hidden" name="id" value="@item.Id" />
-                                <button type="submit" class="btn-secondary"
-                                        onclick="return confirm('Czy na pewno chcesz odwołać tę wizytę?');">Odwołaj wizytę</button>
-                            </form>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn-primary">Szczegóły</a>
+
+                            @if (item.StartTime > DateTime.Now)
+                            {
+                                <form asp-action="CancelReservation" method="post" style="display: inline-block;">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn-secondary"
+                                            onclick="return confirm('Czy na pewno chcesz odwołać tę wizytę?');">
+                                        Odwołaj
+                                    </button>
+                                </form>
+                            }
+                            else if (item.IsConfirmed && !item.IsReviewed)
+                            {
+                                <a asp-controller="Review" asp-action="Create" asp-route-appointmentId="@item.Id" class="btn-primary">
+                                    ⭐ Oceń
+                                </a>
+                            }
+                            else if (item.IsReviewed)
+                            {
+                                <span class="text-muted">Oceniono</span>
+                            }
                         </td>
                     </tr>
                 }

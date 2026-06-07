@@ -111,7 +111,7 @@ namespace App_projekt_IT.Services
                         {
                             UserId = appt.UserId,
                             AppointmentSlotId = appt.Id,
-                            Message = $"Twoja wizyta zaplanowana na {appt.StartTime:dd.MM.yyyy HH:mm} dobiegła końca. Będziemy wdzięczni za ocenę usługi i lekarza!",
+                            Message = $"Twoja wizyta zaplanowana na {appt.StartTime:dd.MM.yyyy HH:mm} dobiegła końca. Przejdź do zakładki 'Moje wizyty', aby ocenić usługę i lekarza.",
                             Type = "ProsbaOOpinie"
                         };
                         context.Notifications.Add(notification);
