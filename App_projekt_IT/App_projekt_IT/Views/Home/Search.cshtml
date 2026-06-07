@@ -43,7 +43,7 @@
 <section id="results" class="results-section">
     <div id="results-container" class="grid-container">
 
-        @if (!Model.Any() && Context.Request.Query.Count > 0)
+        @if (!Model.Any() && Context.Request.Query.ContainsKey("appointmentDate"))
         {
             <div class="empty-results">
                 Niestety, brak wolnych terminów w wybranym dniu.

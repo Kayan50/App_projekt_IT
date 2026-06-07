@@ -57,7 +57,7 @@ namespace App_projekt_IT.Controllers
                 .Include(a => a.Service)
                 .Where(a => a.IsBooked == false && a.StartTime > currentPolishTime);
 
-            bool hasSearched = serviceId.HasValue || cityId.HasValue || appointmentDate.HasValue || !string.IsNullOrEmpty(payment);
+            bool hasSearched = serviceId.HasValue && cityId.HasValue && appointmentDate.HasValue && !string.IsNullOrEmpty(payment);
 
             if (hasSearched)
             {
