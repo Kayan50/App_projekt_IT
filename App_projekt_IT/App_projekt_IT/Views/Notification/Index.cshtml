@@ -35,8 +35,8 @@
 
                 @if (notif.Type == "ProsbaOOpinie" && notif.AppointmentSlot != null && !notif.AppointmentSlot.IsReviewed)
                 {
-                    <div class="action-links">
-                        <a asp-controller="Review" asp-action="Create" asp-route-appointmentId="@notif.AppointmentSlot.Id" class="btn-primary">
+                    <div class="action-links-notification">
+                        <a asp-controller="Review" asp-action="Create" asp-route-appointmentId="@notif.AppointmentSlot.Id" class="btn-rate">
                              Oceń wizytę
                         </a>
                     </div>
