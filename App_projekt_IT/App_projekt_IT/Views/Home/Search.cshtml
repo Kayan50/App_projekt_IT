@@ -28,8 +28,12 @@
                value="@Context.Request.Query["appointmentDate"]" required>
 
         <div class="radio-group">
-            <label><input type="radio" name="payment" value="NFZ" checked="@isNFZ"> NFZ</label>
-            <label><input type="radio" name="payment" value="Prywatnie" checked="@isPrywatnie"> Prywatnie</label>
+            <input type="radio" id="payment-nfz" name="payment" value="NFZ" @(isNFZ ? "checked" : null)>
+            <label for="payment-nfz">NFZ</label>
+
+            <input type="radio" id="payment-prywatnie" name="payment" value="Prywatnie" @(isPrywatnie ? "checked" :
+                                                                                                                                                                                                                                                                                          null)>
+            <label for="payment-prywatnie">Prywatnie</label>
         </div>
 
         <button type="submit" class="btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Szukaj</button>
@@ -54,13 +58,17 @@
                 var clinic = clinicGroup.Key;
                 <div class="clinic-card">
                     <h3 class="clinic-name">@clinic.Name</h3>
-                    <p class="text-muted">@clinic.Address, @clinic.City.Name</p>
-
-                    @foreach (var doctorGroup in clinicGroup.GroupBy(s => s.Doctor))
-                    {
-                        <div style="margin-bottom: 1.5rem;">
-                            <strong>@doctorGroup.Key.Title @doctorGroup.Key.FirstName @doctorGroup.Key.LastName</strong>
-                            <div class="rating-badge">
+                    <p class="text-muted"><i class="fa-solid fa-location-dot" style="margin-right: 0.4rem; color: #cbd5e1;"></i>
+                        @clinic.Address, @clinic.City.Name
+                    </p>
+                    <div class="doctors-container">
+                        @foreach (var doctorGroup in clinicGroup.GroupBy(s => s.Doctor))
+                        {
+                            <div class="doctor-block">
+                                <div class="doctor-info" style="margin-bottom: 1.2rem;">
+                                    <i class="fa-solid fa-user-doctor" style="color: var(--brand-bg); margin-right: 0.5rem;"></i>
+                                    <strong>@doctorGroup.Key.Title @doctorGroup.Key.FirstName @doctorGroup.Key.LastName</strong>
+                                   <div class="rating-badge">
                                 @if (ViewBag.DoctorRatings != null && ViewBag.DoctorRatings.ContainsKey(doctorGroup.Key.Id))
                                 {
                                     var ratingInfo = ViewBag.DoctorRatings[doctorGroup.Key.Id];
@@ -72,18 +80,20 @@
                                     <span class="rating-count text-muted">Brak ocen</span>
                                 }
                             </div>
+                                </div>
 
-                            <div class="time-slots">
-                                @foreach (var slot in doctorGroup)
-                                {
-                                    <button type="button" class="slot-btn"
-                                            onclick="openBookingModal(@slot.Id, '@clinic.Name', '@slot.StartTime.ToString("dd.MM.yyyy")', '@slot.StartTime.ToString("HH:mm")', '@slot.Service.Name')">
-                                        @slot.StartTime.ToString("HH:mm")
-                                    </button>
-                                }
+                                <div class="time-slots">
+                                    @foreach (var slot in doctorGroup)
+                                    {
+                                        <button type="button" class="slot-btn"
+                                                onclick="openBookingModal(@slot.Id, '@clinic.Name', '@slot.StartTime.ToString("dd.MM.yyyy")', '@slot.StartTime.ToString("HH:mm")', '@slot.Service.Name')">
+                                            @slot.StartTime.ToString("HH:mm")
+                                        </button>
+                                    }
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
             }
         }
@@ -124,7 +134,7 @@
 
                 function openBookingModal(slotId, clinicName, date, time, serviceName) {
 
-                    @if (!User?.Identity?.IsAuthenticated ?? false)
+                    @if (!User.Identity.IsAuthenticated)
                         {
                             <text>
                                     alert("Musisz być zalogowany, aby umówić wizytę.");

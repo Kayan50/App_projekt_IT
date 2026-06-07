@@ -1,24 +1,26 @@
 @page
 @model ResetAuthenticatorModel
 @{
-    ViewData["Title"] = "Reset authenticator key";
+    ViewData["Title"] = "Zresetuj klucz uwierzytelniający";
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
 }
 
 <partial name="_StatusMessage" for="StatusMessage" />
-<h3>@ViewData["Title"]</h3>
-<div class="alert alert-warning" role="alert">
-    <p>
-        <span class="glyphicon glyphicon-warning-sign"></span>
-        <strong>If you reset your authenticator key your authenticator app will not work until you reconfigure it.</strong>
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="alert alert-warning" style="margin-bottom: 2rem; background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 1rem; border-radius: 0 8px 8px 0; color: #b45309;">
+    <p style="margin-top: 0; margin-bottom: 0.5rem;">
+        <i class="fa-solid fa-triangle-exclamation" style="margin-right: 0.5rem;"></i>
+        <strong>Jeśli zresetujesz klucz, Twoja aplikacja uwierzytelniająca przestanie działać, dopóki jej nie skonfigurujesz ponownie.</strong>
     </p>
-    <p>
-        This process disables 2FA until you verify your authenticator app.
-        If you do not complete your authenticator app configuration you may lose access to your account.
+    <p style="margin: 0; font-size: 0.95rem;">
+        Ten proces całkowicie wyłącza logowanie dwuetapowe (2FA) do momentu ponownej weryfikacji aplikacji. Jeśli nie ukończysz konfiguracji, możesz stracić dostęp do swojego konta.
     </p>
 </div>
-<div>
-    <form id="reset-authenticator-form" method="post">
-        <button id="reset-authenticator-button" class="btn btn-danger" type="submit">Reset authenticator key</button>
-    </form>
-</div>
+
+<form id="reset-authenticator-form" method="post" class="auth-form">
+    <button id="reset-authenticator-button" class="btn-secondary" type="submit" style="margin-top: 0.5rem;">
+        <i class="fa-solid fa-rotate-right" style="margin-right: 0.5rem;"></i> Zresetuj klucz aplikacji
+    </button>
+</form>

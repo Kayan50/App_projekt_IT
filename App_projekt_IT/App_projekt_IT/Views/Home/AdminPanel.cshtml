@@ -1,0 +1,39 @@
+@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+<div class="admin-dashboard-container">
+    <h3 class="admin-dashboard-title">Panel Administratora</h3>
+
+    <div class="admin-grid">
+        <a asp-controller="Home" asp-action="Search" class="admin-grid-btn">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span>Wyszukiwarka</span>
+        </a>
+
+        <a asp-controller="Clinics" asp-action="Index" class="admin-grid-btn">
+            <i class="fa-solid fa-hospital"></i>
+            <span>Kliniki</span>
+        </a>
+
+        <a asp-controller="Doctors" asp-action="Index" class="admin-grid-btn">
+            <i class="fa-solid fa-user-doctor"></i>
+            <span>Lekarze</span>
+        </a>
+
+        <a asp-controller="Services" asp-action="Index" class="admin-grid-btn">
+            <i class="fa-solid fa-notes-medical"></i>
+            <span>Usługi</span>
+        </a>
+
+        <a asp-controller="Cities" asp-action="Index" class="admin-grid-btn">
+            <i class="fa-solid fa-city"></i>
+            <span>Miasta</span>
+        </a>
+
+        <a asp-area="Identity" asp-page="/Account/Manage/Index" class="admin-grid-btn">
+            <i class="fa-solid fa-gear"></i>
+            <span>Moje Konto</span>
+        </a>
+    </div>
+</div>
