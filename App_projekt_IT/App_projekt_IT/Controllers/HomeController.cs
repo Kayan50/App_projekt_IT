@@ -60,6 +60,25 @@ namespace App_projekt_IT.Controllers
                     query = query.Where(a => a.Service.IsNFZ == false);
 
                 var slots = await query.OrderBy(a => a.StartTime).ToListAsync();
+
+                // 1. Wyci¹gamy z wyników ID wszystkich wyszukanych lekarzy
+                var doctorIds = slots.Select(a => a.DoctorId).Distinct().ToList();
+
+                // 2. Liczymy dla nich œredni¹ ocen i ³adujemy do ViewBag.DoctorRatings
+                ViewBag.DoctorRatings = await _context.Reviews
+                    .Include(r => r.AppointmentSlot)
+                    .Where(r => doctorIds.Contains(r.AppointmentSlot.DoctorId))
+                    .GroupBy(r => r.AppointmentSlot.DoctorId)
+                    .Select(g => new
+                    {
+                        DoctorId = g.Key,
+                        AverageRating = Math.Round(g.Average(r => r.Rating), 1),
+                        ReviewCount = g.Count()
+                    })
+                    .ToDictionaryAsync(k => k.DoctorId, v => v);
+
+                
+
                 return View(slots);
             }
 

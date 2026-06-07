@@ -1,1 +1,1 @@
-# Aplikacja do rezerwacji wizyt lub usług w szpitalach
+# Aplikacja do rezerwacji wizyt lub usług w klinikach

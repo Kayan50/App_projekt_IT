@@ -1,0 +1,49 @@
+﻿@model App_projekt_IT.Models.Review
+
+@{
+    ViewData["Title"] = "Oceń wizytę";
+}
+
+<div class="clinic-card">
+    <h2>Wystaw opinię</h2>
+
+    @if (ViewBag.DoctorName != null)
+    {
+        <p class="text-muted">
+            Oceniasz wizytę: <strong>@ViewBag.ServiceName</strong> u dr. <strong>@ViewBag.DoctorName</strong>
+        </p>
+    }
+
+    <hr />
+
+    <form asp-action="Create" method="post">
+        <input type="hidden" asp-for="AppointmentSlotId" />
+
+        <div class="form-group">
+            <label asp-for="Rating">Twoja ocena:</label>
+            <select asp-for="Rating" class="form-control">
+                <option value="5">⭐⭐⭐⭐⭐ (5) - Wybitnie</option>
+                <option value="4" selected>⭐⭐⭐⭐ (4) - Bardzo dobrze</option>
+                <option value="3">⭐⭐⭐ (3) - Przeciętnie</option>
+                <option value="2">⭐⭐ (2) - Słabo</option>
+                <option value="1">⭐ (1) - Tragedia</option>
+            </select>
+            <span asp-validation-for="Rating" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Comment">Komentarz (opcjonalny):</label>
+            <textarea asp-for="Comment" class="form-control" rows="4" placeholder="Podziel się swoimi wrażeniami. Co poszło dobrze, a co można poprawić?"></textarea>
+            <span asp-validation-for="Comment" class="text-danger"></span>
+        </div>
+
+        <div class="action-buttons">
+            <button type="submit" class="btn-primary">Zapisz opinię</button>
+            <a asp-controller="Notification" asp-action="Index" class="btn-secondary">Anuluj</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -17,6 +17,7 @@ namespace App_projekt_IT.Data
         public DbSet<Service> Services { get; set; }
         public DbSet<AppointmentSlot> AppointmentSlots { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Review> Reviews { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

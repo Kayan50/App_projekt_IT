@@ -32,6 +32,15 @@
                         <button type="submit" class="btn-primary btn-success">Potwierdź obecność</button>
                     </form>
                 }
+
+                @if (notif.Type == "ProsbaOOpinie" && notif.AppointmentSlot != null && !notif.AppointmentSlot.IsReviewed)
+                {
+                    <div class="action-links">
+                        <a asp-controller="Review" asp-action="Create" asp-route-appointmentId="@notif.AppointmentSlot.Id" class="btn-primary">
+                             Oceń wizytę
+                        </a>
+                    </div>
+                }
             </div>
         }
     }
