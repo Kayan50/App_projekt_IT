@@ -1,41 +1,30 @@
 @{
     ViewData["Title"] = "Strona Główna";
-    // Zabezpieczenie na wypadek braku ról - rozpoznajemy admina po mailu lub roli
+    // Sprawdzamy czy to admin
     bool isAdmin = User.IsInRole("Admin") || User.Identity?.Name == "admin@kliniki.pl";
 }
 
-<div class="landing-page" style="text-align: center; padding: 6rem 2rem; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: 60vh;">
-    
-    <h1 style="color: var(--brand-bg); font-size: 3.5rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 1rem;">
-        Kliniki-Med
-    </h1>
-    <p style="font-size: 1.25rem; color: #475569; margin-bottom: 4rem;">
-        Twój nowoczesny system rezerwacji wizyt medycznych online.
-    </p>
+@if (isAdmin)
+{
+    <partial name="AdminPanel" />
+}
+else
+{
+    <div class="landing-page"
+         style="text-align: center; padding: 6rem 2rem; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: 60vh;">
 
-    @if (isAdmin)
-    {
-        <h3 style="color: var(--text-dark); margin-bottom: 1.5rem;">Panel Administratora</h3>
-        <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
-            
-            <a asp-controller="Home" asp-action="Search" class="btn-primary" style="padding: 1.5rem 3rem; font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; text-decoration: none; border-radius: 12px;">
-                <i class="fa-solid fa-magnifying-glass" style="font-size: 2.5rem;"></i>
-                Wyszukiwarka
-            </a>
-            
-            <a asp-controller="Clinics" asp-action="Index" class="btn-secondary" style="padding: 1.5rem 3rem; font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; text-decoration: none; border: 2px solid var(--brand-bg); color: var(--brand-bg); border-radius: 12px;">
-                <i class="fa-solid fa-gears" style="font-size: 2.5rem;"></i>
-                Zarządzaj systemem
-            </a>
-            
-        </div>
-    }
-    else
-    {
+        <h1 style="color: var(--brand-bg); font-size: 3.5rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 1rem;">
+            Witaj w Kliniki-Med
+        </h1>
+        <p style="font-size: 1.25rem; color: #475569; margin-bottom: 4rem;">
+            Twój nowoczesny system rezerwacji wizyt medycznych online.
+        </p>
+
         <div>
-            <a asp-controller="Home" asp-action="Search" class="btn-primary" style="padding: 1.2rem 3rem; font-size: 1.2rem; border-radius: 50px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.8rem; box-shadow: 0 10px 15px -3px rgba(244, 63, 94, 0.3);">
+            <a asp-controller="Home" asp-action="Search" class="btn-primary"
+               style="padding: 1.2rem 3rem; font-size: 1.2rem; border-radius: 50px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.8rem; box-shadow: 0 10px 15px -3px rgba(244, 63, 94, 0.3);">
                 Znajdź wolny termin <i class="fa-solid fa-arrow-right"></i>
             </a>
         </div>
-    }
-</div>
+    </div>
+}

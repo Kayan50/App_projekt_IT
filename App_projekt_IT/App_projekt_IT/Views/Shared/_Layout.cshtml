@@ -15,14 +15,20 @@
     <header class="main-header">
         <a asp-area="" asp-controller="Home" asp-action="Index" class="logo">Kliniki-Med</a>
 
+        <button class="hamburger-btn" id="mobile-menu-btn" aria-label="Otwórz menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
         <nav class="custom-nav-container">
             @{
-                // 1. Pobieramy nazwę aktualnego kontrolera (gdzie obecnie jesteśmy)
                 var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
+                var currentPage = ViewContext.RouteData.Values["page"]?.ToString();
 
-                // 2. Lista kontrolerów, które uznajemy za "Panel Zarządzania"
                 string[] adminControllers = { "Clinics", "Doctors", "Services", "Cities" };
-                bool isManaging = adminControllers.Contains(currentController);
+
+                bool isManaging = adminControllers.Contains(currentController) || (currentArea == "Identity" && currentPage
+                            != null && currentPage.Contains("/Manage/"));
             }
 
             @if (User.IsInRole("Admin") && isManaging)
@@ -44,7 +50,6 @@
     </header>
 
     @{
-        // Pamiętaj, aby w pliku wyszukiwarki i nowej strony głównej ustawić odpowiedni Title!
         bool isHomePage = ViewData["Title"]?.ToString() == "Strona Główna" || ViewData["Title"]?.ToString() ==
    "Wyszukiwarka";
         string spacingClass = isHomePage ? "" : "page-spacing";
