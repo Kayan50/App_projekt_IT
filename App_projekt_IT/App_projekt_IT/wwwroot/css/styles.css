@@ -107,7 +107,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.61);
+  background: rgba(15, 23, 42, 0.74);
   z-index: -1;
 }
 
@@ -146,12 +146,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.8rem;
-  background: rgba(255, 255, 255, 0.05);
   padding: 1rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(10px);
   margin: 0 auto;
 }
 
@@ -1397,6 +1392,69 @@ dl.row dd {
   color: var(--brand-btn);
 }
 
+/* WIDOK SZCZEGÓŁÓW (DETAILS) */
+.details-container {
+  max-width: 1500px;
+  padding: 2.5rem;
+}
+
+.details-container h2 {
+  color: var(--brand-bg);
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  letter-spacing: -0.5px;
+}
+
+.detail-block {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;  
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-block h3 {
+  font-size: 1.1rem;
+  color: #475569;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.detail-block h3 i {
+  color: var(--brand-btn);
+  margin-right: 0.5rem;
+}
+
+.detail-block p {
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+}
+
+.detail-block .doctor-name {
+  margin-bottom: 0;
+  font-size: 1.05rem;
+}
+
+.detail-block i {
+  color: #94a3b8;
+  margin-right: 0.3rem;
+  width: 16px;
+  text-align: center;
+}
+
+.detail-divider {
+  border: 0;
+  border-top: 1px #cbd5e1;
+  margin: 1rem 0;
+}
+
+.center-buttons {
+  justify-content: center;
+  margin-top: 0;
+}
+
 /* =========================================
    10. WERSJA MOBILNA
 ========================================= */
@@ -1408,9 +1466,7 @@ dl.row dd {
     padding: 1rem;
   }
 
-  /* =========================================
-     HAMBURGER
-  ========================================= */
+  /* HAMBURGER */
   .main-header {
     flex-direction: row;
     justify-content: space-between;
@@ -1458,9 +1514,7 @@ dl.row dd {
     }
   }
 
-  /* =========================================
-     ELEMENTy INTERFEJSU
-  ========================================= */
+  /* ELEMENTy INTERFEJSU */
   .search-section {
     padding: 2rem 1rem;
   }
@@ -1525,7 +1579,7 @@ dl.row dd {
   }
 
   /* =========================================
-     TABELe W PANELU ADMINA
+     TABELE W PANELU ADMINA
   ========================================= */
   .custom-table {
     display: block;

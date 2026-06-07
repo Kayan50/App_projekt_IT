@@ -31,7 +31,7 @@
             {
                 @foreach (var item in Model)
                 {
-                    <tr>
+                    <tr class="custom-table">
                         <td>
                             @item.StartTime.ToString("dd.MM.yyyy HH:mm")
                         </td>
@@ -44,28 +44,33 @@
                             @item.Service.Name
                         </td>
 
-                        <td class="action-links">
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn-primary">Szczegóły</a>
+                        <td style="display: flex; align-items: center; gap: 3rem;">
+
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn-primary">
+                                <i class="fa-solid fa-circle-info"></i> Szczegóły
+                            </a>
 
                             @if (item.StartTime > DateTime.Now)
                             {
-                                <form asp-action="CancelReservation" method="post" style="display: inline-block;">
+                                <form asp-action="CancelReservation" method="post" style="margin: 0;">
                                     <input type="hidden" name="id" value="@item.Id" />
                                     <button type="submit" class="btn-secondary"
                                             onclick="return confirm('Czy na pewno chcesz odwołać tę wizytę?');">
-                                        Odwołaj
+                                        <i class="fa-solid fa-xmark"></i> Odwołaj
                                     </button>
                                 </form>
                             }
                             else if (item.IsConfirmed && !item.IsReviewed)
                             {
-                                <a asp-controller="Review" asp-action="Create" asp-route-appointmentId="@item.Id" class="btn-primary">
-                                    ⭐ Oceń
+                                <a asp-controller="Review" asp-action="Create" asp-route-appointmentId="@item.Id" class="btn-rate">
+                                    <i class="fa-solid fa-star"></i> Oceń wizytę
                                 </a>
                             }
                             else if (item.IsReviewed)
                             {
-                                <span class="text-muted">Oceniono</span>
+                                <span class="text-muted" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fa-solid fa-check-double"></i> Oceniono
+                                </span>
                             }
                         </td>
                     </tr>

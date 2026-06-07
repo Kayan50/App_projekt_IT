@@ -87,7 +87,7 @@ namespace App_projekt_IT.Controllers
                 await _context.SaveChangesAsync();
 
                 TempData["SuccessMessage"] = "Dziękujemy za pozostawienie opinii!";
-                return RedirectToAction("Index", "Notification");
+                return RedirectToAction("Index", "PatientPanel");
             }
 
             

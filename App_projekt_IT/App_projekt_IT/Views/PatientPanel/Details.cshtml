@@ -4,39 +4,40 @@
     ViewData["Title"] = "Szczegóły wizyty";
 }
 
-<div class="admin-header">
-    <h1>Szczegóły Twojej wizyty</h1>
-</div>
+<div class="crud-form-container details-container">
+    <h2>Szczegóły Twojej wizyty</h2>
 
-<div class="clinic-card">
-    <div class="form-group">
-        <h3>Informacje o wizycie</h3>
+    <div class="detail-block">
+        <h3><i class="fa-solid fa-calendar-check"></i> Informacje o wizycie</h3>
         <p><strong>Data:</strong> @Model.StartTime.ToString("dd.MM.yyyy")</p>
         <p><strong>Godzina:</strong> @Model.StartTime.ToString("HH:mm")</p>
-        <p><strong>Zarezerwowana usługa:</strong> @Model.Service.Name</p>
+        <p><strong>Zarezerwowana usługa:</strong> @Model.Service?.Name</p>
     </div>
 
-    <hr />
-
-    <div class="form-group">
-        <h3>Lekarz</h3>
-        <p><strong>Imię i nazwisko:</strong> @Model.Doctor.Title @Model.Doctor.FirstName @Model.Doctor.LastName</p>
+    <div class="detail-block">
+        <h3><i class="fa-solid fa-user-doctor"></i> Lekarz specjalista</h3>
+        <p class="doctor-name">
+            <strong>@Model.Doctor?.Title @Model.Doctor?.FirstName @Model.Doctor?.LastName</strong>
+        </p>
     </div>
 
-    <hr />
+    <div class="detail-block">
+        <h3><i class="fa-solid fa-hospital"></i> Miejsce wizyty</h3>
+        <p><strong>Klinika:</strong> @Model.Doctor?.Clinic?.Name</p>
+        <p class="text-muted">
+            <i class="fa-solid fa-location-dot"></i> @Model.Doctor?.Clinic?.Address, @Model.Doctor?.Clinic?.PostalCode
+            @Model.Doctor?.Clinic?.City?.Name
+        </p>
 
-    <div class="form-group">
-        <h3>Miejsce wizyty (Klinika)</h3>
-        <p><strong>Nazwa:</strong> @Model.Doctor.Clinic.Name</p>
-        <p><strong>Adres:</strong> @Model.Doctor.Clinic.Address</p>
-        <p><strong>Miasto:</strong> @Model.Doctor.Clinic.PostalCode @Model.Doctor.Clinic.City.Name</p>
+        <hr class="detail-divider" />
 
-        <br />
-        <p><strong>Telefon kontaktowy:</strong> @Model.Doctor.Clinic.Phone</p>
-        <p><strong>Email kliniki:</strong> @Model.Doctor.Clinic.Email</p>
+        <p><i class="fa-solid fa-phone"></i> <strong>Telefon:</strong> @Model.Doctor?.Clinic?.Phone</p>
+        <p><i class="fa-solid fa-envelope"></i> <strong>Email:</strong> @Model.Doctor?.Clinic?.Email</p>
     </div>
 
-    <div class="action-buttons">
-        <a asp-action="Index" class="btn-secondary">Powrót do listy wizyt</a>
+    <div class="action-buttons center-buttons">
+        <a asp-action="Index" class="btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Powrót do listy wizyt
+        </a>
     </div>
 </div>
