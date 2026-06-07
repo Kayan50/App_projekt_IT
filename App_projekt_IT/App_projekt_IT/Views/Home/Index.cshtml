@@ -1,3 +1,4 @@
+@using App_projekt_IT.Models
 @{
     ViewData["Title"] = "Strona Główna";
     // Sprawdzamy czy to admin
@@ -27,4 +28,43 @@ else
             </a>
         </div>
     </div>
+
+    @if (ViewBag.TopReviews != null)
+    {
+        var reviews = (List<Review>)ViewBag.TopReviews;
+
+        if (reviews.Any())
+        {
+            <section class="reviews-section">
+                <div >
+                    <h2>Co mówią o nas pacjenci?</h2>
+                </div>
+
+                <div class="grid-container">
+                    @foreach (var review in reviews)
+                    {
+                        <div class="clinic-card">
+                            <div class="rating-stars">
+                                @for (int i = 0; i < review.Rating; i++)
+                                {
+                                    <span>⭐</span>
+                                }
+                            </div>
+
+                            <p class="review-comment" >
+                                "@review.Comment"
+                            </p>
+
+                            <p class="text-muted">
+                                <small>
+                                    Wizyta u: <strong>dr @review.AppointmentSlot.Doctor.LastName</strong><br />
+                                    Data: @review.CreatedAt.ToString("dd.MM.yyyy")
+                                </small>
+                            </p>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+    }
 }

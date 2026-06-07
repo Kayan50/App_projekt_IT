@@ -19,9 +19,20 @@ namespace App_projekt_IT.Controllers
             _logger = logger;
             _context = context;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-        return View();
+            
+            var topReviews = await _context.Reviews
+                .Include(r => r.AppointmentSlot)
+                    .ThenInclude(a => a.Doctor)
+                .Where(r => r.Rating >= 4 && !string.IsNullOrEmpty(r.Comment))
+                .OrderByDescending(r => r.CreatedAt)
+                .Take(3)
+                .ToListAsync();
+
+            ViewBag.TopReviews = topReviews;
+
+            return View();
         }
 
         public async Task<IActionResult> Search(int? serviceId, int? cityId, DateTime? appointmentDate, string payment)
