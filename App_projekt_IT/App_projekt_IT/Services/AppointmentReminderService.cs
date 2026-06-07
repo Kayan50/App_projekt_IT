@@ -23,7 +23,7 @@ namespace App_projekt_IT.Services
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             
-            using var timer = new PeriodicTimer(TimeSpan.FromHours(1));
+            using var timer = new PeriodicTimer(TimeSpan.FromMinutes(1));
 
             while (await timer.WaitForNextTickAsync(stoppingToken))
             {
@@ -90,7 +90,37 @@ namespace App_projekt_IT.Services
                 }
 
                 
-                if (appointmentsToRemind.Any() || appointmentsToCancel.Any())
+                var timeForReview = now.AddHours(-2);
+
+                var appointmentsToReview = await context.AppointmentSlots
+                    .Where(a => a.IsBooked
+                             && a.IsConfirmed 
+                             && !a.IsReviewed 
+                             && a.StartTime <= timeForReview)
+                    .ToListAsync(stoppingToken);
+
+                foreach (var appt in appointmentsToReview)
+                {
+                    
+                    bool alreadySent = await context.Notifications
+                        .AnyAsync(n => n.AppointmentSlotId == appt.Id && n.Type == "ProsbaOOpinie", stoppingToken);
+
+                    if (!alreadySent && appt.UserId != null)
+                    {
+                        var notification = new Notification
+                        {
+                            UserId = appt.UserId,
+                            AppointmentSlotId = appt.Id,
+                            Message = $"Twoja wizyta zaplanowana na {appt.StartTime:dd.MM.yyyy HH:mm} dobiegła końca. Będziemy wdzięczni za ocenę usługi i lekarza!",
+                            Type = "ProsbaOOpinie"
+                        };
+                        context.Notifications.Add(notification);
+                    }
+                }
+
+
+                
+                if (appointmentsToRemind.Any() || appointmentsToCancel.Any() || appointmentsToReview.Any())
                 {
                     await context.SaveChangesAsync(stoppingToken);
                 }
