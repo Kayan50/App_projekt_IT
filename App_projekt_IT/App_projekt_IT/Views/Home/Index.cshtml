@@ -11,21 +11,20 @@
 }
 else
 {
-    <div class="landing-page"
-         style="text-align: center; padding: 6rem 2rem; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: 60vh;">
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1>
+                Witaj w Kliniki-Med
+            </h1>
+            <p>
+                Twój nowoczesny system rezerwacji wizyt medycznych online.
+            </p>
 
-        <h1 style="color: var(--brand-bg); font-size: 3.5rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 1rem;">
-            Witaj w Kliniki-Med
-        </h1>
-        <p style="font-size: 1.25rem; color: #475569; margin-bottom: 4rem;">
-            Twój nowoczesny system rezerwacji wizyt medycznych online.
-        </p>
-
-        <div>
-            <a asp-controller="Home" asp-action="Search" class="btn-primary"
-               style="padding: 1.2rem 3rem; font-size: 1.2rem; border-radius: 50px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.8rem; box-shadow: 0 10px 15px -3px rgba(244, 63, 94, 0.3);">
-                Znajdź wolny termin <i class="fa-solid fa-arrow-right"></i>
-            </a>
+            <div class="hero-form">
+                <a asp-controller="Home" asp-action="Search" class="btn-primary hero-btn">
+                    Znajdź wolny termin <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -36,7 +35,7 @@ else
         if (reviews.Any())
         {
             <section class="reviews-section">
-                <div >
+                <div>
                     <h2>Co mówią o nas pacjenci?</h2>
                 </div>
 
@@ -51,7 +50,7 @@ else
                                 }
                             </div>
 
-                            <p class="review-comment" >
+                            <p class="review-comment">
                                 "@review.Comment"
                             </p>
 
