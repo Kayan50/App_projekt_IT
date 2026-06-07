@@ -13,9 +13,12 @@ namespace App_projekt_IT.Models
 
        
         [MaxLength(2000, ErrorMessage = "Opis nie może przekraczać 2000 znaków.")]
-        public string? Description { get; set; } 
+        public string? Description { get; set; }
+
         
-        public string? ImagePath { get; set; } 
+        public byte[]? ImageData { get; set; } 
+
+        public string? ImageContentType { get; set; } 
 
         public bool IsHighlighted { get; set; } = false; 
 

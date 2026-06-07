@@ -12,7 +12,8 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="ImagePath" />
+    <input type="hidden" asp-for="ImageData" />
+    <input type="hidden" asp-for="ImageContentType" />
 
     <div class="clinic-card">
 
@@ -38,11 +39,17 @@
             <label>Zmień zdjęcie (pozostaw puste, aby zachować obecne)</label>
             <input type="file" name="imageFile" class="form-control" accept="image/*" />
 
-            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            @if (Model.ImageData != null && Model.ImageContentType != null)
             {
-                <p class="text-muted">
-                    <small>Obecnie wgrany plik: <strong>@Model.ImagePath</strong></small>
-                </p>
+                string imageBase64 = Convert.ToBase64String(Model.ImageData);
+                string imageSrc = $"data:{Model.ImageContentType};base64,{imageBase64}";
+
+                <div style="margin-top: 1rem;">
+                    <p class="text-muted" style="margin-bottom: 0.5rem;">
+                        <small>Obecnie wgrane zdjęcie:</small>
+                    </p>
+                    <img src="@imageSrc" alt="Obecne zdjęcie" style="max-width: 150px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" />
+                </div>
             }
         </div>
 

@@ -47,10 +47,13 @@ else
                     {
                         <div class="service-card-horizontal">
 
-                            @if (!string.IsNullOrEmpty(service.ImagePath))
+                            @if (service.ImageData != null && service.ImageContentType != null)
                             {
+                                string imageBase64 = Convert.ToBase64String(service.ImageData);
+                                string imageSrc = $"data:{service.ImageContentType};base64,{imageBase64}";
+
                                 <div class="service-image-container">
-                                    <img src="@service.ImagePath" alt="@service.Name" class="service-image" />
+                                    <img src="@imageSrc" alt="@service.Name" class="service-image" />
                                 </div>
                             }
                             else
@@ -59,7 +62,6 @@ else
                                     <i class="fa-solid fa-stethoscope"></i>
                                 </div>
                             }
-
                             <div class="service-content">
                                 <h3 class="service-title">@service.Name</h3>
 

@@ -53,26 +53,15 @@ namespace App_projekt_IT.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+
                 if (imageFile != null && imageFile.Length > 0)
                 {
-                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "services");
-
-                    
-                    if (!Directory.Exists(uploadsFolder))
-                        Directory.CreateDirectory(uploadsFolder);
-
-                    
-                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    using (var memoryStream = new MemoryStream())
                     {
-                        await imageFile.CopyToAsync(fileStream);
+                        await imageFile.CopyToAsync(memoryStream);
+                        service.ImageData = memoryStream.ToArray();
+                        service.ImageContentType = imageFile.ContentType;
                     }
-
-                    
-                    service.ImagePath = "/images/services/" + uniqueFileName;
                 }
 
                 _context.Add(service);
@@ -96,7 +85,7 @@ namespace App_projekt_IT.Controllers
         // POST: SERVICES/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IsNFZ,Description,IsHighlighted,ImagePath")] Service service, IFormFile? imageFile)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IsNFZ,Description,IsHighlighted,ImageData,ImageContentType")] Service service, IFormFile? imageFile)
         {
             if (id != service.Id)
             {
@@ -109,30 +98,12 @@ namespace App_projekt_IT.Controllers
                 {
                     if (imageFile != null && imageFile.Length > 0)
                     {
-                        string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "services");
-                        if (!Directory.Exists(uploadsFolder))
-                            Directory.CreateDirectory(uploadsFolder);
-
-                        string uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
-                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        using (var memoryStream = new MemoryStream())
                         {
-                            await imageFile.CopyToAsync(fileStream);
+                            await imageFile.CopyToAsync(memoryStream);
+                            service.ImageData = memoryStream.ToArray();
+                            service.ImageContentType = imageFile.ContentType;
                         }
-
-                        
-                        if (!string.IsNullOrEmpty(service.ImagePath))
-                        {
-                            string oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, service.ImagePath.TrimStart('/'));
-                            if (System.IO.File.Exists(oldFilePath))
-                            {
-                                System.IO.File.Delete(oldFilePath);
-                            }
-                        }
-
-                        
-                        service.ImagePath = "/images/services/" + uniqueFileName;
                     }
 
                     _context.Update(service);
@@ -140,8 +111,14 @@ namespace App_projekt_IT.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ServiceExists(service.Id)) return NotFound();
-                    else throw;
+                    if (!ServiceExists(service.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
