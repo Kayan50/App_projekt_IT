@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using App_projekt_IT.Data;
+using System.Linq;
 
 
 namespace App_projekt_IT.Controllers
@@ -73,22 +74,49 @@ namespace App_projekt_IT.Controllers
                 return Ok(new List<object>());
             }
 
+            var doctorIds = availableSlots.Select(a => a.DoctorId).Distinct().ToList();
+
+            // Pobieramy opinie tylko dla tych lekarzy, grupujemy i wyliczamy średnią
+            var doctorRatings = await _context.Reviews
+                .Include(r => r.AppointmentSlot)
+                .Where(r => doctorIds.Contains(r.AppointmentSlot.DoctorId))
+                .GroupBy(r => r.AppointmentSlot.DoctorId)
+                .Select(g => new
+                {
+                    DoctorId = g.Key,
+                    AverageRating = Math.Round(g.Average(r => r.Rating), 1),
+                    ReviewCount = g.Count()
+                })
+                .ToDictionaryAsync(k => k.DoctorId, v => v);
+
+
+
             var groupedResults = availableSlots
                 .GroupBy(a => new
                 {
+                    DoctorId = a.DoctorId,
                     ClinicName = a.Doctor.Clinic.Name, 
                     DoctorFirstName = a.Doctor.FirstName,
                     DoctorLastName = a.Doctor.LastName
                 })
-                .Select(g => new
+                .Select(g => 
                 {
-                    clinicName = g.Key.ClinicName,
-                    doctorName = $"Dr {g.Key.DoctorFirstName} {g.Key.DoctorLastName}",
-                    availableSlots = g.Select(s => new
+                    bool hasRatings = doctorRatings.ContainsKey(g.Key.DoctorId);
+
+                    return new
                     {
-                        slotId = s.Id,
-                        time = s.StartTime.ToString("HH:mm")
-                    }).ToList()
+                        clinicName = g.Key.ClinicName,
+                        doctorName = $"Dr {g.Key.DoctorFirstName} {g.Key.DoctorLastName}",
+
+                        rating = hasRatings ? doctorRatings[g.Key.DoctorId].AverageRating : (double?)null,
+                        reviewCount = hasRatings ? doctorRatings[g.Key.DoctorId].ReviewCount : 0,
+                        availableSlots = g.Select(s => new
+                        {
+                            slotId = s.Id,
+                            time = s.StartTime.ToString("HH:mm")
+                        }).ToList()
+                    };
+                    
                 })
                 .ToList();
 

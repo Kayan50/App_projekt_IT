@@ -7,6 +7,8 @@
         public bool IsBooked { get; set; }
         
         public bool IsConfirmed { get; set; } = false;
+        
+        public bool IsReviewed { get; set; } = false;
 
         // Klucze obce
         public int DoctorId { get; set; }

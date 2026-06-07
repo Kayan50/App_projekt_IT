@@ -60,6 +60,19 @@
                     {
                         <div style="margin-bottom: 1.5rem;">
                             <strong>@doctorGroup.Key.Title @doctorGroup.Key.FirstName @doctorGroup.Key.LastName</strong>
+                            <div class="rating-badge">
+                                @if (ViewBag.DoctorRatings != null && ViewBag.DoctorRatings.ContainsKey(doctorGroup.Key.Id))
+                                {
+                                    var ratingInfo = ViewBag.DoctorRatings[doctorGroup.Key.Id];
+                                    <span class="rating-stars">⭐ @ratingInfo.AverageRating.ToString("0.0")</span>
+                                    <span class="rating-count text-muted">(@ratingInfo.ReviewCount opinii)</span>
+                                }
+                                else
+                                {
+                                    <span class="rating-count text-muted">Brak ocen</span>
+                                }
+                            </div>
+
                             <div class="time-slots">
                                 @foreach (var slot in doctorGroup)
                                 {
