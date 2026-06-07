@@ -31,8 +31,7 @@
             <input type="radio" id="payment-nfz" name="payment" value="NFZ" @(isNFZ ? "checked" : null)>
             <label for="payment-nfz">NFZ</label>
 
-            <input type="radio" id="payment-prywatnie" name="payment" value="Prywatnie" @(isPrywatnie ? "checked" :
-                                                                                                                                                                                                                                                                                          null)>
+            <input type="radio" id="payment-prywatnie" name="payment" value="Prywatnie" @(isPrywatnie ? "checked" : null)>
             <label for="payment-prywatnie">Prywatnie</label>
         </div>
 
@@ -68,18 +67,18 @@
                                 <div class="doctor-info" style="margin-bottom: 1.2rem;">
                                     <i class="fa-solid fa-user-doctor" style="color: var(--brand-bg); margin-right: 0.5rem;"></i>
                                     <strong>@doctorGroup.Key.Title @doctorGroup.Key.FirstName @doctorGroup.Key.LastName</strong>
-                                   <div class="rating-badge">
-                                @if (ViewBag.DoctorRatings != null && ViewBag.DoctorRatings.ContainsKey(doctorGroup.Key.Id))
-                                {
-                                    var ratingInfo = ViewBag.DoctorRatings[doctorGroup.Key.Id];
-                                    <span class="rating-stars">⭐ @ratingInfo.AverageRating.ToString("0.0")</span>
-                                    <span class="rating-count text-muted">(@ratingInfo.ReviewCount opinii)</span>
-                                }
-                                else
-                                {
-                                    <span class="rating-count text-muted">Brak ocen</span>
-                                }
-                            </div>
+                                    <div class="rating-badge">
+                                        @if (ViewBag.DoctorRatings != null && ViewBag.DoctorRatings.ContainsKey(doctorGroup.Key.Id))
+                                        {
+                                            var ratingInfo = ViewBag.DoctorRatings[doctorGroup.Key.Id];
+                                            <span class="rating-stars">⭐ @ratingInfo.AverageRating.ToString("0.0")</span>
+                                            <span class="rating-count text-muted">(@ratingInfo.ReviewCount opinii)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="rating-count text-muted">Brak ocen</span>
+                                        }
+                                    </div>
                                 </div>
 
                                 <div class="time-slots">
