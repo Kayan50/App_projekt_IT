@@ -538,7 +538,7 @@ body {
   margin-top: 0.8rem;
   max-height: 140px;
   overflow-y: auto;
-  padding-right: 5px;
+  padding: 5px;
 }
 
 /* Pasek przewijania godzin */
@@ -1057,6 +1057,15 @@ dl.row dd {
   animation: badgePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+@keyframes badgePop {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .action-links-notification {
   display: flex;
   align-items: center;
@@ -1101,13 +1110,35 @@ dl.row dd {
     color 0.3s ease;
 }
 
-@keyframes badgePop {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.star-rating input[type="radio"] {
+  display: none;
+}
+
+.star-rating label {
+  font-size: 2.5rem;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+  margin: 0;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #fbbe24c0;
+  transform: scale(1.1);
+}
+
+.star-rating input[type="radio"]:checked ~ label {
+  color: #f59e0b;
 }
 
 /* =========================================

@@ -5,17 +5,15 @@
 }
 
 <div class="crud-form-container" style="max-width: 600px; margin-top: 2rem;">
-    <h2
-        style="color: var(--brand-bg); margin-bottom: 1.5rem; text-align: center; font-weight: 700; letter-spacing: -0.5px;">
+    <h2 style="color: var(--brand-bg); margin-bottom: 1.5rem; text-align: center; font-weight: 700; letter-spacing: -0.5px;">
         Wystaw opinię
     </h2>
 
     @if (ViewBag.DoctorName != null)
     {
-        <div class="alert"
-             style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.2rem; margin-bottom: 2rem; text-align: center;">
+        <div class="alert" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.2rem; margin-bottom: 2rem; text-align: center;">
             <p style="margin: 0; color: #475569; font-size: 1.05rem;">
-                Oceniasz wizytę: <strong style="color: var(--brand-bg);">@ViewBag.ServiceName</strong> <br />
+                Oceniasz wizytę: <strong style="color: var(--brand-bg);">@ViewBag.ServiceName</strong> <br/>
                 u specjalisty: <strong style="color: var(--brand-bg);">@ViewBag.DoctorName</strong>
             </p>
         </div>
@@ -25,28 +23,40 @@
         <input type="hidden" asp-for="AppointmentSlotId" />
 
         <div class="form-group">
-            <label asp-for="Rating">Twoja ocena:</label>
-            <select asp-for="Rating">
-                <option value="5">⭐⭐⭐⭐⭐ (5) - Wybitnie</option>
-                <option value="4" selected>⭐⭐⭐⭐ (4) - Bardzo dobrze</option>
-                <option value="3">⭐⭐⭐ (3) - Przeciętnie</option>
-                <option value="2">⭐⭐ (2) - Słabo</option>
-                <option value="1">⭐ (1) - Tragedia</option>
-            </select>
+            <label>Twoja ocena:</label>
+            
+            <div class="star-rating">
+                <input type="radio" asp-for="Rating" value="5" id="star5" />
+                <label for="star5" data-text="Wybitnie"><i class="fa-solid fa-star"></i></label>
+                
+                <input type="radio" asp-for="Rating" value="4" id="star4" checked />
+                <label for="star4" data-text="Bardzo dobrze"><i class="fa-solid fa-star"></i></label>
+                
+                <input type="radio" asp-for="Rating" value="3" id="star3" />
+                <label for="star3" data-text="Przeciętnie"><i class="fa-solid fa-star"></i></label>
+                
+                <input type="radio" asp-for="Rating" value="2" id="star2" />
+                <label for="star2" data-text="Słabo"><i class="fa-solid fa-star"></i></label>
+                
+                <input type="radio" asp-for="Rating" value="1" id="star1" />
+                <label for="star1" data-text="Tragedia"><i class="fa-solid fa-star"></i></label>
+            </div>
+            
+            <div id="rating-text" style="color: #64748b; font-size: 0.95rem; font-weight: 600; margin-top: 0.5rem; text-align: left; height: 1.5rem;">
+                Bardzo dobrze
+            </div>
             <span asp-validation-for="Rating" style="color: #e11d48; font-size: 0.85rem; margin-top: 0.2rem;"></span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" style="margin-top: 1rem;">
             <label asp-for="Comment">Komentarz (opcjonalny):</label>
-            <textarea asp-for="Comment" rows="4"
-                      style="width: 100%; padding: 0.9rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; font-family: inherit; color: var(--text-dark); resize: vertical; outline: none; background-color: #f8fafc;"
-                      placeholder="Podziel się swoimi wrażeniami. Co poszło dobrze, a co można poprawić?"></textarea>
+            <textarea asp-for="Comment" rows="4" style="width: 100%; padding: 0.9rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; font-family: inherit; color: var(--text-dark); resize: vertical; outline: none; background-color: #f8fafc;" placeholder="Podziel się swoimi wrażeniami. Co poszło dobrze, a co można poprawić?"></textarea>
             <span asp-validation-for="Comment" style="color: #e11d48; font-size: 0.85rem; margin-top: 0.2rem;"></span>
         </div>
 
         <div class="action-buttons">
             <button type="submit" class="btn-primary">
-                <i class="fa-solid fa-star" style="margin-right: 0.5rem;"></i> Zapisz opinię
+                <i class="fa-solid fa-check" style="margin-right: 0.5rem;"></i> Zapisz opinię
             </button>
             <a asp-controller="Notification" asp-action="Index" class="btn-secondary">
                 <i class="fa-solid fa-xmark" style="margin-right: 0.5rem;"></i> Anuluj
@@ -57,19 +67,42 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-
+    
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const textarea = document.querySelector("textarea");
-            textarea.addEventListener("focus", function () {
+            textarea.addEventListener("focus", function() {
                 this.style.backgroundColor = "white";
                 this.style.borderColor = "var(--brand-btn)";
                 this.style.boxShadow = "0 0 0 3px rgba(244, 63, 94, 0.15)";
             });
-            textarea.addEventListener("blur", function () {
+            textarea.addEventListener("blur", function() {
                 this.style.backgroundColor = "#f8fafc";
                 this.style.borderColor = "#cbd5e1";
                 this.style.boxShadow = "none";
+            });
+
+            const stars = document.querySelectorAll('.star-rating label');
+            const ratingText = document.getElementById('rating-text');
+            
+            let currentText = document.querySelector('.star-rating input:checked + label')?.getAttribute('data-text') || 'Bardzo dobrze';
+            ratingText.innerText = currentText;
+
+            stars.forEach(star => {
+                star.addEventListener('mouseover', function() {
+                    ratingText.innerText = this.getAttribute('data-text');
+                    ratingText.style.color = "#f59e0b";
+                });
+                
+                star.addEventListener('mouseout', function() {
+                    ratingText.innerText = currentText;
+                    ratingText.style.color = "#64748b";
+                });
+                
+                star.addEventListener('click', function() {
+                    currentText = this.getAttribute('data-text');
+                    ratingText.innerText = currentText;
+                });
             });
         });
     </script>
