@@ -59,7 +59,6 @@ namespace App_projekt_IT.Controllers
 
                 if (appointmentDate.HasValue)
                 {
-                    
                     var startOfDay = appointmentDate.Value.Date;
                     var endOfDay = startOfDay.AddDays(1);
                     query = query.Where(a => a.StartTime >= startOfDay && a.StartTime < endOfDay);
@@ -72,10 +71,47 @@ namespace App_projekt_IT.Controllers
 
                 var slots = await query.OrderBy(a => a.StartTime).ToListAsync();
 
-                // 1. Wyci¹gamy z wyników ID wszystkich wyszukanych lekarzy
-                var doctorIds = slots.Select(a => a.DoctorId).Distinct().ToList();
+                
+                List<AppointmentSlot> alternativeSlots = new List<AppointmentSlot>();
 
-                // 2. Liczymy dla nich œredni¹ ocen i ³adujemy do ViewBag.DoctorRatings
+                
+                if (!slots.Any() && appointmentDate.HasValue)
+                {
+                    
+                    var altQuery = _context.AppointmentSlots
+                        .Include(a => a.Doctor)
+                            .ThenInclude(d => d.Clinic)
+                                .ThenInclude(c => c.City)
+                        .Include(a => a.Service)
+                        .Where(a => a.IsBooked == false && a.StartTime > DateTime.Now);
+
+                    if (serviceId.HasValue) altQuery = altQuery.Where(a => a.ServiceId == serviceId.Value);
+                    if (cityId.HasValue) altQuery = altQuery.Where(a => a.Doctor.Clinic.CityId == cityId.Value);
+                    if (payment == "NFZ") altQuery = altQuery.Where(a => a.Service.IsNFZ == true);
+                    else if (payment == "Prywatnie") altQuery = altQuery.Where(a => a.Service.IsNFZ == false);
+
+                   
+                    var nearestSlot = await altQuery.OrderBy(a => a.StartTime).FirstOrDefaultAsync();
+
+                    if (nearestSlot != null)
+                    {
+                        
+                        var altDayStart = nearestSlot.StartTime.Date;
+                        var altDayEnd = altDayStart.AddDays(1);
+
+                        alternativeSlots = await altQuery
+                            .Where(a => a.DoctorId == nearestSlot.DoctorId && a.StartTime >= altDayStart && a.StartTime < altDayEnd)
+                            .OrderBy(a => a.StartTime)
+                            .ToListAsync();
+                    }
+                }
+
+                ViewBag.AlternativeSlots = alternativeSlots;
+                
+                var doctorIds = slots.Select(a => a.DoctorId).ToList();
+                doctorIds.AddRange(alternativeSlots.Select(a => a.DoctorId));
+                doctorIds = doctorIds.Distinct().ToList();
+
                 ViewBag.DoctorRatings = await _context.Reviews
                     .Include(r => r.AppointmentSlot)
                     .Where(r => doctorIds.Contains(r.AppointmentSlot.DoctorId))
@@ -87,8 +123,6 @@ namespace App_projekt_IT.Controllers
                         ReviewCount = g.Count()
                     })
                     .ToDictionaryAsync(k => k.DoctorId, v => v);
-
-                
 
                 return View(slots);
             }
