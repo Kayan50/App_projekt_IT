@@ -44,11 +44,31 @@ namespace App_projekt_IT.Controllers
 
         public async Task<IActionResult> Search(int? serviceId, int? cityId, DateTime? appointmentDate, string payment)
         {
-            ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Name", serviceId);
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", cityId);
-
             TimeZoneInfo polishTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
             DateTime currentPolishTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, polishTimeZone);
+
+            ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Name", serviceId);
+
+            if (serviceId.HasValue)
+            {
+                
+                var availableCities = await _context.AppointmentSlots
+                    .Where(a => a.ServiceId == serviceId.Value && a.IsBooked == false && a.StartTime > currentPolishTime)
+                    .Select(a => a.Doctor.Clinic.City)
+                    .Distinct()
+                    .OrderBy(c => c.Name)
+                    .ToListAsync();
+
+                ViewData["CityId"] = new SelectList(availableCities, "Id", "Name", cityId);
+            }
+            else
+            {
+                
+                var allCities = await _context.Cities.OrderBy(c => c.Name).ToListAsync();
+                ViewData["CityId"] = new SelectList(allCities, "Id", "Name", cityId);
+            }
+
+
 
             var query = _context.AppointmentSlots
                 .Include(a => a.Doctor)
@@ -138,6 +158,36 @@ namespace App_projekt_IT.Controllers
             }
 
             return View(new List<AppointmentSlot>());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCitiesForService(int? serviceId)
+        {
+            
+            if (serviceId == null)
+            {
+                var allCities = await _context.Clinics
+                    .Select(c => c.City)
+                    .Distinct()
+                    .Select(c => new { value = c.Id, text = c.Name })
+                    .OrderBy(c => c.text)
+                    .ToListAsync();
+
+                return Json(allCities);
+            }
+
+            var cities = await _context.AppointmentSlots
+                .Where(a => a.ServiceId == serviceId && a.IsBooked == false && a.StartTime > DateTime.Now)
+                
+                .Select(a => a.Doctor.Clinic.City)
+                
+                .Distinct()
+                
+                .Select(c => new { value = c.Id, text = c.Name })
+                .OrderBy(c => c.text)
+                .ToListAsync();
+
+            return Json(cities); 
         }
         public IActionResult Privacy()
         {

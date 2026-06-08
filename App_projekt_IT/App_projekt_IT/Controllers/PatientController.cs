@@ -24,15 +24,20 @@ namespace App_projekt_IT.Controllers
             
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            
-            var userAppointments = await _context.AppointmentSlots
-                .Include(a => a.Doctor)    
-                .Include(a => a.Service)   
-                .Where(a => a.UserId == userId && a.IsBooked == true)
-                .OrderBy(a => a.StartTime) 
-                .ToListAsync();
 
-            return View(userAppointments);
+            var appointmentsFromDb = await _context.AppointmentSlots
+                .Include(a => a.Doctor)
+                .Include(a => a.Service)
+                .Where(a => a.UserId == userId && a.IsBooked == true) 
+                .ToListAsync(); 
+
+            
+            var appointments = appointmentsFromDb
+                .OrderByDescending(a => a.StartTime >= DateTime.Now)
+                .ThenBy(a => a.StartTime >= DateTime.Now ? a.StartTime.Ticks : -a.StartTime.Ticks)
+                .ToList();
+
+            return View(appointments);
         }
 
         // GET: Details

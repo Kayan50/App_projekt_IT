@@ -183,68 +183,142 @@
                 </div>
             </div>
 
+<div id="messageModal" class="modal-overlay hidden">
+    <div class="modal-content" style="text-align: center;">
+        <div class="modal-header">
+            <h3 id="messageModalTitle">Informacja</h3>
+        </div>
+        <div class="modal-body">
+            <p id="messageModalText" style="font-size: 1.1rem; margin-top: 1rem;"></p>
+        </div>
+        <div class="action-buttons" style="margin-top: 1.5rem; justify-content: center;">
+            <button type="button" id="messageModalBtn" class="btn-primary">Rozumiem</button>
+        </div>
+    </div>
+</div>
+
+
             @section Scripts {
-                <script>
-                    $(document).ready(function () {
-                        $('#city, #service-type').select2({
-                            width: '100%',
-                            placeholder: "Wybierz opcję"
+    <script>
+        $(document).ready(function () {
+            $('#city, #service-type').select2({
+                width: '100%',
+                placeholder: "Wybierz opcję"
+            });
+
+            $('#service-type').on('change', function () {
+                var selectedServiceId = $(this).val();
+                var citySelect = $('#city');
+
+                
+                citySelect.empty();
+                citySelect.append('<option value="">Miasto</option>');
+
+                
+                fetch('/Home/GetCitiesForService?serviceId=' + selectedServiceId)
+                    .then(response => response.json())
+                    .then(data => {
+                        
+                        data.forEach(function (city) {
+                            var newOption = new Option(city.text, city.value, false, false);
+                            citySelect.append(newOption);
                         });
+
+                        
+                        citySelect.trigger('change');
+                    })
+                    .catch(error => {
+                        console.error('Wystąpił błąd podczas pobierania miast:', error);
                     });
-                    let currentSlotId = null;
+            });
+        });
 
-                    function openBookingModal(slotId, clinicName, date, time, serviceName) {
+        let currentSlotId = null;
 
-                        @if (!User.Identity.IsAuthenticated)
-                            {
-                                <text>
-                                        alert("Musisz być zalogowany, aby umówić wizytę.");
-                                        window.location.href = '/Identity/Account/Login';
-                                        return;
-                                </text>
-                        }
+        
+        function showMessageModal(title, message, isSuccess, actionCallback) {
+            document.getElementById('messageModalTitle').innerText = title;
+            document.getElementById('messageModalText').innerText = message;
 
-                            currentSlotId = slotId;
-                        document.getElementById('modalClinicName').innerText = clinicName;
-                        document.getElementById('modalServiceName').innerText = serviceName;
-                        document.getElementById('modalDate').innerText = date;
-                        document.getElementById('modalTime').innerText = time;
-                        document.getElementById('bookingModal').classList.remove('hidden');
-                    }
+            let btn = document.getElementById('messageModalBtn');
 
-                    function closeBookingModal() {
-                        document.getElementById('bookingModal').classList.add('hidden');
-                        currentSlotId = null;
-                    }
+            if (isSuccess) {
+                btn.className = "btn-primary btn-success";
+            } else {
+                btn.className = "btn-secondary";
+            }
 
-                    function confirmBooking() {
-                        if (!currentSlotId) return;
+            btn.onclick = function() {
+                document.getElementById('messageModal').classList.add('hidden');
+                if (actionCallback) {
+                    actionCallback();
+                }
+            };
+
+            document.getElementById('messageModal').classList.remove('hidden');
+        }
+
+        
+        function openBookingModal(slotId, clinicName, date, time, serviceName) {
 
             
-                        fetch(`/api/BookingApi/${currentSlotId}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        })
-                            .then(response => {
-                                return response.json().then(data => ({ status: response.status, body: data }));
-                            })
-                            .then(result => {
-                                closeBookingModal();
-                                if (result.status === 200) {
-                                    alert(result.body.message);
-                                    window.location.href = '/PatientPanel';
-                                } else {
-                                    alert(result.body.message);
-                                    window.location.reload();
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Błąd:', error);
-                                alert('Wystąpił problem techniczny.');
-                                closeBookingModal();
-                            });
-                    }
-                </script>
+            @if (!User.Identity.IsAuthenticated)
+            {
+                    <text>
+                        showMessageModal("Wymagane logowanie", "Musisz być zalogowany, aby umówić wizytę.", false, function() {
+                            window.location.href = '/Identity/Account/Login';
+                        });
+                        return;
+                    </text>
+            }
+
+            currentSlotId = slotId;
+            document.getElementById('modalClinicName').innerText = clinicName;
+            document.getElementById('modalServiceName').innerText = serviceName;
+            document.getElementById('modalDate').innerText = date;
+            document.getElementById('modalTime').innerText = time;
+            document.getElementById('bookingModal').classList.remove('hidden');
+        }
+
+        
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.add('hidden');
+            currentSlotId = null;
+        }
+
+        
+        function confirmBooking() {
+            if (!currentSlotId) return;
+
+            fetch(`/api/BookingApi/${currentSlotId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                return response.json().then(data => ({ status: response.status, body: data }));
+            })
+            .then(result => {
+                closeBookingModal();
+
+                
+                if (result.status === 200) {
+                    showMessageModal("Sukces!", result.body.message, true, function() {
+                        window.location.href = '/PatientPanel';
+                    });
+                } else {
+                    showMessageModal("Uwaga", result.body.message, false, function() {
+                        window.location.reload();
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Błąd:', error);
+                closeBookingModal();
+                showMessageModal("Błąd techniczny", "Wystąpił problem z połączeniem z serwerem.", false, null);
+            });
+        }
+    </script>
+   
             }
