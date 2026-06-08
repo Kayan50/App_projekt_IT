@@ -52,10 +52,10 @@
 
                             @if (item.StartTime > DateTime.Now)
                             {
-                                <form asp-action="CancelReservation" method="post" style="margin: 0;">
+                                <form id="cancel-form-@item.Id" asp-action="CancelReservation" method="post" style="margin: 0;">
                                     <input type="hidden" name="id" value="@item.Id" />
-                                    <button type="submit" class="btn-secondary"
-                                            onclick="return confirm('Czy na pewno chcesz odwołać tę wizytę?');">
+                                    <button type="button" class="btn-secondary"
+                                            onclick="openCancelModal(@item.Id, '@item.Doctor.LastName', '@item.StartTime.ToString("dd.MM.yyyy HH:mm")')">
                                         <i class="fa-solid fa-xmark"></i> Odwołaj
                                     </button>
                                 </form>
@@ -79,3 +79,56 @@
         </tbody>
     </table>
 </div>
+
+<div id="cancelModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Odwołanie wizyty</h3>
+        </div>
+
+        <div class="modal-body">
+            <p>Czy na pewno chcesz odwołać wizytę u lekarza<br><strong id="cancelDoctorName"></strong>?</p>
+            <p>Termin: <strong id="cancelDate"></strong></p>
+            <p class="text-danger" style="margin-top: 1rem; font-size: 0.9rem;">
+                Ta operacja jest nieodwracalna.
+            </p>
+        </div>
+
+        <div class="action-buttons" style="margin-top: 0;">
+            <button type="button" onclick="confirmCancel()" class="btn-primary" style="background-color: #ef4444; border-color: #ef4444;">
+                <i class="fa-solid fa-trash"></i> Tak
+            </button>
+            <button type="button" onclick="closeCancelModal()" class="btn-secondary">
+                <i class="fa-solid fa-times"></i> Wróć
+            </button>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        let currentCancelFormId = null;
+
+        
+        function openCancelModal(appointmentId, doctorName, date) {
+            currentCancelFormId = 'cancel-form-' + appointmentId;
+            document.getElementById('cancelDoctorName').innerText = "dr " + doctorName;
+            document.getElementById('cancelDate').innerText = date;
+
+            document.getElementById('cancelModal').classList.remove('hidden');
+        }
+
+        
+        function closeCancelModal() {
+            document.getElementById('cancelModal').classList.add('hidden');
+            currentCancelFormId = null;
+        }
+
+        
+        function confirmCancel() {
+            if (currentCancelFormId) {
+                
+                document.getElementById(currentCancelFormId).submit();
+            }
+        }
+    </script>
+}
