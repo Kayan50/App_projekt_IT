@@ -32,7 +32,7 @@
             <label for="payment-nfz">NFZ</label>
 
             <input type="radio" id="payment-prywatnie" name="payment" value="Prywatnie" @(isPrywatnie ? "checked" :
-                                   null)>
+                                                      null)>
             <label for="payment-prywatnie">Prywatnie</label>
         </div>
 
@@ -76,7 +76,7 @@
                                         <strong>@doctorGroup.Key.Title @doctorGroup.Key.FirstName @doctorGroup.Key.LastName</strong>
 
                                         <div style="margin-top: 0.3rem; margin-bottom: 0.3rem;">
-                                            <span class="text-muted">Proponowana data: <strong
+                                            <span>Proponowana data: <strong
                                                 style="color: var(--brand-bg);">@doctorGroup.First().StartTime.ToString("dd.MM.yyyy")</strong></span>
                                             </div>
 

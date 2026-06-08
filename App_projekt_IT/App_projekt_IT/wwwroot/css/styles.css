@@ -71,14 +71,14 @@ body {
    SEKCJA HERO (STRONA GŁÓWNA - TŁO)
 ========================================= */
 .hero-section {
+  box-sizing: border-box;
+  min-height: calc(100vh - 70px);
   position: relative;
   width: 100vw;
-  height: 95vh;
   left: 50%;
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
-  min-height: 65vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1012,9 +1012,8 @@ body {
 .auth-section {
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 80px);
-  padding: 3rem 2rem;
+  min-height: calc(80vh - 70px);
+  padding: 0 2rem;
 }
 
 .auth-card {

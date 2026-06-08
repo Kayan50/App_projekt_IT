@@ -4,24 +4,27 @@
     ViewData["Title"] = "Rejestracja";
 }
 
-<section class="auth-section">
+<section class="auth-section" style="margin-top: -3rem;">
     <div class="auth-card register-card">
         <h2>Załóż konto pacjenta</h2>
 
         <form class="auth-form" method="post">
 
-            <div asp-validation-summary="ModelOnly" class="text-danger" style="margin-bottom: 15px; color: #d9534f; font-weight: bold;"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"
+                 style="margin-bottom: 15px; color: #d9534f; font-weight: bold;"></div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label asp-for="Input.FirstName">Imię</label>
                     <input asp-for="Input.FirstName" required />
-                    <span asp-validation-for="Input.FirstName" style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
+                    <span asp-validation-for="Input.FirstName"
+                          style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Input.LastName">Nazwisko</label>
                     <input asp-for="Input.LastName" required />
-                    <span asp-validation-for="Input.LastName" style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
+                    <span asp-validation-for="Input.LastName"
+                          style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
                 </div>
             </div>
 
@@ -29,31 +32,36 @@
                 <div class="form-group">
                     <label asp-for="Input.Pesel">PESEL</label>
                     <input asp-for="Input.Pesel" required pattern="\d{11}" title="PESEL musi mieć 11 cyfr" />
-                    <span asp-validation-for="Input.Pesel" style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
+                    <span asp-validation-for="Input.Pesel"
+                          style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Input.DateOfBirth">Data urodzenia</label>
                     <input asp-for="Input.DateOfBirth" type="date" required />
-                    <span asp-validation-for="Input.DateOfBirth" style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
+                    <span asp-validation-for="Input.DateOfBirth"
+                          style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
                 </div>
             </div>
 
             <div class="form-group">
                 <label asp-for="Input.Email">Adres Email</label>
                 <input asp-for="Input.Email" type="email" required />
-                <span asp-validation-for="Input.Email" style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
+                <span asp-validation-for="Input.Email"
+                      style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label asp-for="Input.Password">Hasło</label>
                     <input asp-for="Input.Password" type="password" required />
-                    <span asp-validation-for="Input.Password" style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
+                    <span asp-validation-for="Input.Password"
+                          style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Input.ConfirmPassword">Potwierdź hasło</label>
                     <input asp-for="Input.ConfirmPassword" type="password" required />
-                    <span asp-validation-for="Input.ConfirmPassword" style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
+                    <span asp-validation-for="Input.ConfirmPassword"
+                          style="color: #d9534f; font-size: 0.85em; display: block; margin-top: 5px;"></span>
                 </div>
             </div>
 
