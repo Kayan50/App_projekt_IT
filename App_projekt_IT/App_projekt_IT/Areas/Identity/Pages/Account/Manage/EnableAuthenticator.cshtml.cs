@@ -178,10 +178,12 @@ public class EnableAuthenticatorModel : PageModel
 
     private string GenerateQrCodeUri(string email, string unformattedKey)
     {
+        string appName = "Kliniki-Med";
+
         return string.Format(
             CultureInfo.InvariantCulture,
             AuthenticatorUriFormat,
-            _urlEncoder.Encode("Microsoft.AspNetCore.Identity.UI"),
+            _urlEncoder.Encode(appName),
             _urlEncoder.Encode(email),
             unformattedKey);
     }
