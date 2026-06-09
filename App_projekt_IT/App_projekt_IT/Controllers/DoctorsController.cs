@@ -51,11 +51,21 @@ namespace App_projekt_IT.Controllers
         // POST: DOCTORS/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-       
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Title,ClinicId")] Doctor doctor)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Title,ClinicId")] Doctor doctor, IFormFile? imageFile)
         {
             if (ModelState.IsValid)
             {
+                
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await imageFile.CopyToAsync(memoryStream);
+                        doctor.ImageData = memoryStream.ToArray();
+                        doctor.ImageContentType = imageFile.ContentType;
+                    }
+                }
+
                 _context.Add(doctor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -76,12 +86,10 @@ namespace App_projekt_IT.Controllers
             ViewData["ClinicId"] = new SelectList(_context.Clinics, "Id", "Name", doctor.ClinicId);
             return View(doctor);
         }
-
         // POST: DOCTORS/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,FirstName,LastName,Title,ClinicId")] Doctor doctor)
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,FirstName,LastName,Title,ClinicId,ImageData,ImageContentType")] Doctor doctor, IFormFile? imageFile)
         {
             if (id != doctor.Id) return NotFound();
 
@@ -89,6 +97,17 @@ namespace App_projekt_IT.Controllers
             {
                 try
                 {
+                    
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await imageFile.CopyToAsync(memoryStream);
+                            doctor.ImageData = memoryStream.ToArray();
+                            doctor.ImageContentType = imageFile.ContentType;
+                        }
+                    }
+
                     _context.Update(doctor);
                     await _context.SaveChangesAsync();
                 }
@@ -99,7 +118,7 @@ namespace App_projekt_IT.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            
+
             ViewData["ClinicId"] = new SelectList(_context.Clinics, "Id", "Name", doctor.ClinicId);
             return View(doctor);
         }
