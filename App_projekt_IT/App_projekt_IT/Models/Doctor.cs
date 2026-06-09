@@ -13,6 +13,10 @@ namespace App_projekt_IT.Models
         [Required]
         public string Title { get; set; } = string.Empty;
 
+        public byte[]? ImageData { get; set; }
+
+        public string? ImageContentType { get; set; }
+
 
         // Klucz obcy do Szpitala
         public int ClinicId { get; set; }
