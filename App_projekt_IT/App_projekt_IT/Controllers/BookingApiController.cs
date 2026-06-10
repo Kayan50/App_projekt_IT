@@ -48,6 +48,8 @@ namespace App_projekt_IT.Controllers
             var appointment = await _context.AppointmentSlots
                 .Include(a => a.Doctor)
                 .Include(a => a.Service)
+                .Include(a => a.Doctor.Clinic)
+                .Include(a => a.Doctor.Clinic.City)
                 .FirstOrDefaultAsync(a => a.Id == slotId);
 
             if (appointment != null)
@@ -94,7 +96,7 @@ namespace App_projekt_IT.Controllers
                                     <p><strong>Godzina:</strong> {appointment.StartTime:HH:mm}</p>
                                     <p><strong>Usługa:</strong> {appointment.Service.Name}</p>
                                     <p><strong>Lekarz:</strong> {appointment.Doctor.Title} {appointment.Doctor.FirstName} {appointment.Doctor.LastName}</p>
-                                    <p><strong>Adres:</strong> {appointment.Doctor.Clinic.Address} </p>
+                                    <p><strong>Adres:</strong> {appointment.Doctor.Clinic.City.Name}, {appointment.Doctor.Clinic.Address} </p>
                                     
                                 </div>
                                 <p style='margin-top: 20px; font-size: 0.9em; color: #64748b;'>{extraMessage}</p>
