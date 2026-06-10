@@ -1,23 +1,21 @@
 @page
 @model RegisterConfirmationModel
 @{
-    ViewData["Title"] = "Register confirmation";
+    ViewData["Title"] = "Potwierdzenie rejestracji";
 }
 
-<h1>@ViewData["Title"]</h1>
-@{
-    if (@Model.DisplayConfirmAccountLink)
-    {
-<p>
-    This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-    Normally this would be emailed: <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>
-</p>
-    }
-    else
-    {
-<p>
-        Please check your email to confirm your account.
-</p>
-    }
-}
+<div style="text-align: center; margin-top: 60px; max-width: 600px; margin-left: auto; margin-right: auto; padding: 40px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
 
+    <i class="fa-solid fa-envelope-open-text" style="font-size: 5rem; color: #2563eb; margin-bottom: 20px;"></i>
+
+    <h1 style="color: #1e293b; font-size: 2rem; margin-bottom: 15px;">Konto zosta³o utworzone!</h1>
+
+    <p style="color: #64748b; font-size: 1.1rem; line-height: 1.6; margin-bottom: 30px;">
+        Na podany przez Ciebie adres e-mail wys³aliœmy wiadomoœæ z linkiem aktywacyjnym. <br /><br />
+        <strong>SprawdŸ swoj¹ skrzynkê pocztow¹</strong> (oraz folder SPAM) i kliknij w przycisk, aby w pe³ni aktywowaæ swoje konto i móc umawiaæ wizyty.
+    </p>
+
+    <a href="/" class="btn-primary" style="display: inline-block; padding: 12px 30px; font-weight: bold; text-decoration: none;">
+        Wróæ na stronê g³ówn¹
+    </a>
+</div>

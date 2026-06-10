@@ -1,8 +1,35 @@
 @page
 @model ConfirmEmailModel
 @{
-    ViewData["Title"] = "Confirm email";
+    ViewData["Title"] = "Potwierdzenie konta";
+    bool isSuccess = ViewData["IsSuccess"] as bool? ?? false;
 }
 
-<h1>@ViewData["Title"]</h1>
-<partial name="_StatusMessage" model="Model.StatusMessage" />
+<section class="auth-section">
+    <div class="auth-card" style="text-align: center; max-width: 500px;">
+
+        @if (isSuccess)
+        {
+            <i class="fa-solid fa-circle-check" style="font-size: 4rem; color: #10b981; margin-bottom: 1.5rem;"></i>
+            <h2 style="margin-bottom: 1rem;">Konto aktywowane!</h2>
+            <p style="margin-bottom: 2rem; color: #64748b; line-height: 1.6;">
+                Dziêkujemy za potwierdzenie adresu e-mail. Twoje konto jest teraz w pe³ni aktywne. Mo¿esz siê zalogowaæ i zaplanowaæ swoj¹ pierwsz¹ wizytê.
+            </p>
+            <a asp-page="./Login" class="btn-primary" style="display: inline-block; text-decoration: none; width: auto; padding: 10px 30px;">
+                PrzejdŸ do logowania
+            </a>
+        }
+        else
+        {
+            <i class="fa-solid fa-circle-xmark" style="font-size: 4rem; color: #e11d48; margin-bottom: 1.5rem;"></i>
+            <h2 style="margin-bottom: 1rem;">Wyst¹pi³ b³¹d</h2>
+            <p style="margin-bottom: 2rem; color: #64748b; line-height: 1.6;">
+                Niestety, ten link aktywacyjny jest nieprawid³owy lub wygas³.
+            </p>
+            <a asp-page="./ResendEmailConfirmation" class="btn-secondary" style="display: inline-block; text-decoration: none; width: auto; padding: 10px 30px;">
+                Wyœlij link ponownie
+            </a>
+        }
+
+    </div>
+</section>
