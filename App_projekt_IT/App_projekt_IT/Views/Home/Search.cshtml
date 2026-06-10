@@ -32,7 +32,7 @@
             <label for="payment-nfz">NFZ</label>
 
             <input type="radio" id="payment-prywatnie" name="payment" value="Prywatnie" @(isPrywatnie ? "checked" :
-                                                                                                           null)>
+                                   null)>
             <label for="payment-prywatnie">Prywatnie</label>
         </div>
 
@@ -45,7 +45,7 @@
 
         @if (!Model.Any() && Context.Request.Query.ContainsKey("appointmentDate"))
         {
-            <div class="empty-results">
+            <div class="empty-results-text">
                 Niestety, brak wolnych terminów w wybranym dniu.
             </div>
 
@@ -63,7 +63,7 @@
                     <div class="clinic-card">
                         <h3 class="clinic-name">@clinic.Name</h3>
                         <p class="text-muted">
-                            <i class="fa-solid fa-location-dot" style="margin-right: 0.4rem; color: #cbd5e1;"></i>
+                            <i class="fa-solid fa-location-dot clinic-location-icon"></i>
                             @clinic.Address, @clinic.City.Name
                         </p>
 
@@ -71,28 +71,94 @@
                             @foreach (var doctorGroup in clinicGroup.GroupBy(s => s.Doctor))
                             {
                                 <div class="doctor-block">
-                                    <div class="doctor-info" style="margin-bottom: 1.2rem; display: flex; gap: 1rem; align-items: flex-start;">
+                                    <div class="doctor-info doctor-details-flex">
 
                                         @if (doctorGroup.Key.ImageData != null && doctorGroup.Key.ImageContentType != null)
                                         {
                                             string imgBase64 = Convert.ToBase64String(doctorGroup.Key.ImageData);
                                             string imgSrc = $"data:{doctorGroup.Key.ImageContentType};base64,{imgBase64}";
-                                            <img src="@imgSrc" alt="@doctorGroup.Key.LastName" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" />
+                                            <img src="@imgSrc" alt="@doctorGroup.Key.LastName" class="doctor-avatar" />
                                         }
                                         else
                                         {
-                                            <img src="~/images/ikonka-lekarz.png" alt="Domyślne zdjęcie" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" />
+                                            <img src="~/images/ikonka-lekarz.png" alt="Domyślne zdjęcie" class="doctor-avatar" />
                                         }
 
                                         <div>
                                             <strong>@doctorGroup.Key.Title @doctorGroup.Key.FirstName @doctorGroup.Key.LastName</strong>
 
-                                            <div style="margin-top: 0.3rem; margin-bottom: 0.3rem;">
-                                                <span>Proponowana data: <strong style="color: var(--brand-bg);">@doctorGroup.First().StartTime.ToString("dd.MM.yyyy")</strong></span>
-                                            </div>
+                                            <div class="proposed-date-wrapper">
+                                                <span>Proponowana data: <strong
+                                                    class="date-highlight">@doctorGroup.First().StartTime.ToString("dd.MM.yyyy")</strong></span>
+                                                </div>
 
-                                            <div class="rating-badge" style="margin-top: 0.2rem;">
-                                                @if (ViewBag.DoctorRatings != null && ViewBag.DoctorRatings.ContainsKey(doctorGroup.Key.Id))
+                                                <div class="rating-badge rating-badge-wrapper">
+                                                    @if (ViewBag.DoctorRatings != null &&
+                                    ViewBag.DoctorRatings.ContainsKey(doctorGroup.Key.Id))
+                                                    {
+                                                        var ratingInfo = ViewBag.DoctorRatings[doctorGroup.Key.Id];
+                                                        <span class="rating-stars">⭐ @ratingInfo.AverageRating.ToString("0.0")</span>
+                                                        <span class="rating-count text-muted">(@ratingInfo.ReviewCount opinii)</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="rating-count text-muted">Brak ocen</span>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="time-slots">
+                                            @foreach (var slot in doctorGroup)
+                                            {
+                                                <button type="button" class="slot-btn"
+                                                        onclick="openBookingModal(@slot.Id, '@clinic.Name', '@slot.StartTime.ToString("dd.MM.yyyy")', '@slot.StartTime.ToString("HH:mm")', '@slot.Service.Name')">
+                                                    @slot.StartTime.ToString("HH:mm")
+                                                </button>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            }
+            else if (Model.Any())
+            {
+                var groupedByClinic = Model.GroupBy(s => s.Doctor.Clinic);
+
+                foreach (var clinicGroup in groupedByClinic)
+                {
+                    var clinic = clinicGroup.Key;
+                    <div class="clinic-card">
+                        <h3 class="clinic-name">@clinic.Name</h3>
+                        <p class="text-muted">
+                            <i class="fa-solid fa-location-dot clinic-location-icon"></i>
+                            @clinic.Address, @clinic.City.Name
+                        </p>
+                        <div class="doctors-container">
+                            @foreach (var doctorGroup in clinicGroup.GroupBy(s => s.Doctor))
+                            {
+                                <div class="doctor-block">
+                                    <div class="doctor-info doctor-details-flex">
+
+                                        @if (doctorGroup.Key.ImageData != null && doctorGroup.Key.ImageContentType != null)
+                                        {
+                                            string imgBase64 = Convert.ToBase64String(doctorGroup.Key.ImageData);
+                                            string imgSrc = $"data:{doctorGroup.Key.ImageContentType};base64,{imgBase64}";
+                                            <img src="@imgSrc" alt="@doctorGroup.Key.LastName" class="doctor-avatar" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/images/ikonka-lekarz.png" alt="Domyślne zdjęcie" class="doctor-avatar" />
+                                        }
+
+                                        <div>
+                                            <strong>@doctorGroup.Key.Title @doctorGroup.Key.FirstName @doctorGroup.Key.LastName</strong>
+                                            <div class="rating-badge rating-badge-wrapper">
+                                                @if (ViewBag.DoctorRatings != null &&
+                                    ViewBag.DoctorRatings.ContainsKey(doctorGroup.Key.Id))
                                                 {
                                                     var ratingInfo = ViewBag.DoctorRatings[doctorGroup.Key.Id];
                                                     <span class="rating-stars">⭐ @ratingInfo.AverageRating.ToString("0.0")</span>
@@ -121,233 +187,156 @@
                     </div>
                 }
             }
-        }
-        else if (Model.Any())
-        {
-            var groupedByClinic = Model.GroupBy(s => s.Doctor.Clinic);
-
-            foreach (var clinicGroup in groupedByClinic)
-            {
-                var clinic = clinicGroup.Key;
-                <div class="clinic-card">
-                    <h3 class="clinic-name">@clinic.Name</h3>
-                    <p class="text-muted">
-                        <i class="fa-solid fa-location-dot" style="margin-right: 0.4rem; color: #cbd5e1;"></i>
-                        @clinic.Address, @clinic.City.Name
-                    </p>
-                    <div class="doctors-container">
-                        @foreach (var doctorGroup in clinicGroup.GroupBy(s => s.Doctor))
-                        {
-                            <div class="doctor-block">
-                                <div class="doctor-info" style="margin-bottom: 1.2rem; display: flex; gap: 1rem; align-items: flex-start;">
-
-                                    @if (doctorGroup.Key.ImageData != null && doctorGroup.Key.ImageContentType != null)
-                                    {
-                                        string imgBase64 = Convert.ToBase64String(doctorGroup.Key.ImageData);
-                                        string imgSrc = $"data:{doctorGroup.Key.ImageContentType};base64,{imgBase64}";
-                                        <img src="@imgSrc" alt="@doctorGroup.Key.LastName" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" />
-                                    }
-                                    else
-                                    {
-                                        <img src="~/images/ikonka-lekarz.png" alt="Domyślne zdjęcie" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" />
-                                    }
-
-                                    <div>
-                                        <strong>@doctorGroup.Key.Title @doctorGroup.Key.FirstName @doctorGroup.Key.LastName</strong>
-                                        <div class="rating-badge" style="margin-top: 0.4rem;">
-                                            @if (ViewBag.DoctorRatings != null && ViewBag.DoctorRatings.ContainsKey(doctorGroup.Key.Id))
-                                            {
-                                                var ratingInfo = ViewBag.DoctorRatings[doctorGroup.Key.Id];
-                                                <span class="rating-stars">⭐ @ratingInfo.AverageRating.ToString("0.0")</span>
-                                                <span class="rating-count text-muted">(@ratingInfo.ReviewCount opinii)</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="rating-count text-muted">Brak ocen</span>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="time-slots">
-                                    @foreach (var slot in doctorGroup)
-                                    {
-                                        <button type="button" class="slot-btn"
-                                                onclick="openBookingModal(@slot.Id, '@clinic.Name', '@slot.StartTime.ToString("dd.MM.yyyy")', '@slot.StartTime.ToString("HH:mm")', '@slot.Service.Name')">
-                                            @slot.StartTime.ToString("HH:mm")
-                                        </button>
-                                    }
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            }
-        }
-    </div>
-</section>
-
-<div id="bookingModal" class="modal-overlay hidden">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Podsumowanie rezerwacji</h3>
         </div>
+    </section>
 
-        <div class="modal-body">
-            <p><strong class="modal-label">Klinika:</strong> <span id="modalClinicName"></span></p>
-            <p><strong class="modal-label">Usługa:</strong> <span id="modalServiceName"></span></p>
-            <p><strong class="modal-label">Data:</strong> <span id="modalDate"></span></p>
-            <p><strong class="modal-label">Godzina:</strong> <span id="modalTime"></span></p>
-        </div>
+    <div id="bookingModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Podsumowanie rezerwacji</h3>
+            </div>
 
-        <div class="action-buttons" style="margin-top: 0;">
-            <button type="button" onclick="confirmBooking()" class="btn-primary btn-success">
-                <i class="fa-solid fa-check"></i> Umów
-            </button>
-            <button type="button" onclick="closeBookingModal()" class="btn-secondary">
-                <i class="fa-solid fa-times"></i>
-                Anuluj
-            </button>
+            <div class="modal-body">
+                <p><strong class="modal-label">Klinika:</strong> <span id="modalClinicName"></span></p>
+                <p><strong class="modal-label">Usługa:</strong> <span id="modalServiceName"></span></p>
+                <p><strong class="modal-label">Data:</strong> <span id="modalDate"></span></p>
+                <p><strong class="modal-label">Godzina:</strong> <span id="modalTime"></span></p>
+            </div>
+
+            <div class="action-buttons modal-actions-nomargin">
+                <button type="button" onclick="confirmBooking()" class="btn-primary btn-success">
+                    <i class="fa-solid fa-check"></i> Umów
+                </button>
+                <button type="button" onclick="closeBookingModal()" class="btn-secondary">
+                    <i class="fa-solid fa-times"></i> Anuluj
+                </button>
+            </div>
         </div>
     </div>
-</div>
 
-<div id="messageModal" class="modal-overlay hidden">
-    <div class="modal-content" style="text-align: center;">
-        <div class="modal-header">
-            <h3 id="messageModalTitle">Informacja</h3>
-        </div>
-        <div class="modal-body">
-            <p id="messageModalText" style="font-size: 1.1rem; margin-top: 1rem;"></p>
-        </div>
-        <div class="action-buttons" style="margin-top: 1.5rem; justify-content: center;">
-            <button type="button" id="messageModalBtn" class="btn-primary">Rozumiem</button>
+    <div id="messageModal" class="modal-overlay hidden">
+        <div class="modal-content modal-content-centered">
+            <div class="modal-header">
+                <h3 id="messageModalTitle">Informacja</h3>
+            </div>
+            <div class="modal-body">
+                <p id="messageModalText" class="modal-message-text"></p>
+            </div>
+            <div class="action-buttons action-buttons-centered">
+                <button type="button" id="messageModalBtn" class="btn-primary">Rozumiem</button>
+            </div>
         </div>
     </div>
-</div>
 
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                $('#city, #service-type').select2({
+                    width: '100%',
+                    placeholder: "Wybierz opcję"
+                });
 
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('#city, #service-type').select2({
-                width: '100%',
-                placeholder: "Wybierz opcję"
+                $('#service-type').on('change', function () {
+                    var selectedServiceId = $(this).val();
+                    var citySelect = $('#city');
+
+                    citySelect.empty();
+                    citySelect.append('<option value="">Miasto</option>');
+
+                    fetch('/Home/GetCitiesForService?serviceId=' + selectedServiceId)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(function (city) {
+                                var newOption = new Option(city.text, city.value, false, false);
+                                citySelect.append(newOption);
+                            });
+                            citySelect.trigger('change');
+                        })
+                        .catch(error => {
+                            console.error('Wystąpił błąd podczas pobierania miast:', error);
+                        });
+                });
             });
 
-            $('#service-type').on('change', function () {
-                var selectedServiceId = $(this).val();
-                var citySelect = $('#city');
+            let currentSlotId = null;
 
+            function showMessageModal(title, message, isSuccess, actionCallback) {
+                document.getElementById('messageModalTitle').innerText = title;
+                document.getElementById('messageModalText').innerText = message;
 
-                citySelect.empty();
-                citySelect.append('<option value="">Miasto</option>');
+                let btn = document.getElementById('messageModalBtn');
 
+                if (isSuccess) {
+                    btn.className = "btn-primary btn-success";
+                } else {
+                    btn.className = "btn-secondary";
+                }
 
-                fetch('/Home/GetCitiesForService?serviceId=' + selectedServiceId)
-                    .then(response => response.json())
-                    .then(data => {
+                btn.onclick = function () {
+                    document.getElementById('messageModal').classList.add('hidden');
+                    if (actionCallback) {
+                        actionCallback();
+                    }
+                };
 
-                        data.forEach(function (city) {
-                            var newOption = new Option(city.text, city.value, false, false);
-                            citySelect.append(newOption);
-                        });
+                document.getElementById('messageModal').classList.remove('hidden');
+            }
 
+            function openBookingModal(slotId, clinicName, date, time, serviceName) {
 
-                        citySelect.trigger('change');
+                @if (!User.Identity.IsAuthenticated)
+                    {
+                        <text>
+                                showMessageModal("Wymagane logowanie", "Musisz być zalogowany, aby umówić wizytę.", false, function() {
+                                    window.location.href = '/Identity/Account/Login';
+                                });
+                                return;
+                        </text>
+                }
+
+                    currentSlotId = slotId;
+                document.getElementById('modalClinicName').innerText = clinicName;
+                document.getElementById('modalServiceName').innerText = serviceName;
+                document.getElementById('modalDate').innerText = date;
+                document.getElementById('modalTime').innerText = time;
+                document.getElementById('bookingModal').classList.remove('hidden');
+            }
+
+            function closeBookingModal() {
+                document.getElementById('bookingModal').classList.add('hidden');
+                currentSlotId = null;
+            }
+
+            function confirmBooking() {
+                if (!currentSlotId) return;
+
+                fetch(`/api/BookingApi/${currentSlotId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        return response.json().then(data => ({ status: response.status, body: data }));
+                    })
+                    .then(result => {
+                        closeBookingModal();
+
+                        if (result.status === 200) {
+                            showMessageModal("Sukces!", result.body.message, true, function () {
+                                window.location.href = '/PatientPanel';
+                            });
+                        } else {
+                            showMessageModal("Uwaga", result.body.message, false, function () {
+                                window.location.reload();
+                            });
+                        }
                     })
                     .catch(error => {
-                        console.error('Wystąpił błąd podczas pobierania miast:', error);
+                        console.error('Błąd:', error);
+                        closeBookingModal();
+                        showMessageModal("Błąd techniczny", "Wystąpił problem z połączeniem z serwerem.", false, null);
                     });
-            });
-        });
-
-        let currentSlotId = null;
-
-
-        function showMessageModal(title, message, isSuccess, actionCallback) {
-            document.getElementById('messageModalTitle').innerText = title;
-            document.getElementById('messageModalText').innerText = message;
-
-            let btn = document.getElementById('messageModalBtn');
-
-            if (isSuccess) {
-                btn.className = "btn-primary btn-success";
-            } else {
-                btn.className = "btn-secondary";
             }
-
-            btn.onclick = function() {
-                document.getElementById('messageModal').classList.add('hidden');
-                if (actionCallback) {
-                    actionCallback();
-                }
-            };
-
-            document.getElementById('messageModal').classList.remove('hidden');
-        }
-
-
-        function openBookingModal(slotId, clinicName, date, time, serviceName) {
-
-
-            @if (!User.Identity.IsAuthenticated)
-            {
-                        <text>
-                            showMessageModal("Wymagane logowanie", "Musisz być zalogowany, aby umówić wizytę.", false, function() {
-                                window.location.href = '/Identity/Account/Login';
-                            });
-                            return;
-                        </text>
-            }
-
-            currentSlotId = slotId;
-            document.getElementById('modalClinicName').innerText = clinicName;
-            document.getElementById('modalServiceName').innerText = serviceName;
-            document.getElementById('modalDate').innerText = date;
-            document.getElementById('modalTime').innerText = time;
-            document.getElementById('bookingModal').classList.remove('hidden');
-        }
-
-
-        function closeBookingModal() {
-            document.getElementById('bookingModal').classList.add('hidden');
-            currentSlotId = null;
-        }
-
-
-        function confirmBooking() {
-            if (!currentSlotId) return;
-
-            fetch(`/api/BookingApi/${currentSlotId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => {
-                return response.json().then(data => ({ status: response.status, body: data }));
-            })
-            .then(result => {
-                closeBookingModal();
-
-
-                if (result.status === 200) {
-                    showMessageModal("Sukces!", result.body.message, true, function() {
-                        window.location.href = '/PatientPanel';
-                    });
-                } else {
-                    showMessageModal("Uwaga", result.body.message, false, function() {
-                        window.location.reload();
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Błąd:', error);
-                closeBookingModal();
-                showMessageModal("Błąd techniczny", "Wystąpił problem z połączeniem z serwerem.", false, null);
-            });
-        }
-    </script>
-
-}
+        </script>
+    }

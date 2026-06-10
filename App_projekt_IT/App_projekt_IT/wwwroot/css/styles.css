@@ -1681,3 +1681,75 @@ dl.row dd {
     white-space: nowrap;
   }
 }
+/* =========================================
+   11. ELEMENTY WYSZUKIWARKI I WYNIKÓW
+========================================= */
+
+/* Ikona lokalizacji w karcie kliniki */
+.clinic-location-icon {
+  margin-right: 0.4rem;
+  color: #cbd5e1;
+}
+
+.doctor-details-flex {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: row; /* Upewnia się, że elementy są w jednym rzędzie */
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+/* Okrągłe zdjęcie lekarza */
+.doctor-avatar {
+  width: 60px;
+  height: 60px;
+  min-width: 60px; /* Zabezpieczenie szerokości */
+  min-height: 60px; /* Zabezpieczenie wysokości */
+  flex-shrink: 0; /* KLUCZOWE: Blokuje "zgniatanie" zdjęcia przez tekst obok! */
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: block;
+}
+
+/* Odstępy dla bloku z proponowaną datą */
+.proposed-date-wrapper {
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+/* Wyróżnienie daty granatowym kolorem marki */
+.date-highlight {
+  color: var(--brand-bg);
+}
+
+/* Drobny margines nad oceną w gwiazdkach */
+.rating-badge-wrapper {
+  margin-top: 0.3rem;
+}
+
+/* =========================================
+   12. ELEMENTY MODALI (WYSKAKUJĄCYCH OKIENEK)
+========================================= */
+
+/* Modal informacyjny - wyśrodkowanie zawartości */
+.modal-content-centered {
+  text-align: center;
+}
+
+/* Główny tekst wewnątrz modala informacyjnego */
+.modal-message-text {
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+/* Wyśrodkowane przyciski w modalu informacyjnym */
+.action-buttons-centered {
+  margin-top: 1.5rem;
+  justify-content: center;
+}
+
+/* Brak marginesu górnego dla przycisków w modalu rezerwacji */
+.modal-actions-nomargin {
+  margin-top: 0;
+}
