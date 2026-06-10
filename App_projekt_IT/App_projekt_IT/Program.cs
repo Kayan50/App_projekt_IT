@@ -20,13 +20,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
 builder.Services.AddHostedService<App_projekt_IT.Services.AppointmentReminderService>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<App_projekt_IT.Services.IEmailSenderQueue, App_projekt_IT.Services.EmailSenderQueue>();
+builder.Services.AddHostedService<App_projekt_IT.Services.EmailBackgroundService>();
+builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, App_projekt_IT.Services.IdentityEmailSender>();
 
 var app = builder.Build();
 

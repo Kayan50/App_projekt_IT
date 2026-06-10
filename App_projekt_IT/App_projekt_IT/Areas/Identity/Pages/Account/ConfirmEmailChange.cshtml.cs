@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using App_projekt_IT.Data;
-namespace App_projekt_IT.Areas.Identity.Pages.Account;
 using App_projekt_IT.Models;
+
+namespace App_projekt_IT.Areas.Identity.Pages.Account;
 
 public class ConfirmEmailChangeModel : PageModel
 {
@@ -24,10 +24,6 @@ public class ConfirmEmailChangeModel : PageModel
         _signInManager = signInManager;
     }
 
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     [TempData]
     public string? StatusMessage { get; set; }
 
@@ -41,28 +37,31 @@ public class ConfirmEmailChangeModel : PageModel
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{userId}'.");
+            return NotFound($"Nie mo¿na za³adowaæ u¿ytkownika o ID '{userId}'.");
         }
 
         code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
         var result = await _userManager.ChangeEmailAsync(user, email, code);
+
+        
+        ViewData["IsSuccess"] = result.Succeeded;
+
         if (!result.Succeeded)
         {
-            StatusMessage = "Error changing email.";
+            StatusMessage = "B³¹d podczas zmiany adresu e-mail.";
             return Page();
         }
 
-        // In our UI email and user name are one and the same, so when we update the email
-        // we need to update the user name.
+        
         var setUserNameResult = await _userManager.SetUserNameAsync(user, email);
         if (!setUserNameResult.Succeeded)
         {
-            StatusMessage = "Error changing user name.";
+            StatusMessage = "B³¹d podczas zmiany nazwy u¿ytkownika.";
             return Page();
         }
 
         await _signInManager.RefreshSignInAsync(user);
-        StatusMessage = "Thank you for confirming your email change.";
+        StatusMessage = "Sukces! Twój adres e-mail zosta³ zmieniony.";
         return Page();
     }
 }
