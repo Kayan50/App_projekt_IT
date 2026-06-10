@@ -14,7 +14,6 @@ namespace App_projekt_IT.Services
     public class AppointmentReminderService : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
-        
         private readonly IEmailSenderQueue _emailQueue;
 
         public AppointmentReminderService(IServiceScopeFactory scopeFactory, IEmailSenderQueue emailQueue)
@@ -31,13 +30,13 @@ namespace App_projekt_IT.Services
             {
                 using var scope = _scopeFactory.CreateScope();
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-                
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
                 var now = DateTime.Now;
 
-                
+                // ==================================================================
+                // 1. WYSYŁKA: PRZYPOMNIENIA O POTWIERDZENIU (5 DNI PRZED WIZYTĄ)
+                // ==================================================================
                 var targetDate5Days = now.AddDays(5);
                 var appointmentsToRemind = await context.AppointmentSlots
                     .Include(a => a.Doctor)
@@ -61,24 +60,37 @@ namespace App_projekt_IT.Services
                         };
                         context.Notifications.Add(notification);
 
-                        
                         var user = await userManager.FindByIdAsync(appt.UserId);
                         if (user != null && !string.IsNullOrEmpty(user.Email))
                         {
                             await _emailQueue.QueueEmailAsync(new EmailMessage
                             {
                                 ToEmail = user.Email,
-                                Subject = "Klinika IT: Ważne - Potwierdź swoją wizytę",
-                                Body = $@"<h2 style='color:#f59e0b;'>Wymagane potwierdzenie wizyty</h2>
-                                          <p>Witaj {user.FirstName},</p>
-                                          <p>Przypominamy, że na dzień <strong>{appt.StartTime:dd.MM.yyyy HH:mm}</strong> masz zaplanowaną wizytę (Usługa: {appt.Service.Name}, Lekarz: {appt.Doctor.LastName}).</p>
-                                          <p>Prosimy o pilne zalogowanie się do panelu pacjenta i potwierdzenie swojej obecności. W przeciwnym razie wizyta zostanie automatycznie anulowana na 24 godziny przed terminem.</p>"
+                                Subject = "Klinika IT - Ważne: Potwierdź swoją wizytę",
+                                Body = $@"
+                                    <div style='font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; line-height: 1.6;'>
+                                        <h2 style='color: #d97706;'>Wymagane potwierdzenie wizyty</h2>
+                                        <p>Witaj {user.FirstName},</p>
+                                        <p>Przypominamy, że zbliża się termin Twojej zaplanowanej wizyty w naszej klinice. Aby utrzymać rezerwację, wymagane jest potwierdzenie obecności:</p>
+                                        
+                                        <div style='background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #d97706;'>
+                                            <p style='margin: 4px 0;'><strong>Lekarz:</strong> {appt.Doctor.Title} {appt.Doctor.FirstName} {appt.Doctor.LastName}</p>
+                                            <p style='margin: 4px 0;'><strong>Usługa:</strong> {appt.Service.Name}</p>
+                                            <p style='margin: 4px 0;'><strong>Termin:</strong> {appt.StartTime:dd.MM.yyyy} r. o godz. {appt.StartTime:HH:mm}</p>
+                                        </div>
+
+                                        <p>Prosimy o pilne zalogowanie się do swojego panelu pacjenta i zatwierdzenie obecności. W przypadku braku potwierdzenia na 24 godziny przed wizytą, slot zostanie automatycznie zwolniony dla innych pacjentów.</p>
+                                        <hr style='border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;' />
+                                        <p style='font-size: 0.8em; color: #94a2b8;'>Pozdrawiamy,<br/>Zespół Kliniki-Med</p>
+                                    </div>"
                             });
                         }
                     }
                 }
 
-                
+                // ==================================================================
+                // 2. WYSYŁKA: AUTOMATYCZNE ODWOŁANIE (24H PRZED WIZYTĄ)
+                // ==================================================================
                 var targetDate24Hours = now.AddHours(24);
                 var appointmentsToCancel = await context.AppointmentSlots
                     .Include(a => a.Doctor)
@@ -99,18 +111,29 @@ namespace App_projekt_IT.Services
                         };
                         context.Notifications.Add(notification);
 
-                        
                         var user = await userManager.FindByIdAsync(appt.UserId);
                         if (user != null && !string.IsNullOrEmpty(user.Email))
                         {
                             await _emailQueue.QueueEmailAsync(new EmailMessage
                             {
                                 ToEmail = user.Email,
-                                Subject = "Klinika IT: Wizyta została anulowana",
-                                Body = $@"<h2 style='color:#ef4444;'>Wizyta anulowana</h2>
-                                          <p>Witaj {user.FirstName},</p>
-                                          <p>Informujemy, że Twoja wizyta zaplanowana na <strong>{appt.StartTime:dd.MM.yyyy HH:mm}</strong> (Usługa: {appt.Service.Name}, Lekarz: {appt.Doctor.LastName}) została automatycznie anulowana.</p>
-                                          <p>Powodem odwołania był brak potwierdzenia obecności z Twojej strony w wymaganym czasie (minimum 24h przed wizytą).</p>"
+                                Subject = "Klinika IT - Anulowanie rezerwacji wizyty",
+                                Body = $@"
+                                    <div style='font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; line-height: 1.6;'>
+                                        <h2 style='color: #dc2626;'>Wizyta została anulowana</h2>
+                                        <p>Witaj {user.FirstName},</p>
+                                        <p>Informujemy, że Twoja rezerwacja na poniższy termin musiała zostać automatycznie odwołana:</p>
+                                        
+                                        <div style='background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc2626;'>
+                                            <p style='margin: 4px 0;'><strong>Lekarz:</strong> {appt.Doctor.Title} {appt.Doctor.FirstName} {appt.Doctor.LastName}</p>
+                                            <p style='margin: 4px 0;'><strong>Usługa:</strong> {appt.Service.Name}</p>
+                                            <p style='margin: 4px 0;'><strong>Niedoszły termin:</strong> {appt.StartTime:dd.MM.yyyy} o godz. {appt.StartTime:HH:mm}</p>
+                                        </div>
+
+                                        <p>Powodem anulowania był brak potwierdzenia obecności z Twojej strony w wymaganym czasie regulaminowym (minimum 24h przed wizytą). Jeśli wizyta jest nadal aktualna, prosimy o ponowne wyszukanie i zarezerwowanie wolnego terminu w systemie.</p>
+                                        <hr style='border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;' />
+                                        <p style='font-size: 0.8em; color: #94a2b8;'>Pozdrawiamy,<br/>Zespół Kliniki-Med</p>
+                                    </div>"
                             });
                         }
                     }
@@ -120,7 +143,9 @@ namespace App_projekt_IT.Services
                     appt.IsConfirmed = false;
                 }
 
-                
+                // ==================================================================
+                // 3. WYSYŁKA: PROŚBA O OPINIĘ (PO ODBYTEJ WIZYCIE)
+                // ==================================================================
                 var timeForReview = now.AddHours(-2);
                 var appointmentsToReview = await context.AppointmentSlots
                     .Include(a => a.Doctor)
@@ -144,18 +169,29 @@ namespace App_projekt_IT.Services
                         };
                         context.Notifications.Add(notification);
 
-                        
                         var user = await userManager.FindByIdAsync(appt.UserId);
                         if (user != null && !string.IsNullOrEmpty(user.Email))
                         {
                             await _emailQueue.QueueEmailAsync(new EmailMessage
                             {
                                 ToEmail = user.Email,
-                                Subject = "Klinika IT: Jak oceniasz swoją wizytę?",
-                                Body = $@"<h2 style='color:#3b82f6;'>Dziękujemy za wizytę!</h2>
-                                          <p>Witaj {user.FirstName},</p>
-                                          <p>Mamy nadzieję, że Twoja dzisiejsza wizyta (Usługa: {appt.Service.Name}) u lekarza {appt.Doctor.LastName} przebiegła pomyślnie.</p>
-                                          <p>Twoja opinia jest dla nas bardzo ważna! Zaloguj się do panelu pacjenta i przejdź do zakładki 'Moje wizyty', aby zostawić ocenę i pomóc innym pacjentom w wyborze specjalisty.</p>"
+                                Subject = "Klinika IT - Dziękujemy za wizytę! Oceń nas",
+                                Body = $@"
+                                    <div style='font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; line-height: 1.6;'>
+                                        <h2 style='color: #2563eb;'>Dziękujemy za zaufanie!</h2>
+                                        <p>Witaj {user.FirstName},</p>
+                                        <p>Mamy nadzieję, że Twoja dzisiejsza wizyta przebiegła pomyślnie i czujesz się dobrze zaopiekowany/a. Dbamy o najwyższą jakość usług w Klinice IT, dlatego szczegóły Twojej odbytej wizyty to:</p>
+                                        
+                                        <div style='background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2563eb;'>
+                                            <p style='margin: 4px 0;'><strong>Lekarz:</strong> {appt.Doctor.Title} {appt.Doctor.FirstName} {appt.Doctor.LastName}</p>
+                                            <p style='margin: 4px 0;'><strong>Usługa:</strong> {appt.Service.Name}</p>
+                                            <p style='margin: 4px 0;'><strong>Data wizyty:</strong> {appt.StartTime:dd.MM.yyyy}</p>
+                                        </div>
+
+                                        <p>Twoja opinia jest dla nas i innych pacjentów bezcenna. Będziemy wdzięczni, jeśli poświęcisz minutę na ocenę lekarza oraz wykonanej usługi. Możesz to zrobić w panelu pacjenta w sekcji <strong>'Moje wizyty'</strong>.</p>
+                                        <hr style='border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;' />
+                                        <p style='font-size: 0.8em; color: #94a2b8;'>Pozdrawiamy,<br/>Zespół Kliniki-Med</p>
+                                    </div>"
                             });
                         }
                     }

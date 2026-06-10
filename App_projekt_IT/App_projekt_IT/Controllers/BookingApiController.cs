@@ -90,14 +90,16 @@ namespace App_projekt_IT.Controllers
                                 <p>Witaj,</p>
                                 <p>Twoja wizyta została pomyślnie zarezerwowana w naszym systemie. Poniżej znajdują się jej szczegóły:</p>
                                 <div style='background-color: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 15px;'>
-                                    <p><strong>Lekarz:</strong> {appointment.Doctor.Title} {appointment.Doctor.FirstName} {appointment.Doctor.LastName}</p>
-                                    <p><strong>Usługa:</strong> {appointment.Service.Name}</p>
                                     <p><strong>Data:</strong> {appointment.StartTime:dd.MM.yyyy}</p>
                                     <p><strong>Godzina:</strong> {appointment.StartTime:HH:mm}</p>
+                                    <p><strong>Usługa:</strong> {appointment.Service.Name}</p>
+                                    <p><strong>Lekarz:</strong> {appointment.Doctor.Title} {appointment.Doctor.FirstName} {appointment.Doctor.LastName}</p>
+                                    <p><strong>Adres:</strong> {appointment.Doctor.Clinic.Address} </p>
+                                    
                                 </div>
                                 <p style='margin-top: 20px; font-size: 0.9em; color: #64748b;'>{extraMessage}</p>
                                 <hr style='border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;' />
-                                <p style='font-size: 0.8em; color: #94a2b8;'>Pozdrawiamy,<br/>Zespół Kliniki IT</p>
+                                <p style='font-size: 0.8em; color: #94a2b8;'>Pozdrawiamy,<br/>Zespół Kliniki-Med</p>
                             </div>"
                     };
 

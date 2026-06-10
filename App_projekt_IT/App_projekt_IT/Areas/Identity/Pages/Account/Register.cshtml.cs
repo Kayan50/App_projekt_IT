@@ -138,18 +138,18 @@ public class RegisterModel : PageModel
                 var emailMsg = new EmailMessage
                 {
                     ToEmail = Input.Email,
-                    Subject = "Witamy w Klinice IT - Potwierdzenie rejestracji",
+                    Subject = "Witamy w Kliniki-Med - Potwierdzenie rejestracji",
                     Body = $@"
                         <div style='font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto;'>
                             <h2 style='color: #2563eb;'>Witaj, {Input.FirstName}!</h2>
-                            <p>Cieszymy siê, ¿e do³¹czy³eœ/aœ do grona pacjentów Kliniki IT.</p>
+                            <p>Cieszymy siê, ¿e do³¹czy³eœ/aœ do grona pacjentów Kliniki-Med.</p>
                             <p>Aby w pe³ni korzystaæ z konta i móc umawiaæ wizyty, prosimy o potwierdzenie adresu e-mail, klikaj¹c w poni¿szy przycisk:</p>
                             <div style='text-align: center; margin: 30px 0;'>
                                 <a href='{HtmlEncoder.Default.Encode(callbackUrl)}' style='background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;'>PotwierdŸ adres e-mail</a>
                             </div>
                             <p>Jeœli to nie Ty zak³ada³eœ/aœ konto, po prostu zignoruj tê wiadomoœæ.</p>
                             <hr style='border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;' />
-                            <p style='font-size: 0.8em; color: #94a2b8;'>Pozdrawiamy,<br/>Zespó³ Kliniki IT</p>
+                            <p style='font-size: 0.8em; color: #94a2b8;'>Pozdrawiamy,<br/>Zespó³ Kliniki-Med</p>
                         </div>"
                 };
 
