@@ -10,24 +10,29 @@
 
         @if (isSuccess)
         {
-            <i class="fa-solid fa-envelope-circle-check" style="font-size: 4rem; color: #10b981; margin-bottom: 1.5rem;"></i>
+            <i class="fa-solid fa-envelope-circle-check"
+               style="font-size: 4rem; color: #10b981; margin-bottom: 1.5rem;"></i>
             <h2 style="margin-bottom: 1rem;">Adres e-mail zmieniony!</h2>
             <p style="margin-bottom: 2rem; color: #64748b; line-height: 1.6;">
-                Twój adres e-mail zosta³ pomyœlnie zaktualizowany w systemie. Bêdzie teraz u¿ywany do logowania oraz otrzymywania powiadomieñ z kliniki.
+                TwÃ³j adres e-mail zostaÅ‚ pomyÅ›lnie zaktualizowany w systemie. BÄ™dzie teraz uÅ¼ywany do logowania oraz
+                otrzymywania powiadomieÅ„ z kliniki.
             </p>
-            <a asp-page="/Index" class="btn-primary" style="display: inline-block; text-decoration: none; width: auto; padding: 10px 30px;">
-                Wróæ na stronê g³ówn¹
+            <a asp-page="/Index" class="btn-primary"
+               style="display: inline-block; text-decoration: none; width: auto; padding: 10px 30px;">
+                WrÃ³Ä‡ na stronÄ™ gÅ‚Ã³wnÄ…
             </a>
         }
         else
         {
             <i class="fa-solid fa-circle-xmark" style="font-size: 4rem; color: #e11d48; margin-bottom: 1.5rem;"></i>
-            <h2 style="margin-bottom: 1rem;">Wyst¹pi³ b³¹d</h2>
+            <h2 style="margin-bottom: 1rem;">WystapiÅ‚ bÅ‚Ä…d</h2>
             <p style="margin-bottom: 2rem; color: #64748b; line-height: 1.6;">
-                Niestety, link autoryzacyjny jest nieprawid³owy lub zd¹¿y³ wygasn¹æ. Wzglêdy bezpieczeñstwa uniemo¿liwi³y zmianê adresu.
+                Niestety, link autoryzacyjny jest nieprawidÅ‚owy lub zdÄ…Å¼yÅ‚ wygasnÄ…Ä‡. WzglÄ™dy bezpieczeÅ„stwa uniemoÅ¼liwiÅ‚y
+                zmianÄ™ adresu.
             </p>
-            <a asp-page="/Account/Manage/Email" asp-area="Identity" class="btn-secondary" style="display: inline-block; text-decoration: none; width: auto; padding: 10px 30px;">
-                Wróæ do ustawieñ konta
+            <a asp-page="/Account/Manage/Email" asp-area="Identity" class="btn-secondary"
+               style="display: inline-block; text-decoration: none; width: auto; padding: 10px 30px;">
+                WrÃ³Ä‡ do ustawieÅ„ konta
             </a>
         }
 

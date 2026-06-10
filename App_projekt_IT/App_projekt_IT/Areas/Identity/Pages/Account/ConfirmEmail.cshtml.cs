@@ -37,7 +37,7 @@ public class ConfirmEmailModel : PageModel
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
-            return NotFound($"Nie moøna za≥adowaÊ uøytkownika z ID '{userId}'.");
+            return NotFound($"Nie mo≈ºna za≈ÇadowaƒÖ u≈ºytkownika z ID '{userId}'.");
         }
 
         code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
@@ -48,11 +48,11 @@ public class ConfirmEmailModel : PageModel
 
         if (result.Succeeded)
         {
-            StatusMessage = "Sukces! TwÛj adres e-mail zosta≥ zweryfikowany.";
+            StatusMessage = "Sukces! Tw√≥j adres e-mail zosta≈Ç zweryfikowany.";
         }
         else
         {
-            StatusMessage = "B≥πd. Link aktywacyjny jest nieprawid≥owy lub wygas≥.";
+            StatusMessage = "B≈ÇƒÖd. Link aktywacyjny jest nieprawid≈Çowy lub wygas≈Ç.";
         }
 
         return Page();

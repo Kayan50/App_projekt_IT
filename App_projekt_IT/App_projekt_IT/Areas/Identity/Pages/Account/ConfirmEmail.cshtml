@@ -13,21 +13,24 @@
             <i class="fa-solid fa-circle-check" style="font-size: 4rem; color: #10b981; margin-bottom: 1.5rem;"></i>
             <h2 style="margin-bottom: 1rem;">Konto aktywowane!</h2>
             <p style="margin-bottom: 2rem; color: #64748b; line-height: 1.6;">
-                Dziêkujemy za potwierdzenie adresu e-mail. Twoje konto jest teraz w pe³ni aktywne. Mo¿esz siê zalogowaæ i zaplanowaæ swoj¹ pierwsz¹ wizytê.
+                DziÄ™kujemy za potwierdzenie adresu e-mail. Twoje konto jest teraz w peÅ‚ni aktywne. MoÅ¼esz siÄ™ zalogowaÄ‡ i
+                zaplanowaÄ‡ swojÄ… pierwszÄ… wizytÄ™.
             </p>
-            <a asp-page="./Login" class="btn-primary" style="display: inline-block; text-decoration: none; width: auto; padding: 10px 30px;">
-                PrzejdŸ do logowania
+            <a asp-page="./Login" class="btn-primary"
+               style="display: inline-block; text-decoration: none; width: auto; padding: 10px 30px;">
+                PrzejdÅº do logowania
             </a>
         }
         else
         {
             <i class="fa-solid fa-circle-xmark" style="font-size: 4rem; color: #e11d48; margin-bottom: 1.5rem;"></i>
-            <h2 style="margin-bottom: 1rem;">Wyst¹pi³ b³¹d</h2>
+            <h2 style="margin-bottom: 1rem;">WystÄ…piÅ‚ bÅ‚Ä…d</h2>
             <p style="margin-bottom: 2rem; color: #64748b; line-height: 1.6;">
-                Niestety, ten link aktywacyjny jest nieprawid³owy lub wygas³.
+                Niestety, ten link aktywacyjny jest nieprawidÅ‚owy lub wygasÅ‚.
             </p>
-            <a asp-page="./ResendEmailConfirmation" class="btn-secondary" style="display: inline-block; text-decoration: none; width: auto; padding: 10px 30px;">
-                Wyœlij link ponownie
+            <a asp-page="./ResendEmailConfirmation" class="btn-secondary"
+               style="display: inline-block; text-decoration: none; width: auto; padding: 10px 30px;">
+                WyÅ›lij link ponownie
             </a>
         }
 
