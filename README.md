@@ -77,7 +77,7 @@ git clone https://github.com/Kayan50/App_projekt_IT.git
 
 ```
 
-**5. Uruchomienie aplikacji:**
+**2. Uruchomienie aplikacji:**
 Kliknij zielony przycisk **Uruchom** (lub wciśnij `F5`) w Visual Studio. Przeglądarka otworzy się automatycznie, a aplikacja będzie działać pod adresem `localhost`.
 
 ### Dodatkowe informacje
