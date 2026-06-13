@@ -73,7 +73,7 @@ Aby uruchomić aplikację na swoim komputerze, postępuj zgodnie z poniższymi k
 Sklonuj repozytorium na swój dysk lokalny za pomocą Git lub pobierz projekt jako plik ZIP i wypakuj go.
 
 ```bash
-git clone <https://github.com/Kayan50/App_projekt_IT.git>
+git clone https://github.com/Kayan50/App_projekt_IT.git
 
 ```
 
