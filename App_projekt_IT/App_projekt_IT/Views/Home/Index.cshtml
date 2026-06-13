@@ -1,7 +1,6 @@
 @using App_projekt_IT.Models
 @{
     ViewData["Title"] = "Strona Główna";
-    // Sprawdzamy czy to admin
     bool isAdmin = User.IsInRole("Admin") || User.Identity?.Name == "admin@kliniki.pl";
 }
 
@@ -29,7 +28,6 @@ else
     </div>
     @if (ViewBag.HighlightedServices != null)
     {
-        // Bezpieczne rzutowanie zabezpieczające przed błędami krytycznymi
         var services = ViewBag.HighlightedServices as IEnumerable<Service>;
 
         if (services != null && services.Any())

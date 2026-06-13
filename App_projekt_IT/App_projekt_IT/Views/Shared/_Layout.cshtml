@@ -25,7 +25,7 @@
                 var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
                 var currentPage = ViewContext.RouteData.Values["page"]?.ToString();
 
-                string[] adminControllers = { "Clinics", "Doctors", "Services", "Cities" };
+                string[] adminControllers = { "Clinics", "Doctors", "Services", "Cities", "AdminSchedules" };
 
                 bool isManaging = adminControllers.Contains(currentController) || (currentArea == "Identity" && currentPage
                             != null && currentPage.Contains("/Manage/"));
@@ -38,6 +38,8 @@
                        class="@(currentController == "Clinics" ? "active" : "")">Zarządzaj Klinikami</a>
                     <a asp-area="" asp-controller="Doctors" asp-action="Index"
                        class="@(currentController == "Doctors" ? "active" : "")">Zarządzaj Lekarzami</a>
+                    <a asp-area="" asp-controller="AdminSchedules" asp-action="Index"
+                       class="@(currentController == "AdminSchedules" ? "active" : "")">Zarządzaj Terminami</a>
                     <a asp-area="" asp-controller="Services" asp-action="Index"
                        class="@(currentController == "Services" ? "active" : "")">Zarządzaj Usługami</a>
                     <a asp-area="" asp-controller="Cities" asp-action="Index"

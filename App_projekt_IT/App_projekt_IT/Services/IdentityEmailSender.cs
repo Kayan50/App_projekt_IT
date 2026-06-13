@@ -33,7 +33,7 @@ namespace App_projekt_IT.Services
                 case "Confirm your email":
                     cleanSubject = "Klinika IT - Potwierdzenie adresu e-mail";
                     title = "Potwierdź swój adres e-mail";
-                    intro = "Otrzymaliśmy prośbę o ponowne przesłanie linku aktywacyjnego dla Twojego konta w Klinice IT.";
+                    intro = "Otrzymaliśmy prośbę o ponowne przesłanie linku aktywacyjnego dla Twojego konta w Klinice-Med.";
                     buttonText = "Potwierdź adres e-mail";
                     outro = "Jeśli nie rejestrowałeś się w naszym systemie, po prostu zignoruj tę wiadomość.";
                     break;
@@ -41,7 +41,7 @@ namespace App_projekt_IT.Services
                 case "Reset Password":
                     cleanSubject = "Klinika IT - Resetowanie hasła do konta";
                     title = "Resetowanie hasła";
-                    intro = "Otrzymaliśmy prośbę o zresetowanie hasła do Twojego konta w Klinice IT. Kliknij w poniższy przycisk, aby ustawić nowe hasło.";
+                    intro = "Otrzymaliśmy prośbę o zresetowanie hasła do Twojego konta w Klinice-Med. Kliknij w poniższy przycisk, aby ustawić nowe hasło.";
                     buttonText = "Zresetuj hasło";
                     outro = "Jeśli nie prosiłeś o resetowanie hasła, Twoje konto jest bezpieczne i możesz zignorować tę wiadomość.";
                     break;
@@ -49,7 +49,7 @@ namespace App_projekt_IT.Services
                 case "Change Email":
                     cleanSubject = "Klinika IT - Potwierdzenie zmiany adresu e-mail";
                     title = "Potwierdź zmianę adresu e-mail";
-                    intro = "Otrzymaliśmy prośbę o zmianę adresu e-mail dla Twojego konta w Klinice IT. Aby dokończyć ten proces, musimy zweryfikować Twoją nową skrzynkę pocztową.";
+                    intro = "Otrzymaliśmy prośbę o zmianę adresu e-mail dla Twojego konta w Klinice-Med. Aby dokończyć ten proces, musimy zweryfikować Twoją nową skrzynkę pocztową.";
                     buttonText = "Potwierdź nowy adres e-mail";
                     outro = "Jeśli to nie Ty zlecałeś tę zmianę, zignoruj tę wiadomość lub skontaktuj się z naszą administracją.";
                     break;
@@ -65,7 +65,7 @@ namespace App_projekt_IT.Services
                     </div>
                     <p>{outro}</p>
                     <hr style='border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;' />
-                    <p style='font-size: 0.8em; color: #94a2b8;'>Pozdrawiamy,<br/>Zespół Kliniki IT</p>
+                    <p style='font-size: 0.8em; color: #94a2b8;'>Pozdrawiamy,<br/>Zespół Kliniki-Med</p>
                 </div>";
 
             var emailMessage = new EmailMessage

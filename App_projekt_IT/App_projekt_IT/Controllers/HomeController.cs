@@ -127,10 +127,10 @@ namespace App_projekt_IT.Controllers
                     {
                         
                         var altDayStart = nearestSlot.StartTime.Date;
-                        var altDayEnd = altDayStart.AddDays(1);
+                        var altDayEnd = altDayStart.AddDays(7);
 
                         alternativeSlots = await altQuery
-                            .Where(a => a.DoctorId == nearestSlot.DoctorId && a.StartTime >= altDayStart && a.StartTime < altDayEnd)
+                            .Where(a => a.StartTime >= altDayStart && a.StartTime < altDayEnd)
                             .OrderBy(a => a.StartTime)
                             .ToListAsync();
                     }

@@ -40,3 +40,59 @@
             }
         </tbody>
     </table>
+</div>
+
+<div id="messageModal" class="modal-overlay hidden">
+    <div class="modal-content modal-content-centered">
+        <div class="modal-header">
+            <h3 id="messageModalTitle">Informacja</h3>
+        </div>
+        <div class="modal-body">
+            <p id="messageModalText" class="modal-message-text"></p>
+        </div>
+        <div class="action-buttons action-buttons-centered">
+            <button type="button" id="messageModalBtn" class="btn-primary">Rozumiem</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showMessageModal(title, message, isSuccess) {
+            document.getElementById('messageModalTitle').innerText = title;
+            document.getElementById('messageModalText').innerText = message;
+
+            let btn = document.getElementById('messageModalBtn');
+
+            if (isSuccess) {
+                btn.className = "btn-primary btn-success";
+                document.getElementById('messageModalTitle').style.color = "#10b981";
+            } else {
+                btn.className = "btn-secondary";
+                document.getElementById('messageModalTitle').style.color = "#e11d48";
+            }
+
+            btn.onclick = function () {
+                document.getElementById('messageModal').classList.add('hidden');
+                document.getElementById('messageModalTitle').style.color = "";
+            };
+
+            document.getElementById('messageModal').classList.remove('hidden');
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            @if (TempData["ErrorMessage"] != null)
+                {
+                    <text>
+                            showMessageModal("Nie można usunąć", @Html.Raw(Json.Serialize(TempData["ErrorMessage"].ToString())), false);
+                    </text>
+            }
+                else if (TempData["SuccessMessage"] != null)
+                {
+                    <text>
+                            showMessageModal("Sukces", @Html.Raw(Json.Serialize(TempData["SuccessMessage"].ToString())), true);
+                    </text>
+            }
+            });
+    </script>
+}

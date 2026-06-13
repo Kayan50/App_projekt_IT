@@ -142,6 +142,14 @@ namespace App_projekt_IT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
+            bool hasSchedule = await _context.AppointmentSlots.AnyAsync(s => s.DoctorId == id);
+
+            if (hasSchedule)
+            {
+                TempData["ErrorMessage"] = "Nie mo¿na usun¹æ tego lekarza, poniewa¿ ma wygenerowany harmonogram. Najpierw usuñ jego terminy.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var doctor = await _context.Doctors.FindAsync(id);
             if (doctor != null)
             {
@@ -187,8 +195,8 @@ namespace App_projekt_IT.Controllers
                     return View(model);
                 }
 
-                DateTime currentSlotTime = model.Date.Date + model.StartTime;
-                DateTime endSlotTime = model.Date.Date + model.EndTime;
+                DateTime currentSlotTime = model.Date.Value.Date + model.StartTime.Value;
+                DateTime endSlotTime = model.Date.Value.Date + model.EndTime.Value;
 
                 
                 bool slotsExist = await _context.AppointmentSlots

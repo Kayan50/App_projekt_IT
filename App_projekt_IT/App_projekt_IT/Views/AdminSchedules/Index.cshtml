@@ -1,0 +1,280 @@
+﻿@model IEnumerable<App_projekt_IT.Models.AppointmentSlot>
+
+@{
+    ViewData["Title"] = "Zarządzanie grafikami";
+}
+
+<div class="admin-header">
+    <h1>Zarządzanie wizytami i grafikami</h1>
+</div>
+
+<section id="search" class="search-section mb-2">
+    <form id="search-form" class="search-form" asp-action="Index" method="get">
+
+        <select name="clinicId" id="clinicId" asp-items="ViewBag.ClinicId" class="form-control">
+            <option value="">Wszystkie kliniki</option>
+        </select>
+
+        <select name="doctorId" id="doctorId" asp-items="ViewBag.DoctorId" class="form-control">
+            <option value="">Wszyscy lekarze</option>
+        </select>
+
+        <input type="date" name="searchDate" id="searchDate" value="@Context.Request.Query["searchDate"]">
+
+        <button type="submit" class="btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Szukaj</button>
+        <a asp-action="Index" class="btn-secondary" style="text-align: center; text-decoration: none;">Wyczyść
+            filtry</a>
+        </form>
+    </section>
+
+    @if (ViewBag.SearchPerformed != null && ViewBag.SearchPerformed)
+    {
+        if (Model.Any())
+        {
+            <section id="results" class="results-section" style="padding-top: 1rem">
+
+                @if (!string.IsNullOrEmpty((string)ViewBag.CurrentDate))
+                {
+                    <div class="detail-block mass-delete-block">
+                        <div>
+                            <h3 class="mass-delete-title"><i class="fa-solid fa-triangle-exclamation"></i> Masowe usuwanie
+                            </h3>
+                            <p class="text-muted" style="margin: 0;">Usuwa z bazy absolutnie wszystkie widoczne poniżej terminy.</p>
+                        </div>
+
+                        <form asp-action="MassDelete" method="post">
+                            <input type="hidden" name="clinicId" value="@Context.Request.Query["clinicId"]" />
+                            <input type="hidden" name="doctorId" value="@Context.Request.Query["doctorId"]" />
+                            <input type="hidden" name="searchDate" value="@ViewBag.CurrentDate" />
+
+                            <button type="submit" class="btn-primary btn-danger">Wyczyść ten dzień</button>
+                        </form>
+                    </div>
+                }
+
+                <div id="results-container" class="grid-container-schedule">
+                    @{
+                        var groupedByClinic = Model.GroupBy(s => s.Doctor.Clinic);
+                    }
+
+                    @foreach (var clinicGroup in groupedByClinic)
+                    {
+                        var clinic = clinicGroup.Key;
+                        <div class="clinic-card">
+                            <h3 class="clinic-name">@(clinic?.Name ?? "Brak przypisanej kliniki")</h3>
+                            <p class="text-muted">
+                                <i class="fa-solid fa-location-dot clinic-location-icon"></i>
+                                @(clinic?.Address), @(clinic?.City?.Name)
+                            </p>
+
+                            <div class="doctors-container">
+                                @foreach (var doctorGroup in clinicGroup.GroupBy(s => s.Doctor))
+                                {
+                                    <div class="doctor-block">
+                                        <div class="doctor-info doctor-details-flex">
+
+                                            @if (doctorGroup.Key.ImageData != null && doctorGroup.Key.ImageContentType != null)
+                                            {
+                                                string imgBase64 = Convert.ToBase64String(doctorGroup.Key.ImageData);
+                                                string imgSrc = $"data:{doctorGroup.Key.ImageContentType};base64,{imgBase64}";
+                                                <img src="@imgSrc" alt="@doctorGroup.Key.LastName" class="doctor-avatar" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/images/ikonka-lekarz.png" alt="Domyślne zdjęcie" class="doctor-avatar" />
+                                            }
+
+                                            <div>
+                                                <strong>@doctorGroup.Key.Title @doctorGroup.Key.FirstName @doctorGroup.Key.LastName</strong>
+                                                <div class="proposed-date-wrapper">
+                                                    <span>Data: <strong
+                                                        class="date-highlight">@doctorGroup.First().StartTime.ToString("dd.MM.yyyy")</strong></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="time-slots">
+                                                @foreach (var slot in doctorGroup)
+                                                {
+                                                    bool isBooked = slot.UserId != null;
+                                                    string patientName = isBooked ? $"{slot.User.FirstName} {slot.User.LastName}" : "Brak pacjenta";
+
+                                                    string btnStyle = isBooked
+                                                        ? "background-color: #fee2e2; color: #e11d48; border-color: #fda4af;"
+                                                        : "background-color: #d1fae5; color: #10b981; border-color: #6ee7b7;";
+
+                                                    string icon = isBooked ? "<i class='fa-solid fa-user-lock' style='margin-left: 4px;'></i>" : "";
+
+                                                    <button type="button" class="slot-btn" style="@btnStyle"
+                                                            onclick="openAdminSlotModal(@slot.Id, '@slot.StartTime.ToString("HH:mm")', @isBooked.ToString().ToLower(), '@patientName')">
+                                                        @slot.StartTime.ToString("HH:mm") @Html.Raw(icon)
+                                                    </button>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </section>
+            }
+    else
+            {
+                <div class="detail-block text-center">
+                    <p>Brak terminów spełniających kryteria wyszukiwania.</p>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="detail-block empty-state-block">
+                <i class="fa-solid fa-calendar-days"></i>
+                <p>Wybierz filtry i kliknij "Szukaj", aby wyświetlić grafiki do zarządzania.</p>
+            </div>
+        }
+
+        <div id="adminSlotModal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Zarządzaj terminem: <span id="modalAdminTime" class="date-highlight"></span></h3>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-1-5" id="modalPatientInfo"></p>
+
+                    <div class="action-buttons modal-actions-nomargin modal-actions-vertical">
+
+                        <form id="formCancel" asp-action="CancelAppointment" method="post" style="display: none;">
+                            <input type="hidden" name="id" id="cancelSlotId" />
+                            <input type="hidden" name="clinicId" value="@Context.Request.Query["clinicId"]" />
+                            <input type="hidden" name="doctorId" value="@Context.Request.Query["doctorId"]" />
+                            <input type="hidden" name="searchDate" value="@Context.Request.Query["searchDate"]" />
+
+                            <button type="submit" class="btn-secondary btn-block">
+                                <i class="fa-solid fa-user-minus"></i> Odwołaj pacjenta (zwolnij termin)
+                            </button>
+                        </form>
+
+                        <form asp-action="DeleteSlot" method="post" class="btn-block">
+                            <input type="hidden" name="id" id="deleteSlotId" />
+                            <input type="hidden" name="clinicId" value="@Context.Request.Query["clinicId"]" />
+                            <input type="hidden" name="doctorId" value="@Context.Request.Query["doctorId"]" />
+                            <input type="hidden" name="searchDate" value="@Context.Request.Query["searchDate"]" />
+
+                            <button type="submit" class="btn-secondary btn-outline-danger btn-block">
+                                <i class="fa-solid fa-trash"></i> Usuń termin całkowicie
+                            </button>
+                        </form>
+
+                        <button type="button" onclick="closeAdminSlotModal()" class="btn-primary btn-block mt-0-5">
+                            Anuluj
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="messageModal" class="modal-overlay hidden">
+            <div class="modal-content modal-content-centered">
+                <div class="modal-header">
+                    <h3 id="messageModalTitle">Informacja</h3>
+                </div>
+                <div class="modal-body">
+                    <p id="messageModalText" class="modal-message-text"></p>
+                </div>
+                <div class="action-buttons action-buttons-centered">
+                    <button type="button" id="messageModalBtn" class="btn-primary">Rozumiem</button>
+                </div>
+            </div>
+        </div>
+
+        @section Scripts {
+            <script>
+                $(document).ready(function () {
+                    $('#clinicId, #doctorId').select2({
+                        width: '100%',
+                    });
+
+                    $('#clinicId').on('change', function () {
+                        var selectedClinicId = $(this).val();
+                        var doctorSelect = $('#doctorId');
+
+                        doctorSelect.empty();
+                        doctorSelect.append('<option value="">Wszyscy lekarze</option>');
+
+                        fetch('/AdminSchedules/GetDoctorsByClinic?clinicId=' + selectedClinicId)
+                            .then(response => response.json())
+                            .then(data => {
+                                data.forEach(function (doctor) {
+                                    var newOption = new Option(doctor.fullName, doctor.id, false, false);
+                                    doctorSelect.append(newOption);
+                                });
+                                doctorSelect.trigger('change');
+                            })
+                            .catch(error => {
+                                console.error('Wystąpił błąd podczas pobierania lekarzy:', error);
+                            });
+                    });
+                });
+
+                function openAdminSlotModal(slotId, time, isBooked, patientName) {
+                    document.getElementById('modalAdminTime').innerText = time;
+                    document.getElementById('cancelSlotId').value = slotId;
+                    document.getElementById('deleteSlotId').value = slotId;
+
+                    let infoElement = document.getElementById('modalPatientInfo');
+                    let cancelForm = document.getElementById('formCancel');
+
+                    if (isBooked) {
+                        infoElement.innerHTML = `<i class="fa-solid fa-user-lock text-danger"></i> <strong>Zarezerwowano przez:</strong> ${patientName}`;
+                        cancelForm.style.display = "block";
+                    } else {
+                        infoElement.innerHTML = `<i class="fa-solid fa-calendar-check" style="color: #10b981;"></i> <strong>Status:</strong> Termin jest wolny`;
+                        cancelForm.style.display = "none";
+                    }
+
+                    document.getElementById('adminSlotModal').classList.remove('hidden');
+                }
+
+                function closeAdminSlotModal() {
+                    document.getElementById('adminSlotModal').classList.add('hidden');
+                }
+
+                function showMessageModal(title, message, isSuccess) {
+                    document.getElementById('messageModalTitle').innerText = title;
+                    document.getElementById('messageModalText').innerText = message;
+                    let btn = document.getElementById('messageModalBtn');
+
+                    if (isSuccess) {
+                        btn.className = "btn-primary btn-success";
+                        document.getElementById('messageModalTitle').style.color = "#10b981";
+                    } else {
+                        btn.className = "btn-secondary";
+                        document.getElementById('messageModalTitle').className = "text-danger";
+                    }
+
+                    btn.onclick = function () {
+                        document.getElementById('messageModal').classList.add('hidden');
+                        document.getElementById('messageModalTitle').style.color = "";
+                        document.getElementById('messageModalTitle').className = "";
+                    };
+
+                    document.getElementById('messageModal').classList.remove('hidden');
+                }
+
+                document.addEventListener("DOMContentLoaded", function () {
+                    @if (TempData["ErrorMessage"] != null)
+                        {
+                            <text>
+                                    showMessageModal("Błąd", @Html.Raw(Json.Serialize(TempData["ErrorMessage"].ToString())), false);
+                            </text>
+                    }
+                                                                                                                                                                        else if (TempData["SuccessMessage"] != null)
+                        {
+                            <text>
+                                    showMessageModal("Sukces", @Html.Raw(Json.Serialize(TempData["SuccessMessage"].ToString())), true);
+                            </text>
+                    }
+                                                                                                                                                                    });
+            </script>
+        }

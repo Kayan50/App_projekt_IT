@@ -6,11 +6,11 @@ namespace App_projekt_IT.Models
     public class Doctor
     {
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Imię lekarza jest wymagane.")]
         public string FirstName { get; set; } = string.Empty;
-        [Required]
+        [Required(ErrorMessage = "Nazwisko lekarza jest wymagane.")]
         public string LastName { get; set; } = string.Empty;
-        [Required]
+        [Required(ErrorMessage = "Tytuł lekarza jest wymagany.")]
         public string Title { get; set; } = string.Empty;
 
         public byte[]? ImageData { get; set; }

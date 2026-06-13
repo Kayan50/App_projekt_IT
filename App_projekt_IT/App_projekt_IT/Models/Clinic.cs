@@ -11,7 +11,7 @@ namespace App_projekt_IT.Models
         public string Name { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Numer telefonu jest wymagany.")]
-        [Phone(ErrorMessage = "Wprowadź poprawny numer telefonu.")]
+        [RegularExpression(@"^\d{9}$", ErrorMessage = "Numer telefonu musi składać się z dokładnie 9 cyfr (bez spacji).")]
         public string Phone { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Adres e-mail jest wymagany.")]

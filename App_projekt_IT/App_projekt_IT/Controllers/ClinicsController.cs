@@ -92,7 +92,6 @@ namespace App_projekt_IT.Controllers
         // POST: CLINICS/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // NAPRAWIONE: Dodano Phone, Email i PostalCode do listy Bind
         public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,Phone,Email,Address,PostalCode,CityId")] Clinic clinic)
         {
             if (id != clinic.Id)
