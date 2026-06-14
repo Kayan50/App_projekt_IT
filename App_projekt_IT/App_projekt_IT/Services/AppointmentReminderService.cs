@@ -86,9 +86,7 @@ namespace App_projekt_IT.Services
                     }
                 }
 
-                // ==================================================================
                 // 2. WYSYŁKA: AUTOMATYCZNE ODWOŁANIE (24H PRZED WIZYTĄ)
-                // ==================================================================
                 var targetDate24Hours = now.AddHours(24);
                 var appointmentsToCancel = await context.AppointmentSlots
                     .Include(a => a.Doctor)
@@ -115,7 +113,7 @@ namespace App_projekt_IT.Services
                             await _emailQueue.QueueEmailAsync(new EmailMessage
                             {
                                 ToEmail = user.Email,
-                                Subject = "Klinika IT - Anulowanie rezerwacji wizyty",
+                                Subject = "Klinika-Med - Anulowanie rezerwacji wizyty",
                                 Body = $@"
                                     <div style='font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; line-height: 1.6;'>
                                         <h2 style='color: #dc2626;'>Wizyta została anulowana</h2>
@@ -173,7 +171,7 @@ namespace App_projekt_IT.Services
                             await _emailQueue.QueueEmailAsync(new EmailMessage
                             {
                                 ToEmail = user.Email,
-                                Subject = "Klinika IT - Dziękujemy za wizytę! Oceń nas",
+                                Subject = "Klinika-Med - Dziękujemy za wizytę! Oceń nas",
                                 Body = $@"
                                     <div style='font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; line-height: 1.6;'>
                                         <h2 style='color: #2563eb;'>Dziękujemy za zaufanie!</h2>
