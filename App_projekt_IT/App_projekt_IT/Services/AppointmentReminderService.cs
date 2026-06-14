@@ -34,9 +34,7 @@ namespace App_projekt_IT.Services
 
                 var now = DateTime.Now;
 
-                // ==================================================================
-                // 1. WYSYŁKA: PRZYPOMNIENIA O POTWIERDZENIU (5 DNI PRZED WIZYTĄ)
-                // ==================================================================
+                //PRZYPOMNIENIA O POTWIERDZENIU (5 DNI PRZED WIZYTĄ)
                 var targetDate5Days = now.AddDays(5);
                 var appointmentsToRemind = await context.AppointmentSlots
                     .Include(a => a.Doctor)
@@ -66,7 +64,7 @@ namespace App_projekt_IT.Services
                             await _emailQueue.QueueEmailAsync(new EmailMessage
                             {
                                 ToEmail = user.Email,
-                                Subject = "Klinika IT - Ważne: Potwierdź swoją wizytę",
+                                Subject = "Klinika-Med - Ważne: Potwierdź swoją wizytę",
                                 Body = $@"
                                     <div style='font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; line-height: 1.6;'>
                                         <h2 style='color: #d97706;'>Wymagane potwierdzenie wizyty</h2>
