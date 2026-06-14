@@ -127,7 +127,7 @@ namespace App_projekt_IT.Controllers
                     {
                         
                         var altDayStart = nearestSlot.StartTime.Date;
-                        var altDayEnd = altDayStart.AddDays(7);
+                        var altDayEnd = altDayStart.AddDays(2);
 
                         alternativeSlots = await altQuery
                             .Where(a => a.StartTime >= altDayStart && a.StartTime < altDayEnd)
