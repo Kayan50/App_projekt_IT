@@ -34,7 +34,7 @@ namespace App_projekt_IT.Services
 
                 var now = DateTime.Now;
 
-                //PRZYPOMNIENIA O POTWIERDZENIU (5 DNI PRZED WIZYTĄ)
+                //1. PRZYPOMNIENIA O POTWIERDZENIU (5 DNI PRZED WIZYTĄ)
                 var targetDate5Days = now.AddDays(5);
                 var appointmentsToRemind = await context.AppointmentSlots
                     .Include(a => a.Doctor)
@@ -139,9 +139,7 @@ namespace App_projekt_IT.Services
                     appt.IsConfirmed = false;
                 }
 
-                // ==================================================================
                 // 3. WYSYŁKA: PROŚBA O OPINIĘ (PO ODBYTEJ WIZYCIE)
-                // ==================================================================
                 var timeForReview = now.AddHours(-2);
                 var appointmentsToReview = await context.AppointmentSlots
                     .Include(a => a.Doctor)
